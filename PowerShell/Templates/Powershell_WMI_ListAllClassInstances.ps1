@@ -4,7 +4,7 @@ $hostname = '##SYSTEM.HOSTNAME##'
 ## Set our namespace 
 $namespace = "root\cimv2"
 
-## Set out WMI class.
+## Set our WMI class.
 $classname = "insert_class_name" ## i.e. 'Win32_DiskPartition'
 
 ## List WMI object names available from the specified namespace.
