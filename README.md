@@ -2,19 +2,16 @@ This monitoring recipes repo contains scripts and snippets of code that may be u
 
 Here's the folder structure in tree form to help you find what you're looking for:
 
-├── Groovy
-│   ├── SNMP
-│   │   ├── Groovy_SNMP.groovy
-│   │   └── Groovy_SNMP_V3.groovy
-├── PowerShell
-│   ├── Templates
-│   │   ├── Powershell_WMI_ListAllNamespaces.ps1
-│   │   └── Powershell_WMI_ListAllClasses.ps1
-│   │ 	├── Powershell_WMI_ListAllClassInstances.ps1
-│   ├── PowerShell Examples
-│   	├── 
-│   	└── Powershell_ActiveDiscovery_Example.ps1
-│   	└── Powershell_Collection_Example.ps1
-└── README
+- Groovy
+-- SNMP
+--- Groovy_SNMP.groovy
+--- Groovy_SNMP_V3.groovy
 
-5 directories, 7 files
+- PowerShell
+-- PowerShell Examples
+--- Powershell_ActiveDiscovery_Example.ps1
+--- Powershell_Collection_Example.ps1
+-- Templates
+--- Powershell_WMI_ListAllNamespaces.ps1
+--- Powershell_WMI_ListAllClasses.ps1
+--- Powershell_WMI_ListAllClassInstances.ps1
