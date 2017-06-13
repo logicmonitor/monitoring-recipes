@@ -1,13 +1,13 @@
-This monitoring recipes repo contains scripts and snippets of code that may be useful to anyone writing LogicModules.
+# This monitoring recipes repo contains scripts and snippets of code that may be useful to anyone writing LogicModules.
 
-Here's the folder structure in tree form to help you find what you're looking for:
+### Here's the folder structure in tree form to help you find what you're looking for:
 
-- Groovy
+### - Groovy
   1. SNMP
     - Groovy_SNMP.groovy
     - Groovy_SNMP_V3.groovy
 
-- PowerShell
+### - PowerShell
   1. PowerShell Examples
     - Powershell_ActiveDiscovery_Example.ps1
     - Powershell_Collection_Example.ps1
