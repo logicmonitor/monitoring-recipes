@@ -2,7 +2,7 @@ This monitoring recipes repo contains scripts and snippets of code that may be u
 
 Here's the folder structure in tree form to help you find what you're looking for:
 
-.
+```
 ├── Groovy
 │   ├── NetApp
 │   │   └── NetApp_Ontapi.groovy
@@ -22,3 +22,4 @@ Here's the folder structure in tree form to help you find what you're looking fo
 └── README.md
 
 6 directories, 11 files
+```
