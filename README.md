@@ -4,14 +4,11 @@ Here's the folder structure in tree form to help you find what you're looking fo
 
 ```
 ├── Groovy
-│   ├── NetApp
-│   │   └── NetApp_Ontapi.groovy
 │   └── SNMP
 │       ├── Groovy_SNMP.groovy
 │       ├── Groovy_SNMP_V3.groovy
-│       └── Performing_an_SNMPWalk_with_Alternate_Port.groovy
 ├── PowerShell
-│   ├── PowerShell\ Examples
+│   ├── PowerShell Batchscript Example
 │   │   ├── Powershell_ActiveDiscovery_Example.ps1
 │   │   └── Powershell_Collection_Example.ps1
 │   ├── README.md
@@ -21,5 +18,4 @@ Here's the folder structure in tree form to help you find what you're looking fo
 │       └── Powershell_WMI_ListAllNamespaces.ps1
 └── README.md
 
-6 directories, 11 files
 ```
