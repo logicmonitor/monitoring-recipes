@@ -12,4 +12,4 @@ When returning batchscript collection output, the output should follow this form
 Intel[R] 82574L Gigabit Network Connection.packetThroughput=118055428
 ```
 
-[https://www.logicmonitor.com/support/datasources/data-collection-methods/batchscript-data-collection/]
+[Additional examples and documentation](https://www.logicmonitor.com/support/datasources/data-collection-methods/batchscript-data-collection/)
