@@ -4,13 +4,16 @@ Here's the folder structure in tree form to help you find what you're looking fo
 
 ```
 ├── Groovy
-│   └── SNMP
-│       ├── Groovy_SNMP.groovy
-│       ├── Groovy_SNMP_V3.groovy
+│   ├── SNMP
+│   │   ├── Groovy_SNMP.groovy
+│   │   ├── Groovy_SNMP_V3.groovy
+│   └── WMI
+│       └── Groovy_WMI_Query.groovy
 ├── PowerShell
-│   ├── PowerShell Batchscript Example
+│   ├── PowerShell\ Examples
 │   │   ├── Powershell_ActiveDiscovery_Example.ps1
-│   │   └── Powershell_Collection_Example.ps1
+│   │   ├── Powershell_Collection_Example.ps1
+│   │   └── README.md
 │   ├── README.md
 │   └── Templates
 │       ├── Powershell_WMI_ListAllClassInstances.ps1
