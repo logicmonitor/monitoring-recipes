@@ -5,7 +5,7 @@ Here's the folder structure in tree form to help you find what you're looking fo
 ```
 ├── Groovy
 │   ├── JDBC 
-│   │   ├── Groovy_JDBC_MSSQL_QueryP.groovy
+│   │   ├── Groovy_JDBC_MSSQL_Query.groovy
 │   ├── SNMP
 │   │   ├── Groovy_SNMP.groovy
 │   │   ├── Groovy_SNMP_V3.groovy
