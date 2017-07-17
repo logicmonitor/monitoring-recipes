@@ -51,7 +51,6 @@ catch (Exception e)
 
     // Exit with return code 1;
     return 1;
-    }
 }
 
 // Successful script execution, return 0;
