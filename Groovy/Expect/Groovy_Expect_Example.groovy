@@ -1,4 +1,4 @@
-// Additional examples found on our support site : https://www.logicmonitor.com/support/terminology-syntax/scripting-support/groovyexpect-text-based-interaction/
+// Additional examples found on LogicMonitor support site : https://www.logicmonitor.com/support/terminology-syntax/scripting-support/groovyexpect-text-based-interaction/
 
 // import the logicmonitor expect helper class
 import com.santaba.agent.groovyapi.expect.Expect;

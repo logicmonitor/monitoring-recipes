@@ -4,6 +4,8 @@ Here's the folder structure in tree form to help you find what you're looking fo
 
 ```
 ├── Groovy
+│   ├── Expect
+│   │   └── Groovy_Expect_Example.groovy
 │   ├── JDBC
 │   │   └── Groovy_JDBC_MSSQL_Query.groovy
 │   ├── NetApp
@@ -26,6 +28,6 @@ Here's the folder structure in tree form to help you find what you're looking fo
 │       └── Powershell_WMI_ListAllNamespaces.ps1
 └── README.md
 
-8 directories, 14 files
+9 directories, 15 files
 ```
 Updates and new content will be added periodically.
