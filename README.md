@@ -4,11 +4,14 @@ Here's the folder structure in tree form to help you find what you're looking fo
 
 ```
 ├── Groovy
-│   ├── JDBC 
-│   │   ├── Groovy_JDBC_MSSQL_Query.groovy
+│   ├── JDBC
+│   │   └── Groovy_JDBC_MSSQL_Query.groovy
+│   ├── NetApp
+│   │   └── NetApp_OnTap_Example.groovy
 │   ├── SNMP
 │   │   ├── Groovy_SNMP.groovy
 │   │   ├── Groovy_SNMP_V3.groovy
+│   │   └── Groovy_SNMP_walkAsMap.groovy
 │   └── WMI
 │       └── Groovy_WMI_Query.groovy
 ├── PowerShell
@@ -23,5 +26,6 @@ Here's the folder structure in tree form to help you find what you're looking fo
 │       └── Powershell_WMI_ListAllNamespaces.ps1
 └── README.md
 
+8 directories, 14 files
 ```
 Updates and new content will be added periodically.

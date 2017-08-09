@@ -1,7 +1,7 @@
 # This repository contains Powershell examples to aid in LogicModule develpment.
 
 ```
-├── PowerShell\ Examples
+├── PowerShell Examples
 │   ├── Powershell_ActiveDiscovery_Example.ps1
 │   └── Powershell_Collection_Example.ps1
 ├── README.md
