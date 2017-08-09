@@ -1,4 +1,4 @@
-# This repository contains Powershell examples to aid in LogicModule develpment.
+# This repository contains Powershell examples to aid in LogicModule development.
 
 ```
 ├── PowerShell Examples
