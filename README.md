@@ -31,3 +31,5 @@ Here's the folder structure in tree form to help you find what you're looking fo
 9 directories, 15 files
 ```
 Updates and new content will be added periodically.
+
+If you have suggestions and/or improvements, feel free to submit an Issue : Enhancement request.
