@@ -1,5 +1,7 @@
 # This repository contains Powershell examples to aid in LogicModule development.
 
+https://www.logicmonitor.com/support/terminology-syntax/scripting-support/embedded-powershell-scripting/
+
 ```
 ├── PowerShell Examples
 │   ├── Powershell_ActiveDiscovery_Example.ps1
