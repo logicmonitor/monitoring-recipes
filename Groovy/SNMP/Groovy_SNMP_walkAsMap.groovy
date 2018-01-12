@@ -1,38 +1,47 @@
+import com.santaba.agent.collector3.CollectorDb
 import com.santaba.agent.groovyapi.snmp.Snmp
 
-def hostname = hostProps.get("system.hostname");
-def community = hostProps.get("snmp.community");
-def version = hostProps.get("snmp.version");
+// variable to hold system hostname
+def host = hostProps.get('system.hostname');
 
-// Set our OID.
-def snmp_oid = 'INSERT_OID_HERE' // i.e. : 1.3.6.1.2.1.1.2
+/*
+ The following variable will grab all necessary SNMP properties to initiate a walk.
+ Compatible with SNMP v1, v2 and v3
+ */
+def props = hostProps.toProperties().findAll { it.key.contains('snmp') };
 
-def snmp_walkAsMap = Snmp.walkAsMap(hostname, snmp_oid, [:])
+def timeout = 10000 // 10 sec timeout.
 
-// Try following code
+// define maps we will walk.
+def exampleNameWalkAsMap = Snmp.walkAsMap(host, "INSERT_OID_HERE", props, timeout);
+def exampleDataWalkAsMap = Snmp.walkAsMap(host, "INSERT_OID_HERE", props, timeout);
+
+// Throw into a try/catch
 try
 {
-    // Execute the snmpwalk and iterate through each line.
-    snmp_walkAsMap.each
-    { key, value ->
-
-        println "${key}=${value}"
+    exampleNameWalkAsMap.each
+    { key, val ->
 
         /*
-        Data post processing code goes here.
+        Insert your additional data processing here.
+
+        Example:
+            - If you have multiple maps, you can easily
+            correlate data between them by referencing the key.
          */
+
+        println "exampleData=" + exampleDataWalkAsMap[key]
+
     }
+
+    // execution was successful, return 0;
+    return 0;
 }
 
-// Catch any exception that may have occurred.
 catch (Exception e)
 {
-    // Print the exception.
-    println e
-
-    // Exit with return code 1;
+    // if exception is caught, print it out and return 1;
+    println e;
     return 1;
 }
 
-// Successful script execution, return 0;
-return 0;
