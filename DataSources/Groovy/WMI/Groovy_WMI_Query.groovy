@@ -20,8 +20,13 @@ try
     // instantiate the WMI class object
     def wmi_output = WMI.queryAll(hostname, namespace, wmi_query, timeout);
 
+    // maybe you only want the first result (same parameters as queryAll())
+    def first_result = WMI.queryFirst(hostname, namespace, wmi_query, timeout)
+
     // Print out the output of our WMI query.
     println wmi_output;
+    println '-----'
+    println first_result;
 
     /*
     The rest of your post processing code goes here.
