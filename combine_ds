@@ -1,0 +1,74 @@
+#!/usr/bin/perl
+
+$target_file = "combined_ds.xml";
+$file_count  = scalar(@ARGV);
+$file_index  = 0;
+
+if ($file_count > 1)
+{
+    print "combining $file_count files...\n\n";
+}
+else
+{
+    die
+"ERROR: only $file_count files specified; can't combine fewer than two files\n\n" .
+"USAGE: $0 file1.xml file2.xml ... filen.xml\n\n";
+}
+
+open OUT_FILE, ">$target_file";
+
+# loop through input files
+foreach $file (@ARGV)
+{
+    # test that we can read file
+    die "ERROR: file \"$file\" does not exist or isn't readable\n"
+      unless -r $file;
+
+    $file_index++;
+    open IN_FILE, $file;
+
+    print "  processing file \"$file\" with index $file_index\n";
+
+    # loop through lines in input file
+    while ($line = <IN_FILE>)
+    {
+        # is this the first file in the group?
+        if ($file_index > 1)
+        {
+            # no. does the line match a leading metadata entry
+            if (   ($line =~ /^<\?xml.*\?>/g)
+                || ($line =~ /^<feed  version=.* hasPendingRequests=.*>/g)
+                || ($line =~ /^\s+<company>.*<\/company>/g)
+                || ($line =~ /^\s+<status>.*<\/status>/g)
+                || ($line =~ /^\s+<errmsg>.*<\/errmsg>/g)
+                || ($line =~ /^\s+<interval>.*<\/interval>/g))
+            {
+                # yes. skip it
+                print "    * skip leading metadadata line : $line";
+                next;
+            }
+        }
+
+        # is this the last file in the group?
+        if ($file_index < $file_count)
+        {
+            # no. does the line match a trailing metadata entry?
+            if ($line =~ /^<\/feed>/g)
+            {
+                # yes. skip it
+                print "    * skip trailing metadadata line : $line";
+                next;
+            }
+        }
+
+        # store this line in combined outfile
+        print OUT_FILE $line;
+    }
+
+    close IN_FILE;
+}
+
+close OUT_FILE;
+
+print "\ndone. Combined $file_count datasources and stored in file: $target_file\n";
+exit(0);
