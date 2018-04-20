@@ -1,4 +1,4 @@
-## This monitoring-recipes repo contains scripts and snippet templates of code that may be useful to anyone writing LogicModules.
+## This repository contains scripts and snippet templates of code that may be useful to anyone writing LogicModules.
 
 Here's the folder structure in tree form to help you find what you're looking for:
 
@@ -11,8 +11,11 @@ Here's the folder structure in tree form to help you find what you're looking fo
 │   │   │   └── Readme.md
 │   │   ├── Groovy.iml
 │   │   ├── JDBC
-│   │   │   └── Microsoft\ SQL
-│   │   │       └── Groovy_JDBC_MSSQL_Query.groovy
+│   │   │   ├── Microsoft\ SQL
+│   │   │   │   └── Groovy_JDBC_MSSQL_Query.groovy
+│   │   │   └── Readme.md
+│   │   ├── JMX
+│   │   │   └── JMX_MBean_Enumerator.groovy
 │   │   ├── NetApp
 │   │   │   └── NetApp_OnTap_Example.groovy
 │   │   ├── Readme.md
@@ -36,9 +39,17 @@ Here's the folder structure in tree form to help you find what you're looking fo
 │   ├── Cisco_Product_Info.groovy
 │   ├── README.md
 │   └── addCategory_Microsoft_Exchange.groovy
-└── README.md
+├── README.md
+└── Tools
+    ├── DataSource\ Checker
+    │   ├── README.md
+    │   └── ds_checker.rb
+    ├── DataSource\ Combiner
+    │   ├── README.md
+    │   └── combine_ds
+    └── README.md
 
-12 directories, 21 files
+16 directories, 28 files
 ```
 Updates and new content will be added periodically.
 
