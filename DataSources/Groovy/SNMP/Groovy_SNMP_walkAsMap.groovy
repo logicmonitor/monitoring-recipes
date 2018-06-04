@@ -8,7 +8,7 @@ def host = hostProps.get('system.hostname');
  The following variable will grab all necessary SNMP properties to initiate a walk.
  Compatible with SNMP v1, v2 and v3
  */
-def props = hostProps.toProperties().findAll { it.key.contains('snmp') };
+def props = hostProps.toProperties()
 
 def timeout = 10000 // 10 sec timeout.
 
