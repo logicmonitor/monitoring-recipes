@@ -4,7 +4,7 @@ Included Groovy SNMP examples:
 - SNMP Walk-As-Map
 
 
-'''
+```
 .
 ├── Groovy_SNMP_Get.groovy
 ├── Groovy_SNMP_Walk.groovy
@@ -12,4 +12,4 @@ Included Groovy SNMP examples:
 └── readme.md
 
 0 directories, 4 files
-'''
+```
