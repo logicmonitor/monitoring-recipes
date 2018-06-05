@@ -1,7 +1,8 @@
 # This repository contains Powershell examples to aid in LogicModule development.
 
-[Tips & Tricks](https://www.logicmonitor.com/support/terminology-syntax/scripting-support/powershell-tips-tricks/)
-[Embedded PowerShell Scripting](https://www.logicmonitor.com/support/terminology-syntax/scripting-support/embedded-powershell-scripting/)
+- [Tips & Tricks](https://www.logicmonitor.com/support/terminology-syntax/scripting-support/powershell-tips-tricks/)
+
+- [Embedded PowerShell Scripting](https://www.logicmonitor.com/support/terminology-syntax/scripting-support/embedded-powershell-scripting/)
 
 ```
 ├── PowerShell Examples
