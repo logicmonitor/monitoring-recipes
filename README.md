@@ -11,8 +11,8 @@ Here's the folder structure in tree form to help you find what you're looking fo
 │   │   │   └── Readme.md
 │   │   ├── Groovy.iml
 │   │   ├── JDBC
-│   │   │   ├── Microsoft\ SQL
-│   │   │   │   └── Groovy_JDBC_MSSQL_Query.groovy
+│   │   │   ├── Groovy_JDBC_MSSQL.groovy
+│   │   │   ├── Groovy_JDBC_MySQL.groovy
 │   │   │   └── Readme.md
 │   │   ├── JMX
 │   │   │   └── JMX_MBean_Enumerator.groovy
@@ -20,9 +20,10 @@ Here's the folder structure in tree form to help you find what you're looking fo
 │   │   │   └── NetApp_OnTap_Example.groovy
 │   │   ├── Readme.md
 │   │   ├── SNMP
-│   │   │   ├── Groovy_SNMP.groovy
-│   │   │   ├── Groovy_SNMP_V3.groovy
-│   │   │   └── Groovy_SNMP_walkAsMap.groovy
+│   │   │   ├── Groovy_SNMP_Get.groovy
+│   │   │   ├── Groovy_SNMP_Walk.groovy
+│   │   │   ├── Groovy_SNMP_WalkAsMap.groovy
+│   │   │   └── readme.md
 │   │   └── WMI
 │   │       └── Groovy_WMI_Query.groovy
 │   └── PowerShell
@@ -49,7 +50,7 @@ Here's the folder structure in tree form to help you find what you're looking fo
     │   └── combine_ds
     └── README.md
 
-16 directories, 28 files
+15 directories, 30 files
 ```
 Updates and new content will be added periodically.
 
