@@ -21,7 +21,7 @@
 * Information about Logical Drives (Includes mapped drives and I believe PSDrives)
     * ```Get-WMIObject -Class Win32_LogicalDisk```
 
-Note : You can also use the shortform of the command from:
+* Note : You can also use the shortform of the command from:
     * ```Get-WMIObject -Class Win32_ComputerSystem``` to ```gwmi Win32_ComputerSystem```
 
 #### Show PowerShell Version
