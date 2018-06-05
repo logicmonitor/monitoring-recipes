@@ -25,7 +25,7 @@
     * ```Get-WMIObject -Class Win32_ComputerSystem``` to ```gwmi Win32_ComputerSystem```
 
 #### Show PowerShell Version
-    *```$PSVersionTable```
+    * ```$PSVersionTable```
 
 
 ```
