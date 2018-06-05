@@ -24,8 +24,8 @@
 * Note : You can also use the shortform of the command from:
     * ```Get-WMIObject -Class Win32_ComputerSystem``` to ```gwmi Win32_ComputerSystem```
 
-#### Show PowerShell Version
-* ```$PSVersionTable```
+* Show PowerShell Version
+    * ```PS C:\> $PSVersionTable.PSVersion```
 
 
 ```
