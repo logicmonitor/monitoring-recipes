@@ -13,8 +13,8 @@
 
 * Microsoft SQL (1433)
   * URL: 
-    * Integrated Security: ```jdbc:sqlserver://<hostname>:<port>;databaseName=<database_name>;integratedSecurity=true;```
-    * JDBC Credentials: ```jdbc:sqlserver://<hostname>:<port>;```
+    * Integrated Security - ```jdbc:sqlserver://<hostname>:<port>;databaseName=<database_name>;integratedSecurity=true;```
+    * JDBC Credentials - ```jdbc:sqlserver://<hostname>:<port>;```
   * Driver: ```com.microsoft.sqlserver.jdbc.SQLServerDriver```
 
 * Oracle (1521)
