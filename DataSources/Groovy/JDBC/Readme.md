@@ -7,9 +7,9 @@
 #### [Data Collection](https://www.logicmonitor.com/support/datasources/data-collection-methods/jdbc-data-collection/)
 
 ## Supported Databases (default port):
-- MySQL (3306)
--- URL: ```jdbc:mysql://<hostname>:<port>```
--- Driver: ```com.mysql.jdbc.Driver```
+* MySQL (3306)
+  * URL: ```jdbc:mysql://<hostname>:<port>```
+  * Driver: ```com.mysql.jdbc.Driver```
 
 - Microsoft SQL (1433)
 URL: ```jdbc:sqlserver://<hostname>:<port>;integratedSecurity=true```
