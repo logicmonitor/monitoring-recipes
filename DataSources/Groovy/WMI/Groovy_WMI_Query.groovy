@@ -11,11 +11,11 @@ try
     // This parameter is optional.
     def namespace = "CIMv2";
 
-    // This is our WMI query.
-    def wmi_query = 'select * from win32_operatingsystem';
-
     // You can also pass an optional timeout value, the default is 30 seconds
     def timeout = 30;
+
+    // This is our WMI query.
+    def wmi_query = 'select * from win32_operatingsystem';
 
     // instantiate the WMI class object
     def wmi_output = WMI.queryAll(hostname, namespace, wmi_query, timeout);
@@ -32,6 +32,8 @@ try
     The rest of your post processing code goes here.
     */
     
+    // Exit by returning 0.
+    return 0;
 }
 
 // Catch any exceptions that may have occurred.
@@ -41,6 +43,3 @@ catch (Exception e)
     println e
     return 1;
 }
-
-// Exit by returning 0.
-return 0;
