@@ -8,28 +8,25 @@
 
 Supported Databases (default port):
 - MySQL (3306)
-```
-jdbc:mysql://<hostname>:<port>
-```
+URL: ```jdbc:mysql://<hostname>:<port>```
+Driver: ```com.mysql.jdbc.Driver```
+
 - Microsoft SQL (1433)
-```
-jdbc:sqlserver://<hostname>:<port>;
-jdbc:sqlserver://<hostname>:<port>;integratedSecurity=true
-```
+URL: ```jdbc:sqlserver://<hostname>:<port>;integratedSecurity=true```
+Driver: ```com.microsoft.sqlserver.jdbc.SQLServerDriver```
+
 - Oracle (1521)
-```
-jdbc:oracle:thin:<hostname>:<port>/<database_name>
-```
+```jdbc:oracle:thin:<hostname>:<port>/<database_name>```
+Driver: ```oracle.jdbc.driver.OracleDriver```
+
 - Postgres (1433)
-```
-jdbc:postgresql://<hostname>:<port>/<database_name>
-```
+URL: ```jdbc:postgresql://<hostname>:<port>/<database_name>```
+Driver: ```org.postgresql.Driver```
+
 - DB2 (5432)
-```
-jdbc:jtds:db2://<hostname>/<database_name>
-jdbc:db2://<hostname>:<port>/<database_name>
-```
+URL: ```jdbc:db2://<hostname>:<port>/<database_name>```
+Driver: ```com.ibm.db2.jcc.DB2Driver```
+
 - Sybase 
-```
-jdbc:jtds:sybase://<hostname>/<database_name>
-```
+URL: ```jdbc:jtds:sybase://<hostname>/<database_name>```
+Driver: ```com.sybase.jdbc4.jdbc.SybDriver```
