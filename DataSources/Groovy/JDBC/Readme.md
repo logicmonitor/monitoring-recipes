@@ -12,21 +12,21 @@
   * Driver: ```com.mysql.jdbc.Driver```
 
 * Microsoft SQL (1433)
- * URL: ```jdbc:sqlserver://<hostname>:<port>;integratedSecurity=true```
- * Driver: ```com.microsoft.sqlserver.jdbc.SQLServerDriver```
+  * URL: ```jdbc:sqlserver://<hostname>:<port>;integratedSecurity=true```
+  * Driver: ```com.microsoft.sqlserver.jdbc.SQLServerDriver```
 
 * Oracle (1521)
- * URL: ```jdbc:oracle:thin:<hostname>:<port>/<database_name>```
- * Driver: ```oracle.jdbc.driver.OracleDriver```
+  * URL: ```jdbc:oracle:thin:<hostname>:<port>/<database_name>```
+  * Driver: ```oracle.jdbc.driver.OracleDriver```
 
 * Postgres (1433)
- * URL: ```jdbc:postgresql://<hostname>:<port>/<database_name>```
- * Driver: ```org.postgresql.Driver```
+  * URL: ```jdbc:postgresql://<hostname>:<port>/<database_name>```
+  * Driver: ```org.postgresql.Driver```
 
 * DB2 (5432)
- * URL: ```jdbc:db2://<hostname>:<port>/<database_name>```
- * Driver: ```com.ibm.db2.jcc.DB2Driver```
+  * URL: ```jdbc:db2://<hostname>:<port>/<database_name>```
+  * Driver: ```com.ibm.db2.jcc.DB2Driver```
 
 * Sybase 
- * URL: ```jdbc:jtds:sybase://<hostname>/<database_name>```
- * Driver: ```com.sybase.jdbc4.jdbc.SybDriver```
+  * URL: ```jdbc:jtds:sybase://<hostname>/<database_name>```
+  * Driver: ```com.sybase.jdbc4.jdbc.SybDriver```
