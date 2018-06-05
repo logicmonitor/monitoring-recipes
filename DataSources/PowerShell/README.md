@@ -25,8 +25,14 @@
     * ```Get-WMIObject -Class Win32_ComputerSystem``` to ```gwmi Win32_ComputerSystem```
 
 * Show PowerShell Version
-    * ```PS C:\> $PSVersionTable.PSVersion```
-      * ```test```
+    * 
+    ```
+    PS C:\> $PSVersionTable.PSVersion
+
+    Major  Minor  Build  Revision
+    -----  -----  -----  --------
+    4      0      -1     -1
+    ```
 
 
 ```
