@@ -1,24 +1,23 @@
-import com.santaba.agent.collector3.CollectorDb
 import com.santaba.agent.groovyapi.snmp.Snmp
 
 // variable to hold system hostname
 def host = hostProps.get('system.hostname');
-
-/*
- The following variable will grab all necessary SNMP properties to initiate a walk.
- Compatible with SNMP v1, v2 and v3
- */
 def props = hostProps.toProperties()
-
 def timeout = 10000 // 10 sec timeout.
-
-// define maps we will walk.
-def exampleNameWalkAsMap = Snmp.walkAsMap(host, "INSERT_OID_HERE", props, timeout);
-def exampleDataWalkAsMap = Snmp.walkAsMap(host, "INSERT_OID_HERE", props, timeout);
 
 // Throw into a try/catch
 try
 {
+    /*
+    The following SNMP walkAsMap will handle v1 , v2 and v3. 
+    Props contains a map of ALL host properties and the SNMP walk method will automatically
+    handle the proper connection based on which SNMP version is configured.
+    */
+
+    // define maps we will walk.
+    def exampleNameWalkAsMap = Snmp.walkAsMap(host, "INSERT_OID_HERE", props, timeout);
+    def exampleDataWalkAsMap = Snmp.walkAsMap(host, "INSERT_OID_HERE", props, timeout);
+
     exampleNameWalkAsMap.each
     { key, val ->
 
