@@ -9,7 +9,7 @@
 ## Supported Databases (default port):
 * MySQL (3306)
   * URL: ```jdbc:mysql://<hostname>:<port>```
-  * Driver: ```com.mysql.jdbc.Driver```
+  * Driver: ```org.mariadb.jdbc.Driver```
 
 * Microsoft SQL (1433)
   * URL: 
