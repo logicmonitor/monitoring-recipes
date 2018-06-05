@@ -6,6 +6,8 @@ Here's the folder structure in tree form to help you find what you're looking fo
 .
 ├── DataSources
 │   ├── Groovy
+│   │   ├── CIM
+│   │   │   └── Groovy_CIM_EnumerateClassObjects.groovy
 │   │   ├── Expect
 │   │   │   ├── Groovy_Expect_Example.groovy
 │   │   │   └── Readme.md
@@ -54,7 +56,7 @@ Here's the folder structure in tree form to help you find what you're looking fo
     │   └── combine_ds
     └── README.md
 
-16 directories, 33 files
+17 directories, 34 files
 ```
 Updates and new content will be added periodically.
 
