@@ -1,8 +1,10 @@
-LogicMonitor Support Pages
+#LogicMonitor Support Pages
 
-JDBC Active Discovery : https://www.logicmonitor.com/support/datasources/active-discovery/jdbc-active-discovery/
+###Authentication Credentials : https://www.logicmonitor.com/support/getting-started/advanced-logicmonitor-setup/defining-authentication-credentials/
 
-JDBC Authentication Credentials : https://www.logicmonitor.com/support/getting-started/advanced-logicmonitor-setup/defining-authentication-credentials/
+###Active Discovery : https://www.logicmonitor.com/support/datasources/active-discovery/jdbc-active-discovery/
+
+###Data Collection : https://www.logicmonitor.com/support/datasources/data-collection-methods/jdbc-data-collection/
 
 Supported Databases (default port):
 - MySQL (3306)
