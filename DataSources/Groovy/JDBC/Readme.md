@@ -12,11 +12,13 @@
   * Driver: ```com.mysql.jdbc.Driver```
 
 * Microsoft SQL (1433)
-  * URL: ```jdbc:sqlserver://<hostname>:<port>;integratedSecurity=true```
+  * URL: 
+    * Integrated Security: ```jdbc:sqlserver://<hostname>:<port>;databaseName=<database_name>;integratedSecurity=true```
+    * JDBC Credentials: ```jdbc:sqlserver://<hostname>:<port>;```
   * Driver: ```com.microsoft.sqlserver.jdbc.SQLServerDriver```
 
 * Oracle (1521)
-  * URL: ```jdbc:oracle:thin:<hostname>:<port>/<database_name>```
+  * URL: ```jdbc:oracle:thin:@//<hostname>:<port>/<database_name>```
   * Driver: ```oracle.jdbc.driver.OracleDriver```
 
 * Postgres (1433)
