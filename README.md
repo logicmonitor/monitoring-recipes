@@ -42,6 +42,9 @@ Here's the folder structure in tree form to help you find what you're looking fo
 │           ├── Powershell_WMI_ListAllClassInstances.ps1
 │           ├── Powershell_WMI_ListAllClasses.ps1
 │           └── Powershell_WMI_ListAllNamespaces.ps1
+├── EventSources
+│   ├── Groovy_AWS_RSSFeed
+│   └── Readme.md
 ├── PropertySources
 │   ├── Cisco_Product_Info.groovy
 │   ├── README.md
@@ -56,7 +59,7 @@ Here's the folder structure in tree form to help you find what you're looking fo
     │   └── combine_ds
     └── README.md
 
-17 directories, 34 files
+18 directories, 36 files
 ```
 Updates and new content will be added periodically.
 
