@@ -19,7 +19,9 @@ try
 	have 'integratedSecurity=true'
 	 */
 	def url = "jdbc:sqlserver://" + hostname + ":" + port +  ";databaseName=master;integratedSecurity=false";
-
+	// def url = "jdbc:sqlserver://${hostname};instanceName=${instance};integratedSecurity=true"
+	
+	
 	// Microsoft SQL Driver
 	def driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
