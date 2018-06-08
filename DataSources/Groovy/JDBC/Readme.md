@@ -11,7 +11,7 @@
   * URL: ```jdbc:mysql://<hostname>:<port>```
   * Driver: ```org.mariadb.jdbc.Driver```
 
-* Microsoft SQL (1433) - https://docs.microsoft.com/en-us/sql/connect/jdbc/building-the-connection-url?view=sql-server-2017
+* Microsoft SQL (1433) - [JDBC : Building the connection URL](https://docs.microsoft.com/en-us/sql/connect/jdbc/building-the-connection-url?view=sql-server-2017)
   * URL: 
     * Integrated Security - ```jdbc:sqlserver://<hostname>:<port>;databaseName=<database_name>;integratedSecurity=true;```
     * JDBC Credentials - ```jdbc:sqlserver://<hostname>:<port>;```
