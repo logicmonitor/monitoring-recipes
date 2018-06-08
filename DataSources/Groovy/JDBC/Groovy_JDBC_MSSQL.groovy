@@ -17,10 +17,13 @@ try
 	If you would like to use Integrated Security, script must be executed from from a Windows collector
 	logged in with adequate user privileges to access the MS SQL instance. You may then change the url to
 	have 'integratedSecurity=true'
-	 */
-	def url = "jdbc:sqlserver://" + hostname + ":" + port +  ";databaseName=master;integratedSecurity=false";
+	 */	
+	// Integrated Security = true
 	// def url = "jdbc:sqlserver://${hostname};instanceName=${instance};integratedSecurity=true"
-	
+	// def url = "jdbc:sqlserver://${hostname};integratedSecurity=true"
+
+	// Integrated Security = false
+	def url = "jdbc:sqlserver://" + hostname + ":" + port +  ";databaseName=master;integratedSecurity=false";
 	
 	// Microsoft SQL Driver
 	def driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
