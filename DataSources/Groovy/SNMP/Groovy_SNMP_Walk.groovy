@@ -21,7 +21,7 @@ try
     sampleWalk = Snmp.walk(hostname, snmp_oid, props, snmp_timeout);
 
     // Iterate through each line of the snmp output
-    snmp_out.eachLine()
+    sampleWalk.eachLine()
     { line ->
 
         // split on the '=' sign and get the oid and value.
