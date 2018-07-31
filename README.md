@@ -1,3 +1,5 @@
+# LogicModule Recipes
+
 ## This repository contains scripts and snippet templates of code that may be useful to anyone writing LogicModules.
 
 Here's the folder structure in tree form to help you find what you're looking for:
