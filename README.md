@@ -3,6 +3,7 @@
 ## This repository contains scripts and snippet templates of code that may be useful to anyone writing LogicModules.
 
 [LogicMonitor Communities](https://communities.logicmonitor.com/)
+
 [LogicMonitor Support](https://www.logicmonitor.com/support/)
 
 Here's the folder structure in tree form to help you find what you're looking for:
