@@ -1,6 +1,6 @@
 # LogicModule Recipes
 
-## This repository contains various scripts and code snippets that are be useful to anyone writing LogicModules.
+## This repository contains various scripts and code snippets that can be useful to anyone writing a LogicModule.
 
 [LogicMonitor Communities](https://communities.logicmonitor.com/)
 
