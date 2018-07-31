@@ -71,4 +71,4 @@ Updates and new content will be added periodically.
 
 If you have suggestions and/or improvements, feel free to submit an Issue : Enhancement request.
 
-https://logicmonitor.github.io/monitoring-recipes/
+[Monitoring Recipes GitHub Page](https://logicmonitor.github.io/monitoring-recipes/)
