@@ -39,14 +39,16 @@ try
 	    println database.name + "##" + database.name
 	}
 
-	// Close the connection
-	sql.close()
-
 	return 0;
 }
 catch(Exception e) 
 {
 	println e
 	return 1
+}
+finally
+{
+	// In case we run into any exceptions, we want to ensure our JDBC connection is closed.
+	sql.close()
 }
 

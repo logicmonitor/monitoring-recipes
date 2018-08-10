@@ -1,15 +1,6 @@
-Included Groovy SNMP examples:
+## Groovy SNMP
+
 - SNMP GET
 - SNMP Walk
-- SNMP Walk-As-Map
+- SNMP Walk-As-Map (preferred)
 
-
-```
-.
-├── Groovy_SNMP_Get.groovy
-├── Groovy_SNMP_Walk.groovy
-├── Groovy_SNMP_WalkAsMap.groovy
-└── readme.md
-
-0 directories, 4 files
-```

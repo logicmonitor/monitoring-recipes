@@ -35,4 +35,8 @@ catch(Exception e)
 	println e
 	return 1
 }
-
+finally
+{
+	// In case we run into any exceptions, we want to ensure our JDBC connection is closed.
+	sql.close()
+}
