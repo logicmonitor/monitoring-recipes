@@ -13,7 +13,10 @@ try
     def output = Snmp.get(hostname, entPhysicalSerialNum);
 
     // Print out the serial number.
-    println "auto.Cisco_Serial_Number=" + output
+    println "auto.cisco.serial_number=" + output
+
+    // exit code 0
+    return 0;
 }
 
 // Catch the exception.
@@ -23,6 +26,3 @@ catch (Exception e)
     println e;
     return 1;
 }
-
-// exit code 0
-return 0;

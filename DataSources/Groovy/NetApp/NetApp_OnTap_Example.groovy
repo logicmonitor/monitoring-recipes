@@ -32,25 +32,28 @@ try
 
     // print it out .
     println xo.toPrettyString("");
+
+    // Exit code 0
+    return 0;
 }
 
-// Netapp Server Exception
+// NetApp Server Exception
 catch (NaException e)
 {
     handleException(e);
+    return 1
 }
 
 // Unknown host exception.
 catch (UnknownHostException e)
 {
     handleException(e);
+    return 1
 }
 
 // IO Exceptions.
 catch (IOException e)
 {
     handleException(e);
+    return 1
 }
-
-// Exit code 0
-return 0;

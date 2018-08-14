@@ -1,6 +1,7 @@
-import javax.management.remote.JMXServiceURL
-import javax.management.remote.JMXConnectorFactory
 import org.jboss.remotingjmx.*
+
+import javax.management.remote.JMXConnectorFactory
+import javax.management.remote.JMXServiceURL
 
 /*
 The JMX MBean Enumerator mimics the bean enumeration capabilities of JConsole, 
@@ -26,19 +27,19 @@ WebLogic:
   my_proto = 'jndi/weblogic.management.mbeanservers.runtime'
 */
 
- 
+
 my_host = hostProps.get("system.hostname")
 my_port = hostProps.get("jmx.port")
 my_user = hostProps.get("jmx.user")
 my_pass = hostProps.get("jmx.pass")
 
-my_type  = 'remoting-jmx'
+my_type = 'remoting-jmx'
 my_proto = ''
 
 service_url = 'service:jmx:' + my_type + '://' + my_host + ':' + my_port + '/' + my_proto
 println "JMX Service URL: ${service_url}"
 
-jmx_url    = new JMXServiceURL(service_url)
+jmx_url = new JMXServiceURL(service_url)
 connection = JMXConnectorFactory.connect(jmx_url, ['jmx.remote.credentials': [my_user, my_pass] as String[]])
 
 // get the MBeanServer

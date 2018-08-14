@@ -1,9 +1,10 @@
-import groovy.json.*
-import groovy.time.TimeCategory;
-import java.text.SimpleDateFormat;
+import groovy.json.JsonOutput
+import groovy.time.TimeCategory
 
-try 
-{      
+import java.text.SimpleDateFormat
+
+try
+{
     // Get the RSS feed
     def rssFeed = "http://status.aws.amazon.com/rss/all.rss".toURL().text;
 
@@ -22,7 +23,7 @@ try
         thisRunTime = new Date()
 
         // Calculate last time the script ran
-        use(TimeCategory) 
+        use(TimeCategory)
         {
             lastRunTime = thisRunTime - 20.minutes
         }
@@ -53,9 +54,9 @@ try
     }
 
     // Exit script with return value 0.
-    return (0);      
+    return (0);
 }
-catch(Exception e) 
+catch (Exception e)
 {
     println e
     return 1
