@@ -13,7 +13,8 @@ Here's the folder structure in tree form to help you find what you're looking fo
 ├── DataSources
 │   ├── Groovy
 │   │   ├── CIM
-│   │   │   └── Groovy_CIM_EnumerateClassObjects.groovy
+│   │   │   ├── Groovy_CIM_EnumerateClassObjects.groovy
+│   │   │   └── readme.md
 │   │   ├── Expect
 │   │   │   ├── Groovy_Expect_Example.groovy
 │   │   │   └── Readme.md
@@ -28,13 +29,17 @@ Here's the folder structure in tree form to help you find what you're looking fo
 │   │   │   └── Readme.md
 │   │   ├── JMX
 │   │   │   └── JMX_MBean_Enumerator.groovy
+│   │   ├── JSCH
+│   │   │   ├── JSCH_Example.groovy
+│   │   │   └── Readme.md
 │   │   ├── NetApp
 │   │   │   └── NetApp_OnTap_Example.groovy
 │   │   ├── Readme.md
 │   │   ├── SNMP
+│   │   │   ├── Groovy_SNMP_DateTimeTypeConversionCode.groovy
 │   │   │   ├── Groovy_SNMP_Get.groovy
 │   │   │   ├── Groovy_SNMP_Walk.groovy
-│   │   │   ├── Groovy_SNMP_WalkAsMap.groovy
+│   │   │   ├── Groovy_SNMP_walkAsMap.groovy
 │   │   │   └── readme.md
 │   │   └── WMI
 │   │       └── Groovy_WMI_Query.groovy
@@ -49,23 +54,24 @@ Here's the folder structure in tree form to help you find what you're looking fo
 │           ├── Powershell_WMI_ListAllClasses.ps1
 │           └── Powershell_WMI_ListAllNamespaces.ps1
 ├── EventSources
-│   ├── Groovy_AWS_RSSFeed
+│   ├── Groovy_AWS_RSSFeed.groovy
 │   └── Readme.md
 ├── PropertySources
 │   ├── Cisco_Product_Info.groovy
 │   ├── README.md
 │   └── addCategory_Microsoft_Exchange.groovy
 ├── README.md
-└── Tools
-    ├── DataSource\ Checker
-    │   ├── README.md
-    │   └── ds_checker.rb
-    ├── DataSource\ Combiner
-    │   ├── README.md
-    │   └── combine_ds
-    └── README.md
+├── Tools
+│   ├── DataSource\ Checker
+│   │   ├── README.md
+│   │   └── ds_checker.rb
+│   ├── DataSource\ Combiner
+│   │   ├── README.md
+│   │   └── combine_ds
+│   └── README.md
+└── _config.yml
 
-18 directories, 36 files
+19 directories, 41 files
 ```
 Updates and new content will be added periodically.
 
