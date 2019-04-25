@@ -6,6 +6,10 @@
 
 [LogicMonitor Support](https://www.logicmonitor.com/support/)
 
+New / Updated content will be added periodically.
+
+If you have suggestions and/or improvements, feel free to submit an Issue : Enhancement request.
+
 Here's the folder structure in tree form to help you find what you're looking for:
 
 ```
@@ -73,8 +77,3 @@ Here's the folder structure in tree form to help you find what you're looking fo
 
 19 directories, 41 files
 ```
-Updates and new content will be added periodically.
-
-If you have suggestions and/or improvements, feel free to submit an Issue : Enhancement request.
-
-[Monitoring Recipes GitHub Page](https://logicmonitor.github.io/monitoring-recipes/)
