@@ -1,7 +1,7 @@
 ## Powershell examples to aid in LogicModule development.
 
-- [PowerShell Essentials](https://www.pluralsight.com/paths/windows-powershell-essentials)
-- [Advanced PowerShell](https://www.pluralsight.com/paths/powershell-scripting-and-toolmaking)
+- [PluralSight PowerShell Essentials](https://www.pluralsight.com/paths/windows-powershell-essentials)
+- [PluralSight Advanced PowerShell](https://www.pluralsight.com/paths/powershell-scripting-and-toolmaking)
 - [Microsoft Official Module Browser](https://docs.microsoft.com/en-us/powershell/module/)
 - [Books](https://donjones.com/books/)
 - [PowerShell For Noobs](https://leanpub.com/powershell-4n00bs)
