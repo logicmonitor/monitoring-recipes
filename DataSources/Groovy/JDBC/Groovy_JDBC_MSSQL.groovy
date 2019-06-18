@@ -1,54 +1,45 @@
+/*******************************************************************************
+ *  © 2007-2019 - LogicMonitor, Inc. All rights reserved.
+ ******************************************************************************/
+
 import groovy.sql.Sql
 
 // Get basic info to connect
-def hostname = hostProps.get("system.hostname");
-def user = hostProps.get("jdbc.mssql.username");
-def pass = hostProps.get("jdbc.mssql.password");
+def hostname = hostProps.get("system.hostname")
+def user = hostProps.get("jdbc.mssql.username")
+def pass = hostProps.get("jdbc.mssql.password")
 def port = (hostProps.get("jdbc.mssql.port") ? hostProps.get("jdbc.mssql.port").toInteger() : 1433)
 
-try 
-{	
-	// Construct a SQL instance with a url and a driver
+// Construct a SQL instance with a url and a driver
 
-	/*
-	This example is using SQL authentication, which is why "integratedSecurity"
-	is set to 'false'. This will work from Linux or Windows.
+/*
+This example is using SQL authentication, which is why "integratedSecurity"
+is set to 'false'. This will work from Linux or Windows.
 
-	If you would like to use Integrated Security, script must be executed from from a Windows collector
-	logged in with adequate user privileges to access the MS SQL instance. You may then change the url to
-	have 'integratedSecurity=true'
-	 */	
-	// Integrated Security = true
-	// def url = "jdbc:sqlserver://${hostname};instanceName=${instance};integratedSecurity=true"
-	// def url = "jdbc:sqlserver://${hostname};integratedSecurity=true"
+If you would like to use Integrated Security, script must be executed from from a Windows collector
+logged in with adequate user privileges to access the MS SQL instance. You may then change the url to
+have 'integratedSecurity=true'
+ */
 
-	// Integrated Security = false
-	def url = "jdbc:sqlserver://" + hostname + ":" + port +  ";databaseName=master;integratedSecurity=false";
-	
-	// Microsoft SQL Driver
-	def driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+// Integrated Security = true
+// def url = "jdbc:sqlserver://${hostname};instanceName=${instance};integratedSecurity=true"
+// def url = "jdbc:sqlserver://${hostname};integratedSecurity=true"
 
-	// Create a connection to the SQL server
-	sql = Sql.newInstance(url, user, pass, driver )
+// Integrated Security = false
+def url = "jdbc:sqlserver://" + hostname + ":" + port + ";databaseName=master;integratedSecurity=false"
 
-	// Iterate over query results and list the databases
-	sql.eachRow( 'SELECT [name] FROM [master].[sys].[databases]' )
-	{ database ->
+// Microsoft SQL Driver
+def driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 
-	    // Create an instance for each database
-	    println database.name + "##" + database.name
-	}
+// Create a connection to the SQL server
+sql = Sql.newInstance(url, user, pass, driver)
 
-	return 0;
-}
-catch(Exception e) 
-{
-	println e
-	return 1
-}
-finally
-{
-	// In case we run into any exceptions, we want to ensure our JDBC connection is closed.
-	sql.close()
-}
+// Iterate over query results and list the databases
+sql.eachRow('SELECT [name] FROM [master].[sys].[databases]')
+        { database ->
 
+            // Create an instance for each database
+            println database.name + "##" + database.name
+        }
+
+return 0

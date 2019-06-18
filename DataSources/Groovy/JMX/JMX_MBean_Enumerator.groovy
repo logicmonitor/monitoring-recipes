@@ -11,7 +11,7 @@ import javax.management.remote.JMXServiceURL
 The JMX MBean Enumerator mimics the bean enumeration capabilities of JConsole, 
 but in groovy for non-gui access. 
 
-In addtion to host/port/user/pass, you'll need to configure the JMX type and 
+In addition to host/port/user/pass, you'll need to configure the JMX type and
 protocol to corresponding how your application server exposes JMX.
 
 Tomcat:
