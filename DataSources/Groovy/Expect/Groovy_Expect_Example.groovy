@@ -1,3 +1,7 @@
+/*******************************************************************************
+ *  © 2007-2019 - LogicMonitor, Inc. All rights reserved.
+ ******************************************************************************/
+
 // Additional examples found on LogicMonitor support site : https://www.logicmonitor.com/support/terminology-syntax/scripting-support/groovyexpect-text-based-interaction/
 
 // import the logicmonitor expect helper class
@@ -8,8 +12,7 @@ hostname = hostProps.get("system.hostname");
 userid = hostProps.get("ssh.user");
 passwd = hostProps.get("ssh.pass");
 
-try
-{
+try {
     // initiate an ssh connection to the host using the provided credentials
     ssh_connection = Expect.open(hostname, userid, passwd);
 
@@ -34,31 +37,28 @@ try
 
     // now let's iterate over each line of the we collected
     cmd_output.eachLine
-    { line ->
+            { line ->
 
-        // does this line contain the characters "-rw"
-        if (line =~ /\-rw/)
-        {
-            // yes -- this is the line containing the output of our ls command
-            // tokenize the cmd output on one-or-more whitespace characters
-            tokens = line.split(/\s+/);
+                // does this line contain the characters "-rw"
+                if (line =~ /\-rw/) {
+                    // yes -- this is the line containing the output of our ls command
+                    // tokenize the cmd output on one-or-more whitespace characters
+                    tokens = line.split(/\s+/);
 
-            // print the 5th element in the array, which is the size
-            println tokens[4];
-        }
-    }
+                    // print the 5th element in the array, which is the size
+                    println tokens[4];
+                }
+            }
 
 // return with a response code that indicates we ran successfully
     return 0
 
 }
-catch (Exception e)
-{
+catch (Exception e) {
     println e
     return 1
 
 }
-finally
-{
+finally {
     ssh_connection.expectClose()
 }

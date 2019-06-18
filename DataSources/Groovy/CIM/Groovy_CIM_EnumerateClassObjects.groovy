@@ -1,3 +1,7 @@
+/*******************************************************************************
+ *  © 2007-2019 - LogicMonitor, Inc. All rights reserved.
+ ******************************************************************************/
+
 // Lists all of the supported SMI-S classes, and their properties.
 
 // You can set 'filter' to a complete or partial Class name to restrict.
@@ -29,25 +33,20 @@ final Subject subject = new Subject();
 subject.getPrincipals().add(new UserPrincipal(cim_user));
 subject.getPrivateCredentials().add(new PasswordCredential(cim_pass));
 
-try
-{
+try {
     client.initialize(path, subject, Locale.getAvailableLocales());
 }
-catch (Exception e)
-{
+catch (Exception e) {
     e.printStackTrace();
     print e.toString();
 }
 
 println "All Class objects and properties, unless 'filter' set: "
 
-try
-{
+try {
     final CloseableIterator<CIMClass> iterator = client.enumerateClasses(new CIMObjectPath("", namespace), true, false, false, true);
-    try
-    {
-        while (iterator.hasNext())
-        {
+    try {
+        while (iterator.hasNext()) {
             final CIMClass objIter = iterator.next();
             //println (objIter.toString());
 
@@ -56,27 +55,23 @@ try
             classes << className;
 
             // If filtered, only show that class and it's properties.
-            if (filter == "" || className.toLowerCase().contains(filter.toLowerCase()))
-            {
+            if (filter == "" || className.toLowerCase().contains(filter.toLowerCase())) {
                 println objIter.getObjectPath();
 
                 final Iterator iterator2 = objIter.getProperties().iterator();
 
-                while (iterator2.hasNext())
-                {
+                while (iterator2.hasNext()) {
                     final CIMClassProperty propIter = iterator2.next();
                     println('\t' + propIter.getName());
                 }
             }
         }
     }
-    finally
-    {
+    finally {
         iterator.close();
     }
 }
-catch (WBEMException e)
-{
+catch (WBEMException e) {
     e.printStackTrace();
     print e.toString();
 }
@@ -85,9 +80,9 @@ catch (WBEMException e)
 println "All classes: \n";
 
 classes.sort().each
-{ it ->
+        { it ->
 
-    print it + "\n";
-};
+            print it + "\n";
+        };
 
 return 0;
