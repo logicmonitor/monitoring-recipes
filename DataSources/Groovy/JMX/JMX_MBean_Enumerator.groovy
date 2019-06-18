@@ -1,3 +1,7 @@
+/*******************************************************************************
+ *  © 2007-2019 - LogicMonitor, Inc. All rights reserved.
+ ******************************************************************************/
+
 import org.jboss.remotingjmx.*
 
 import javax.management.remote.JMXConnectorFactory
@@ -46,91 +50,79 @@ connection = JMXConnectorFactory.connect(jmx_url, ['jmx.remote.credentials': [my
 def mbeanServer = connection.MBeanServerConnection
 println "Total MBeans: ${mbeanServer.MBeanCount}"
 
-try
-{
+try {
     // get a list of bean names from server
     mbeanNames = mbeanServer.queryNames(null, null)
 }
-catch (Exception mbeanException)
-{
+catch (Exception mbeanException) {
     println "Oops! Mbean Query Names Exception: " + mbeanException;
 }
 
 // iterate over bean names
 mbeanNames.each
-{ beanName ->
+        { beanName ->
 
-    // init some variables
-    def mbeanObject = null;
-    def mbeanAttributeValues = null;
-    def mbeanAttributeNames = null;
+            // init some variables
+            def mbeanObject = null;
+            def mbeanAttributeValues = null;
+            def mbeanAttributeNames = null;
 
-    println "\n==========\nBEAN NAME: " + beanName
+            println "\n==========\nBEAN NAME: " + beanName
 
-    try
-    {
-        // get a list of bean objects
-        mbeanObject = new GroovyMBean(mbeanServer, beanName)
-    }
-    catch (Exception mbeanException)
-    {
-        println "Oops! Mbean Exception: " + mbeanException;
-    }
-
-    try
-    {
-        // get a list of bean attribute names
-        mbeanAttributeNames = mbeanObject.listAttributeNames();
-    }
-    catch (Exception namesException)
-    {
-        println "Oops! Attr Name Exception: " + namesException;
-    }
-
-    try
-    {
-        // get a list of bean attribute values
-        mbeanAttributeValues = mbeanObject.listAttributeValues();
-    }
-    catch (Exception valuesException)
-    {
-        println "Oops! Attr Value Exception: " + valuesException;
-    }
-
-    // Iterate over this beans attributes
-    mbeanAttributeNames.each
-    { attrName ->
-
-        println "  ATTRIBUTE:     ${attrName}";
-        println "  DESCRIPTION:   ${mbeanObject.describeAttribute(attrName)}";
-
-        // are there values for this attribute?
-        if (mbeanAttributeValues)
-        {
-            // yes. iterate over each attr value
-            mbeanAttributeValues.each
-            { value ->
-
-                // separate name & value
-                (x, y) = value.split(" :");
-
-                // is this the value that corresponds to this attr name?
-                if (x == attrName)
-                {
-                    // yes. print it
-                    println "  VALUE: ${y}";
-                }
+            try {
+                // get a list of bean objects
+                mbeanObject = new GroovyMBean(mbeanServer, beanName)
             }
-        }
-        else
-        {
-            print "  NO VALUE"
-        }
+            catch (Exception mbeanException) {
+                println "Oops! Mbean Exception: " + mbeanException;
+            }
 
-        print "\n"
-        print "----------\n"
-    }
-}
+            try {
+                // get a list of bean attribute names
+                mbeanAttributeNames = mbeanObject.listAttributeNames();
+            }
+            catch (Exception namesException) {
+                println "Oops! Attr Name Exception: " + namesException;
+            }
+
+            try {
+                // get a list of bean attribute values
+                mbeanAttributeValues = mbeanObject.listAttributeValues();
+            }
+            catch (Exception valuesException) {
+                println "Oops! Attr Value Exception: " + valuesException;
+            }
+
+            // Iterate over this beans attributes
+            mbeanAttributeNames.each
+                    { attrName ->
+
+                        println "  ATTRIBUTE:     ${attrName}";
+                        println "  DESCRIPTION:   ${mbeanObject.describeAttribute(attrName)}";
+
+                        // are there values for this attribute?
+                        if (mbeanAttributeValues) {
+                            // yes. iterate over each attr value
+                            mbeanAttributeValues.each
+                                    { value ->
+
+                                        // separate name & value
+                                        (x, y) = value.split(" :");
+
+                                        // is this the value that corresponds to this attr name?
+                                        if (x == attrName) {
+                                            // yes. print it
+                                            println "  VALUE: ${y}";
+                                        }
+                                    }
+                        } else {
+                            print "  NO VALUE"
+                        }
+
+                        print "\n"
+                        print "----------\n"
+                    }
+        }
 
 println "DONE!"
 

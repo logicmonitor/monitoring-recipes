@@ -1,23 +1,26 @@
-import com.santaba.agent.groovyapi.http.*
-import com.santaba.agent.groovyapi.jmx.*
+/*******************************************************************************
+ *  © 2007-2019 - LogicMonitor, Inc. All rights reserved.
+ ******************************************************************************/
+
 import netapp.manage.NaElement
 import netapp.manage.NaException
 import netapp.manage.NaServer
-import org.xbill.DNS.*
 
 // set variables.
-hostname   = hostProps.get("system.hostname");
-username   = hostProps.get("netapp.user");
-password   = hostProps.get("netapp.pass");
+hostname = hostProps.get("system.hostname");
+username = hostProps.get("netapp.user");
+password = hostProps.get("netapp.pass");
 
 // Try the connection.
-try
-{
+try {
+
     // instantiate a connection
-    NaServer s = new NaServer(hostname, 1 , 31);
+    // NOTE : Example OnTAP version here is v1.31.
+    NaServer s = new NaServer(hostname, 1, 31);
+
     s.setServerType(NaServer.SERVER_TYPE_FILER);
     s.setTransportType(NaServer.TRANSPORT_TYPE_HTTPS);
-    s.setPort(443);
+    s.setPort(443); // Port 443 used for HTTPS
     s.setStyle(NaServer.STYLE_LOGIN_PASSWORD);
     s.setAdminUser(username, password);
 
@@ -25,7 +28,7 @@ try
     NaElement api = new NaElement("snapshot-get-iter");
 
     // limit output to 5000 records.
-    api.addNewChild("max-records","5000");
+    api.addNewChild("max-records", "5000");
 
     // invoke the command.
     NaElement xo = s.invokeElem(api);
@@ -33,27 +36,28 @@ try
     // print it out .
     println xo.toPrettyString("");
 
+    /*
+    The output can be easily passed into XmlSlurper for easier parsing.
+     */
+
     // Exit code 0
     return 0;
 }
 
 // NetApp Server Exception
-catch (NaException e)
-{
+catch (NaException e) {
     handleException(e);
     return 1
 }
 
 // Unknown host exception.
-catch (UnknownHostException e)
-{
+catch (UnknownHostException e) {
     handleException(e);
     return 1
 }
 
 // IO Exceptions.
-catch (IOException e)
-{
+catch (IOException e) {
     handleException(e);
     return 1
 }
