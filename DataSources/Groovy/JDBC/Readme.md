@@ -2,6 +2,8 @@
 
 Used to connect to various types of databases in order to execute certain commands and/or queries.
 
+##### [Official Groovy SQL Java Docs](http://docs.groovy-lang.org/latest/html/api/groovy/sql/Sql.html)
+
 ## LogicMonitor Support Pages
 
 #### [Authentication & Credentials](https://www.logicmonitor.com/support/getting-started/advanced-logicmonitor-setup/defining-authentication-credentials/)
