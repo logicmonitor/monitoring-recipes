@@ -1,4 +1,5 @@
-## Groovy <img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/DataSources/Groovy/Groovy_Logo.png" width="10%">
+<img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/DataSources/Groovy/Groovy_Logo.png" width="10%">
+## Groovy 
 
 Here you will find various Groovy examples and reference documentation to aid in LogicModule development.
 
