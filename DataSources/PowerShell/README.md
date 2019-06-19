@@ -1,5 +1,7 @@
 ## PowerShell
 
+<img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/LM_Logo.png" width="20%">
+
 Here you will find various PowerShell examples and reference documentation to aid in LogicModule development.
 
 LogicMonitor
