@@ -4,20 +4,21 @@ $hostname = '##SYSTEM.HOSTNAME##'
 ## Set our namespace 
 $namespace = "root\cimv2"
 
-## Set out WMI class.
-$class = "Win32_PerfRawData_Tcpip_NetworkInterface"
+## Set your query.
+$query = "SELECT * FROM Win32_LogicalDisk"
 
 ## Set variable to get out wmi objects
-$output = Get-WmiObject -namespace $namespace -ComputerName $hostname -class $class
+$output = Get-WmiObject -Namespace $namespace -ComputerName $hostname -Query $query
 
 ## Iterate through each output from our query.
-foreach ($instance in $output)
-{   
+foreach ($instance in $output) {   
+
     ## Set variables.
     $name = $instance.Name
 
     ## Print it all out.
-    Write-Host "$name##$name"
+    Write-Host "$name.FreeSpace=$($instance.FreeSpace)"
+    Write-Host "$name.Size=$($instance.Size)"
 }
 
 ## Make sure we fully terminate the script.

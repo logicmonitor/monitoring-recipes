@@ -5,7 +5,7 @@ $hostname = '##SYSTEM.HOSTNAME##'
 $namespace = "root\cimv2"
 
 ## Set our WMI class.
-$class = "Win32_PerfRawData_Tcpip_NetworkInterface"
+$class = "Win32_LogicalDisk"
 
 ## Set variable to get out wmi objects
 $output = Get-WmiObject -namespace $namespace -ComputerName $hostname -class $class
