@@ -1,6 +1,7 @@
-## Scripted EventSources Example
+## EventSources
 
-Scripted EventSources give you the ability to pull in event-based textual data in order to provide you with full breathe of coverage of your infrastructure.
+EventSources define monitoring and alerting activity for non-numeric event-based data. 
 
 #### Documentation
-[Scripted EventSource Support Page](https://www.logicmonitor.com/support/eventsources/types-of-events/script-eventsources/)
+ - [What Are EventSources?](https://www.logicmonitor.com/support/eventsources/eventsources-overview/about-eventsources/)
+ - [Scripted EventSources](https://www.logicmonitor.com/support/eventsources/types-of-events/script-eventsources/)
