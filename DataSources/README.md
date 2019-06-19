@@ -69,7 +69,7 @@ volume2.write_latency=67890
 For more information on Batchscript Collection, visit our support site : [Batchscript Collection](https://www.logicmonitor.com/support/datasources/data-collection-methods/batchscript-data-collection/)
 
 
-#### Script Collection
+### Script Collection
 In standard __SCRIPT__ mode, the collection script is run for each of the DataSource instances at each collection interval. 
 
 This means that in a multi-instance DataSource that has discovered 5 instances, the collection script will be run 5 times at every collection interval. Each of these data collection “tasks” is independent from one another. 
