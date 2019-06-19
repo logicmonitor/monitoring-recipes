@@ -1,6 +1,6 @@
 # LogicModule Recipes
 
-![text](https://github.com/logicmonitor/monitoring-recipes/blob/master/LM_Logo.png=250x250)
+![text](https://github.com/logicmonitor/monitoring-recipes/blob/master/LM_Logo.png)
 
 This repository contains various scripts and code snippets that can be useful to anyone writing a LogicModule.
 
