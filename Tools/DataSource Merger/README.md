@@ -3,7 +3,7 @@ This script combines multiple xml files into one file. Incredibly useful when wo
 
 #### How to use:
 Terminal: 
-  - Individual:`perl combine_ds datasource1.xml datasource2.xml`
+  - Individual: `perl combine_ds datasource1.xml datasource2.xml`
   - Wildcard: `perl combine_ds datasource_*`
 
 

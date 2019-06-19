@@ -31,6 +31,7 @@ try {
 
     // did we locate an exchange service?
     if (is_exchange) {
+
         // yes, add the exchange to system.categories
         println "system.categories=MSExchange"
     }
