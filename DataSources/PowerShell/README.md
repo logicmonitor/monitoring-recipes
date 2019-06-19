@@ -1,6 +1,6 @@
-## PowerShell
+<img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/DataSources/PowerShell/PowerShell_Logo.png" width="20%">
 
-<img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/LM_Logo.png" width="20%">
+## PowerShell
 
 Here you will find various PowerShell examples and reference documentation to aid in LogicModule development.
 
