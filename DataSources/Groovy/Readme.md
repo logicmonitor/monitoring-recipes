@@ -1,25 +1,12 @@
-LogicMonitor Scripted Groovy Support Page
+## Groovy
 
-https://www.logicmonitor.com/support/terminology-syntax/scripting-support/embedded-groovy-scripting/
+Here you will find various Groovy examples and reference documentation to aid in LogicModule development.
 
-```
-.
-├── Expect
-│   ├── Groovy_Expect_Example.groovy
-│   └── Readme.md
-├── Groovy.iml
-├── JDBC
-│   └── Microsoft\ SQL
-│       └── Groovy_JDBC_MSSQL_Query.groovy
-├── NetApp
-│   └── NetApp_OnTap_Example.groovy
-├── Readme.md
-├── SNMP
-│   ├── Groovy_SNMP.groovy
-│   ├── Groovy_SNMP_V3.groovy
-│   └── Groovy_SNMP_walkAsMap.groovy
-└── WMI
-    └── Groovy_WMI_Query.groovy
+LogicMonitor
+ - [Embedded Groovy Scripting](https://www.logicmonitor.com/support/terminology-syntax/scripting-support/embedded-groovy-scripting/)
+ - [Groovy Tips & Tricks](https://www.logicmonitor.com/support/terminology-syntax/scripting-support/groovy-tips-tricks/)
 
-6 directories, 10 files
-```
+External
+ - [Apache Groovy Programming Language](http://groovy-lang.org/)
+ - [Groovy Documentation](http://groovy-lang.org/documentation.html)
+ - [Groovy Tutorials](https://www.tutorialspoint.com/groovy/)
