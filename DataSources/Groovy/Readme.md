@@ -1,4 +1,4 @@
-<img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/DataSources/Groovy/Groovy_Logo.png" width="15%">
+<img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/Tools/Images/Groovy_Logo.png" width="15%">
 
 ## Groovy 
 
