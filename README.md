@@ -14,6 +14,8 @@ Check out the latest release notes for new and updated LogicModules here. You ca
 ## Check the LogicMonitor Repository
 The Monitoring Engineering team is constantly hard at work delivering the latest and greatest, so make sure you check out the LogicMonitor repository inside your portal to see if there is already existing monitoring integrations for your various technologies.
 
+<img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/Tools/Images/LogicMonitor_Repository.png">
+
 ## Share
 #### [LogicMonitor Communities](https://communities.logicmonitor.com/)
 Want to share your cool DataSource with others ? Hop onto the communities and let them know!!!
