@@ -16,7 +16,7 @@ Register with your email and get them sent to you as soon as they are released.
 ## Check the LogicMonitor Repository
 The Monitoring Engineering team is constantly hard at work delivering the latest and greatest, so make sure you check out the __LogicMonitor Repository__ inside your portal to see if there is already existing monitoring integrations for your various technologies.
 
-<img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/Tools/Images/LogicMonitor_Repository.png" width="50%">
+<img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/Tools/Images/LogicMonitor_Repository.png" width="75%">
 
 ## Share
 #### [LogicMonitor Communities](https://communities.logicmonitor.com/)
