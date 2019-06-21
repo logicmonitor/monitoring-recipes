@@ -12,7 +12,7 @@ Check out the latest release notes for new and updated LogicModules here. You ca
 #### [Release Notes](https://www.logicmonitor.com/releasenotes/)
 
 ## Check the LogicMonitor Repository
-The Monitoring Engineering team is constantly hard at work delivering the latest and greatest, so make sure you check out the LogicMonitor repository inside your portal to see if there is already existing monitoring integrations for your various technologies.
+The Monitoring Engineering team is constantly hard at work delivering the latest and greatest, so make sure you check out the __LogicMonitor Repository__ inside your portal to see if there is already existing monitoring integrations for your various technologies.
 
 <img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/Tools/Images/LogicMonitor_Repository.png">
 
@@ -27,4 +27,4 @@ Ask questions, answer others, and see what others are working on.
  * Submit a Pull Request and we'll review it.
  * Submit an issue (enhancement / bug)
 
-New and updated content will be added periodically.
+*New & updated content will be added periodically.
