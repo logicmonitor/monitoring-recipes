@@ -27,4 +27,4 @@ Ask questions, answer others, and see what others are working on.
  * Submit a Pull Request and we'll review it.
  * Submit an issue (enhancement / bug)
 
-*New & updated content will be added periodically.
+*New & updated content will be added periodically.*
