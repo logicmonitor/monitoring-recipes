@@ -3,8 +3,7 @@
 This repository contains various scripts and code snippets that can be useful to anyone writing a LogicModule.
 
 ## Help & Documentation
-#### [LogicMonitor Support & Documentation](https://www.logicmonitor.com/support/)
-One stop shop for all things LogicMonitor related.
+#### [LogicMonitor Support & Documentation](https://www.logicmonitor.com/support/) - One stop shop for all things LogicMonitor related.
 
 ## Release Notes
 Check out the latest release notes for new and updated LogicModules. 
