@@ -4,4 +4,7 @@ The LogicMonitor REST API will allow you to programmatically query and manage yo
 
 [Using LogicMonitor's REST API](https://www.logicmonitor.com/support/rest-api-developers-guide/overview/using-logicmonitors-rest-api/)
 
-[REST API Developers Guide](https://www.logicmonitor.com/support/rest-api-developers-guide/)
+[REST API Developers Guide](https://www.logicmonitor.com/support/rest-api-developers-guide/v2/)
+
+### Documentation
+[Documentation](https://www.logicmonitor.com/support-files/rest-api-developers-guide/sdks/docs/)
