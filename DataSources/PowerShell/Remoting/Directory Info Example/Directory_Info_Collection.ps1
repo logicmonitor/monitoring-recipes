@@ -1,6 +1,6 @@
 <# © 2007-2019 - LogicMonitor, Inc.  All rights reserved. #>
 
-#######################      Active Discovery      #########################
+#######################      Data Collection      #########################
 # Purpose:
 # Author:
 #------------------------------------------------------------------------------------------------------------
@@ -34,9 +34,9 @@ $scriptBlock = {
     foreach ($item in $items) {
         $wildvalue = $item.Name
         $info = Get-ChildItem -Path "$path\$wildvalue" -recurse | Measure-Object -Property length -Sum
-    Write-Host "$wildvalue.Count=$($info.Count)"
-    Write-Host "$wildvalue.bytes=$($info.Sum)"
-}
+        Write-Host "$wildvalue.Count=$($info.Count)"
+        Write-Host "$wildvalue.bytes=$($info.Sum)"
+    }
 }
 
 #------------------------------------------------------------------------------------------------------------
@@ -51,14 +51,16 @@ try {
     elseif (([string]::IsNullOrWhiteSpace($wmi_user) -and [string]::IsNullOrWhiteSpace($wmi_pass)) -or (($wmi_user -like '*WMI.USER*') -and ($wmi_pass -like '*WMI.PASS*'))) {
         # no
         $response = Invoke-Command -ComputerName $hostname -ScriptBlock $scriptBlock
-    } else {
+    }
+    else {
         # yes. convert user/password into a credential string
         $remote_pass = ConvertTo-SecureString -String $wmi_pass -AsPlainText -Force;
         $remote_credential = New-Object -typename System.Management.Automation.PSCredential -argumentlist $wmi_user, $remote_pass;
         $response = Invoke-Command -ComputerName $hostname -Credential $remote_credential -ScriptBlock $scriptBlock
     }
     exit 0
-} catch {
+}
+catch {
     # exit code of non 0 will mean the script failed and not overwrite the instances that have already been found
     throw $Error[0].Exception
     exit 1
