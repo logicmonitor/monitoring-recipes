@@ -1,1 +1,2 @@
-## Examples 
+## Examples
+1. PropertySource with enumeration - This script can be modified for use in a Property Source discovering multiple properties. In addition to discovering the properties, if there are any enumerations defined in the MIB, they can be added to the propstoget map below and the script will replace the polled value with the enumerated word. For example, instead of saving a "2" for .1.3.6.1.4.1.15450.2.2.5.11.0, the word "ping(2)" would be stored in the property instead. The included MGUARDB-MIB.txt file details the enumerations if you want to see the source of the definitions shown.
