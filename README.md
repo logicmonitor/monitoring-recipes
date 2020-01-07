@@ -19,7 +19,7 @@ The Monitoring Engineering team is constantly hard at work delivering the latest
 <img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/Tools/Images/LogicMonitor_Repository.png" width="80%">
 
 ## Share
-Want to share your cool DataSource with others ? Hop onto the communities and let them know!!!
+Want to share your cool LogicModules with others ? Hop onto the communities and share your locator codes!!!
 
 Ask questions, answer others, and see what others are working on.
 
