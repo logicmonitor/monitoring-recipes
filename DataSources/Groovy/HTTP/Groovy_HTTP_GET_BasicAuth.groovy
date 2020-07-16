@@ -6,8 +6,11 @@ import com.santaba.agent.groovyapi.http.HTTP
 import groovy.json.JsonSlurper
 
 hostname = hostProps.get("system.hostname")
+user = hostProps.get("vmanage.user")
+password = hostProps.get("vmanage.pass")
 port = hostProps.get("vmanage.port")
 url = "https://${hostname}:${port}/"
+headers = ["Content-Type": "application/x-www-form-urlencoded"]
 
 httpClient = HTTP.open(hostname, 443)
 
@@ -44,7 +47,7 @@ return success ? 0 : 1
 def httpGET(endpoint) {
 
     def get_endpoint = url + endpoint
-    httpClient.get(get_endpoint)
+    httpClient.get(get_endpoint, user, password, headers)
 
     if (httpClient.getStatusCode() == 200) {
 
