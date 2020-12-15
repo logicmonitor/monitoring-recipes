@@ -1,5 +1,5 @@
 /*******************************************************************************
- *  © 2007-2019 - LogicMonitor, Inc. All rights reserved.
+ *  © 2007-2020 - LogicMonitor, Inc. All rights reserved.
  ******************************************************************************/
 
 import com.santaba.agent.groovyapi.win32.WMI
@@ -39,12 +39,15 @@ try {
     println '*** Query first output:'
     println wmi_output_first;
 
+    println '*** Iterating through all from wmi_output_all'
     // example of iterating through the map of values.
-    wmi_output_all.each {
-        k, v ->
+    wmi_output_all.each { entry ->
+
+        entry.each{ k, v ->
 
             // print k=v
             println "${k}=${v}"
+        }
     }
 
     /*
