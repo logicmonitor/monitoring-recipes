@@ -1,0 +1,11 @@
+name: wmi-query
+language: powershell
+pattern: wmi
+applicable_module_types:
+  - datasource
+  - propertysource
+tags: [building-block, wmi, windows]
+status: implemented
+requires_snippets: false
+official_docs:
+  - https://www.logicmonitor.com/support/logicmodules/datasources/data-collection-methods/scripted-data-collection-overview

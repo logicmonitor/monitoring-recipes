@@ -1,0 +1,11 @@
+name: wmi-discovery
+language: powershell
+pattern: wmi
+applicable_module_types:
+  - datasource
+tags: [building-block, wmi, active-discovery, windows]
+status: implemented
+requires_snippets: false
+official_docs:
+  - https://www.logicmonitor.com/support/active-discovery
+  - https://www.logicmonitor.com/support/logicmodules/datasources/active-discovery/script-active-discovery

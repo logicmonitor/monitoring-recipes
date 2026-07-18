@@ -1,0 +1,17 @@
+name: ssh-exec
+language: groovy
+pattern: ssh
+applicable_module_types:
+  - datasource
+  - configsource
+  - diagnosticsource
+tags: [building-block, ssh]
+status: implemented
+requires_snippets: true
+snippets_used:
+  - name: lm.remote
+    min_version: "0.6.0"
+  - name: lm.emit
+    min_version: "0"
+official_docs:
+  - https://www.logicmonitor.com/support/logicmodules/datasources/data-collection-methods/scripted-data-collection-overview

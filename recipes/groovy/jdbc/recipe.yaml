@@ -1,0 +1,15 @@
+name: jdbc
+language: groovy
+pattern: jdbc
+applicable_module_types:
+  - datasource
+tags: [building-block, jdbc, sql]
+status: implemented
+requires_snippets: true
+snippets_used:
+  - name: lm.sql
+    min_version: "0"
+  - name: lm.emit
+    min_version: "0"
+official_docs:
+  - https://www.logicmonitor.com/support/logicmodules/datasources/data-collection-methods/scripted-data-collection-overview

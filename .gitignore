@@ -1,3 +1,7 @@
 .idea
 Groovy.iml
 .DS_Store
+*.iml
+.cursor/
+PROJECT.md
+example-code/**
