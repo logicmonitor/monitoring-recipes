@@ -9,6 +9,7 @@ Best-practice script snippets, documentation, and Agent Skills for building [Log
 | [`recipes/`](recipes/) | Copy-paste Groovy and PowerShell script building blocks | Engineers writing module scripts |
 | [`docs/`](docs/) | Module-type guides, concepts, and decision trees | Engineers learning LM module authoring |
 | [`skills/`](skills/) | Installable [Agent Skill](https://agentskills.io/specification) for AI-assisted authoring | Engineers using Cursor, Claude Code, or other Agent Skills-compatible tools |
+| [`LogicMonitor_LogicModule_Repo_Download/`](LogicMonitor_LogicModule_Repo_Download/) | Portal export/search scripts for mining Exchange modules | Engineers comparing recipes to live LogicModules |
 
 ## Quick start
 
