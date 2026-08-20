@@ -37,6 +37,7 @@ For POST requests or custom auth flows, extend using `http.rawPost()` — see [s
 | DataSource (Script) | `emit.dp("metricName", value)` | Map API JSON fields |
 | PropertySource | `emit.property("auto.name", value)` | Inventory/metadata from API |
 | DataSource (BatchScript) | `emit.dp(wildvalue, "field", value)` | Multi-instance from API array |
+| LogSource | JSON `{events:[{message}]}` | Use [`script-logs`](../script-logs/) |
 
 ## Related docs
 

@@ -75,7 +75,7 @@ walkResult.each { index, value ->
 return 0
 ```
 
-See `recipes/groovy/snmp-walk/` and `recipes/groovy/snmp-get/`.
+See `recipes/groovy/snmp-walk/` and `recipes/groovy/snmp-get/` for collection, and `recipes/groovy/snmp-discovery/` for Active Discovery.
 
 ## SSH execution (lm.remote)
 
@@ -85,7 +85,7 @@ def output = remote.exec(hostProps, 'INSERT_COMMAND_HERE')
 // Parse output and emit via lm.emit
 ```
 
-See `recipes/groovy/ssh-exec/`.
+See `recipes/groovy/ssh-exec/` for one-shot commands and `recipes/groovy/ssh-interactive-config/` for ConfigSource collection.
 
 ## HTTP REST (proto.http)
 
@@ -95,7 +95,7 @@ def http = httpMod.httpSnippetFactory(hostProps)
 def response = http.rawGet('https://api.example.com/endpoint', ['Authorization': 'Bearer token'])
 ```
 
-See `recipes/groovy/http-rest/`.
+See `recipes/groovy/http-rest/` for metrics, `recipes/groovy/script-logs/` for LogSources, and `recipes/groovy/script-events/` for EventSources.
 
 ## Output with lm.emit
 
@@ -159,4 +159,4 @@ Return `0` on success. Non-zero on failure.
 
 ## Recipes
 
-See `recipes/groovy/` in the monitoring-recipes repo.
+See `recipes/groovy/` in the monitoring-recipes repo. JSON module types: `script-logs`, `script-events`, `topology-edges`, `diagnostic`, `remediation`.

@@ -67,6 +67,11 @@ if (alertProps.containsKey("alert.datapoint")) {
 }
 ```
 
+## Related recipes
+
+- [`groovy/remediation`](../../recipes/groovy/remediation/)
+- [`powershell/winrm-exec`](../../recipes/powershell/winrm-exec/)
+
 ## Official documentation
 
 - [Creating RemediationSources](https://www.logicmonitor.com/support/logicmodules/remediationsources/creating-remediationsources/)

@@ -10,9 +10,18 @@ All Groovy recipes require **LogicMonitor_Collector_Snippets** and follow [scrip
 |---------|------|----------|---------------------|-------------------|--------|
 | SNMP walk | `recipes/groovy/snmp-walk/` | proto.snmp, lm.emit | DataSource, PropertySource, AD | DS: `key=value` · PS: `auto.prop=value` · AD: `wild##alias` | Ready |
 | SNMP get | `recipes/groovy/snmp-get/` | proto.snmp, lm.emit | DataSource, PropertySource | DS: `key=value` · PS: `auto.prop=value` | Ready |
+| SNMP discovery | `recipes/groovy/snmp-discovery/` | proto.snmp, lm.emit | Active Discovery | `wildvalue##wildalias` via `emit.instance` | Ready |
 | SSH exec | `recipes/groovy/ssh-exec/` | lm.remote, lm.emit | DataSource, ConfigSource, DiagnosticSource | DS: `key=value` · Config: raw text · Diag: JSON `{data,format}` | Ready |
+| SSH interactive config | `recipes/groovy/ssh-interactive-config/` | lm.remote | ConfigSource | Raw config text · BatchScript JSON `data.<wildvalue>.configuration` | Ready |
 | HTTP REST | `recipes/groovy/http-rest/` | proto.http, lm.cache, lm.emit | DataSource, PropertySource | DS: `key=value` · PS: `auto.prop=value` | Ready |
+| Script Logs | `recipes/groovy/script-logs/` | proto.http, lm.cache | LogSource | JSON `{events:[{message}]}` | Ready |
+| Script Events | `recipes/groovy/script-events/` | proto.http | EventSource | JSON `{events:[{happenedOn,severity,message}]}` | Ready |
 | JDBC | `recipes/groovy/jdbc/` | lm.sql, lm.emit | DataSource | DS Script: `key=value` · BatchScript: `instance.key=value` | Ready |
+| Topology edges | `recipes/groovy/topology-edges/` | lm.topo | TopologySource | `registerEdge` + `generateTopology` | Ready |
+| addCategory | `recipes/groovy/add-category/` | lm.emit | PropertySource | `system.categories=...` | Ready |
+| addERI | `recipes/groovy/add-eri/` | lm.topo | PropertySource (ERISource) | `emitEri` + `printEriArray` | Ready |
+| Diagnostic | `recipes/groovy/diagnostic/` | lm.remote | DiagnosticSource | JSON `{data,format}` + alertProps fallback | Ready |
+| Remediation | `recipes/groovy/remediation/` | lm.remote | RemediationSource | JSON `{data,format,remediationStatus}` | Ready |
 
 ## PowerShell
 

@@ -10,7 +10,7 @@ license: Apache-2.0
 compatibility: LogicMonitor Collector; references monitoring-recipes repo
 metadata:
   author: logicmonitor
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # LogicMonitor Module Authoring

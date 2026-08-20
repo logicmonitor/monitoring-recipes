@@ -44,3 +44,4 @@ Uncomment the appropriate `emit` line in `script.groovy` for your module type.
 - [PropertySource](../../../docs/module-types/propertysource.md)
 - [Active Discovery](../../../docs/concepts/active-discovery.md)
 - [Snippets catalog](../../../skills/logicmonitor-authoring/references/snippets-catalog.md)
+- [snmp-discovery](../snmp-discovery/) — dedicated Active Discovery variant

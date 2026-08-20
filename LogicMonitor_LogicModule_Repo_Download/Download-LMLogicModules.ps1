@@ -88,7 +88,8 @@ param(
         'functions',
         'oids',
         'batchjobs',
-        'diagnosticsources'
+        'diagnosticsources',
+        'remediationsources'
     )]
     [string[]]$Type = @('All'),
 
@@ -509,6 +510,7 @@ $script:TypeCatalog = @(
     @{ ApiType = 'oids';               Folder = 'oids';             Extension = 'json'; Format = 'file'; ListCommand = 'Get-LMSysOIDMap' }
     @{ ApiType = 'batchjobs';          Folder = 'batchjobs';        Extension = 'xml';  Format = 'xml';  ListCommand = $null }
     @{ ApiType = 'diagnosticsources';  Folder = 'diagnosticsources'; Extension = 'json'; Format = 'file'; ListCommand = $null }
+    @{ ApiType = 'remediationsources'; Folder = 'remediationsources'; Extension = 'json'; Format = 'file'; ListCommand = $null }
 )
 
 $script:LMModule = $null

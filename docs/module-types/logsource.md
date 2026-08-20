@@ -56,6 +56,10 @@ Use `groovy.json.JsonBuilder` or similar to construct output from API responses.
 
 See [Output Formats](../concepts/output-formats.md).
 
+## Related recipes
+
+- [`groovy/script-logs`](../../recipes/groovy/script-logs/)
+
 ## Official documentation
 
 - [Script Logs LogSource Configuration](https://www.logicmonitor.com/support/script-logs-logsource-configuration)

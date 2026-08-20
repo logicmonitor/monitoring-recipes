@@ -63,7 +63,7 @@ Limit to one type if needed:
 ./Download-LMLogicModules.ps1 -Type datasources
 ```
 
-Valid `-Type` values: `datasources`, `propertysources`, `eventsources`, `topologysources`, `configsources`, `logsources`, `functions`, `oids`, `batchjobs`, `diagnosticsources`.
+Valid `-Type` values: `datasources`, `propertysources`, `eventsources`, `topologysources`, `configsources`, `logsources`, `functions`, `oids`, `batchjobs`, `diagnosticsources`, `remediationsources`.
 
 PropertySources are stored in `logicmodules/propertysources/` (`propertyrules` is still accepted as an alias).
 

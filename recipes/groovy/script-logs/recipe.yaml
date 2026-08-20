@@ -1,0 +1,16 @@
+name: script-logs
+language: groovy
+pattern: http
+applicable_module_types:
+  - logsource
+tags: [building-block, logs, json, http]
+status: implemented
+requires_snippets: true
+snippets_used:
+  - name: proto.http
+    min_version: "0"
+  - name: lm.cache
+    min_version: "0"
+official_docs:
+  - https://www.logicmonitor.com/support/script-logs-logsource-configuration
+  - https://www.logicmonitor.com/support/configuring-a-logsource

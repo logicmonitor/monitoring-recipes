@@ -39,7 +39,8 @@ param(
         'functions',
         'oids',
         'batchjobs',
-        'diagnosticsources'
+        'diagnosticsources',
+        'remediationsources'
     )]
     [string[]]$Type,
 

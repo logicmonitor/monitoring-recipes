@@ -1,0 +1,14 @@
+name: topology-edges
+language: groovy
+pattern: topology
+applicable_module_types:
+  - topologysource
+tags: [building-block, topology]
+status: implemented
+requires_snippets: true
+snippets_used:
+  - name: lm.topo
+    min_version: "0"
+official_docs:
+  - https://www.logicmonitor.com/support/topologysources-scripts
+  - https://www.logicmonitor.com/support/topologysource-configuration

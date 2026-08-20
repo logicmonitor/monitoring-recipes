@@ -1,0 +1,13 @@
+name: script-events
+language: groovy
+pattern: http
+applicable_module_types:
+  - eventsource
+tags: [building-block, events, json, http]
+status: implemented
+requires_snippets: true
+snippets_used:
+  - name: proto.http
+    min_version: "0"
+official_docs:
+  - https://www.logicmonitor.com/support/script-eventsource

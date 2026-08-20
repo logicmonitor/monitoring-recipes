@@ -71,6 +71,7 @@ For SSH/Telnet config retrieval, use embedded Groovy with Expect syntax. Set SSH
 ## Related recipes
 
 - [`groovy/ssh-exec`](../../recipes/groovy/ssh-exec/) — retrieve remote config via SSH one-shot exec
+- [`groovy/ssh-interactive-config`](../../recipes/groovy/ssh-interactive-config/) — session-based show/enable collection
 
 ## Official documentation
 

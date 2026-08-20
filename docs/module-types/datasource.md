@@ -81,7 +81,9 @@ Distilled from LogicMonitor's DataSource style guidelines:
 
 - [`groovy/snmp-walk`](../../recipes/groovy/snmp-walk/)
 - [`groovy/snmp-get`](../../recipes/groovy/snmp-get/)
+- [`groovy/snmp-discovery`](../../recipes/groovy/snmp-discovery/)
 - [`powershell/wmi-query`](../../recipes/powershell/wmi-query/)
+- [`powershell/wmi-discovery`](../../recipes/powershell/wmi-discovery/)
 
 ## Official documentation
 

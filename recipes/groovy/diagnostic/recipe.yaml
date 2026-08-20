@@ -1,0 +1,14 @@
+name: diagnostic
+language: groovy
+pattern: ssh
+applicable_module_types:
+  - diagnosticsource
+tags: [building-block, diagnostic, json]
+status: implemented
+requires_snippets: true
+snippets_used:
+  - name: lm.remote
+    min_version: "0.6.0"
+official_docs:
+  - https://www.logicmonitor.com/support/alert-properties-for-diagnosticsource-and-remediationsource-scripts
+  - https://www.logicmonitor.com/support/logicmodules/diagnosticsources/creating-diagnosticsources/

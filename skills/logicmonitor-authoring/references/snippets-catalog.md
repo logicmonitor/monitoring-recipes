@@ -23,13 +23,13 @@ def loader = GSH.getInstance(GroovySystem.version)
 | Snippet | Min version | Load | Primary methods | Recipe |
 |---------|-------------|------|-----------------|--------|
 | `lm.emit` | `"0"` | `loader.load("lm.emit", "0")` | `.dp()`, `.instance()`, `.property()` | All Groovy output |
-| `proto.snmp` | `"0"` | `loader.load("proto.snmp", "0")` | `.create(host).withRetries(5).walk(oid)` | snmp-walk, snmp-get |
-| `lm.remote` | `"0.6.0"` | `loader.load("lm.remote", "0.6.0")` | `.exec(hostProps, cmd)`, `.create(hostProps).exec(cmd)` | ssh-exec |
-| `proto.http` | `"0"` | `loader.load("proto.http", "0")` | `.httpSnippetFactory(hostProps)` | http-rest |
+| `proto.snmp` | `"0"` | `loader.load("proto.snmp", "0")` | `.create(host).withRetries(5).walk(oid)` | snmp-walk, snmp-get, snmp-discovery |
+| `lm.remote` | `"0.6.0"` | `loader.load("lm.remote", "0.6.0")` | `.exec(hostProps, cmd)`, `.create(hostProps).exec(cmd)` | ssh-exec, ssh-interactive-config, diagnostic, remediation |
+| `proto.http` | `"0"` | `loader.load("proto.http", "0")` | `.httpSnippetFactory(hostProps)` | http-rest, script-logs, script-events |
 | `lm.sql` | `"0"` | `loader.load("lm.sql", "0")` | `.attemptConnection()`, `.runQuery()` | jdbc |
-| `lm.cache` | `"0"` | `loader.load("lm.cache", "0")` | `.cacheSnippetFactory(debug, keySuffix)` | http-rest (token auth) |
+| `lm.cache` | `"0"` | `loader.load("lm.cache", "0")` | `.cacheSnippetFactory(debug, keySuffix)` | http-rest, script-logs |
 | `lm.debug` | `"0"` | `loader.load("lm.debug", "0")` | `.create(out)` → `.LMDebugPrint()` | Optional debugging |
-| `lm.topo` | `"0"` | `loader.load("lm.topo", "0")` | Topology edge registration | Phase 2 — not a building block |
+| `lm.topo` | `"0"` | `loader.load("lm.topo", "0")` | `.registerEdge()`, `.generateTopology()`, `.emitEri()`, `.printEriArray()` | topology-edges, add-eri |
 | `lm.api` | `"0"` | `loader.load("lm.api", "0")` | LM REST API client | Phase 2 — niche |
 
 ---
@@ -98,7 +98,7 @@ def session = remote.create(hostProps).withDebug(out)
 def output = session.exec("INSERT_COMMAND_HERE")
 ```
 
-For interactive shell sessions (ConfigSource), see Phase 2 `ssh-interactive-config` — not covered by this building block.
+For ConfigSource collection (pager + enable), see `recipes/groovy/ssh-interactive-config/`. Exchange `SSH_Interactive_Standard` covers full PTY/prompt handling.
 
 ---
 
@@ -170,6 +170,33 @@ if (!token) {
 ```
 
 Requires Collector 29.100+ for ScriptCache API.
+
+---
+
+## lm.topo — topology edges and ERIs
+
+Exchange TopologySources and `addERI_*` PropertySources load `lm.topo` **with** `.withBinding(getBinding())`. Prefer this over hand-built `{ "edges": [...] }` JSON.
+
+```groovy
+def loader = GSH.getInstance(GroovySystem.version)
+    .getScript("Snippets", Snippets.getLoader())
+    .withBinding(getBinding())
+def lmtopo = loader.load("lm.topo", "0")
+
+def keyNamespace = hostProps.get(hostProps.get("topo.namespace", ""), "")
+def keyBlacklist = hostProps.get("topo.blacklist", "").tokenize(",")
+def edges = []
+
+lmtopo.registerEdge("NETWORK", fromEri, toEri, edges)
+println lmtopo.generateTopology(edges, keyNamespace, keyBlacklist, null, false)
+
+// ERISource PropertySource
+def eriArray = new org.json.JSONArray()
+lmtopo.emitEri("docker", 1, ["docker--${hostProps.get('system.displayname')}"], "Container", eriArray)
+lmtopo.printEriArray(eriArray, keyNamespace, keyBlacklist)
+```
+
+See `recipes/groovy/topology-edges/` and `recipes/groovy/add-eri/`.
 
 ---
 

@@ -62,6 +62,11 @@ Use `groovy.json.*` (e.g. `JsonBuilder`) to build output if your data isn't alre
 
 See [Output Formats](../concepts/output-formats.md).
 
+## Related recipes
+
+- [`groovy/script-events`](../../recipes/groovy/script-events/)
+- [`groovy/script-logs`](../../recipes/groovy/script-logs/) — prefer for searchable logs
+
 ## Official documentation
 
 - [Script EventSource](https://www.logicmonitor.com/support/script-eventsource)

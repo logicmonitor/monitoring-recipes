@@ -23,9 +23,9 @@ Install the `logicmonitor-authoring` skill for AI-assisted module development. S
 
 ## Project status
 
-**Last updated:** 2026-07-18  
-**Branch:** `doc-overhaul` (uncommitted)  
-**Status:** Phase 1 complete — recipes implemented; Phase 2 expansion next
+**Last updated:** 2026-08-20  
+**Branch:** `doc-overhaul`  
+**Status:** Phase 2 recipes added — LogSource, EventSource, TopologySource, ConfigSource session, ERISource, DiagnosticSource, RemediationSource
 
 ## Help & documentation
 
