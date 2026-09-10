@@ -79,7 +79,8 @@ def debugPrint(message) {
 | Use `JsonOutput.toJson()` for JSON output | Avoids malformed JSON |
 | No hardcoded credentials | Use `hostProps` / device properties |
 | `debug` flag + conditional logging | Collector troubleshooting without noise |
-| Return `0` on success, `1` on failure | AD: non-zero preserves existing instances |
+| `println` on fatal paths even if `debug` is false | Debug-gated errors look like "no output" |
+| Return `0` on success, `1` on failure | AD: non-zero preserves existing instances; empty + 0 deletes them |
 
 ### Anti-patterns
 
@@ -88,6 +89,8 @@ def debugPrint(message) {
 - Do **not** build JSON with string concatenation
 - Do **not** use `println` for hand-rolled `key=value` when `lm.emit` is available
 - Do **not** wrap everything in a `main()` function — collector runs top-level script
+- Do **not** omit `.withBinding(getBinding())` — `lm.emit` then prints nothing
+- Do **not** assign snippet handles with `def` if helper methods need them
 
 ---
 

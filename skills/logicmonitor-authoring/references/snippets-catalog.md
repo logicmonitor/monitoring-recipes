@@ -57,7 +57,7 @@ def fetch(String url) {
 | `lm.emit` | `"0"` | `loader.load("lm.emit", "0")` | `.dp()`, `.instance()`, `.property()` | All Groovy output |
 | `proto.snmp` | `"0"` | `loader.load("proto.snmp", "0")` | `.create(host).withRetries(5).walk(oid)` | snmp-walk, snmp-get, snmp-discovery |
 | `lm.remote` | `"0.6.0"` | `loader.load("lm.remote", "0.6.0")` | `.exec(hostProps, cmd)`, `.create(hostProps).exec(cmd)` | ssh-exec, ssh-interactive-config, diagnostic, remediation |
-| ~~`proto.http`~~ | — | **Unverified — do not use.** See [HTTP](#http--no-verified-snippet) | — | — |
+| `proto.http` | `"0"` | `loader.load("proto.http", "0")` | `.httpSnippetFactory(hostProps)` then `.rawGet()` | http-rest, script-logs, script-events |
 | `lm.sql` | `"0"` | `loader.load("lm.sql", "0")` | `.attemptConnection()`, `.runQuery()` | jdbc |
 | `lm.cache` | `"0"` | `loader.load("lm.cache", "0")` | `.cacheSnippetFactory(debug, keySuffix)` | http-rest, script-logs |
 | `lm.debug` | `"0"` | `loader.load("lm.debug", "0")` | `.create(out)` → `.LMDebugPrint()` | Optional debugging |
@@ -134,45 +134,38 @@ For ConfigSource collection (pager + enable), see `recipes/groovy/ssh-interactiv
 
 ---
 
-## HTTP — no verified snippet
+## proto.http — HTTP client
 
-**There is no confirmed `proto.http` snippet.** An audit of 926 Groovy scripts
-across 556 OOTB DataSources found zero uses of `proto.http` or
-`httpSnippetFactory`. Loading it fails at `loader.load(...)`, and because that
-line usually sits in the bootstrap, the script dies before producing any output.
+`proto.*` is LogicMonitor's **protocol snippet family**, not a third-party library.
+Load it the same way as `proto.snmp` or `lm.emit`: through
+`LogicMonitor_Collector_Snippets`. Confirmed members in OOTB modules include
+`proto.snmp`, `proto.openmetrics`, and `proto.http`.
 
-Use the OOTB pattern instead — a `getBinding()`-scoped helper over
-`URL.openConnection()`. This is what `Jenkins_*` and `SilverPeak_*` do:
+`proto.http` is real and official; it is just uncommon. In this portal's
+downloaded DataSources the only consumer is `StatusPageIO_Service_Status`. Most
+other OOTB HTTP scripts still use `URL.openConnection()` because they predate
+the snippet or do not pull in snippets at all.
 
 ```groovy
-// Binding scope so the helper method below can read them.
-userAgent = hostProps.get("example.user_agent") ?: "LM-Module/1.0"
-connectTimeoutMs = 10000
-readTimeoutMs = 30000
-
-def getJson(String url) {
-    def conn
-    try {
-        conn = new URL(url).openConnection()
-        conn.setRequestMethod("GET")
-        conn.setConnectTimeout(connectTimeoutMs)
-        conn.setReadTimeout(readTimeoutMs)
-        conn.setRequestProperty("Accept", "application/json")
-        conn.setRequestProperty("User-Agent", userAgent)
-
-        def responseCode = conn.getResponseCode()
-        if (responseCode != 200) {
-            throw new IOException("HTTP ${responseCode} from ${url}")
-        }
-        return new groovy.json.JsonSlurper().parseText(conn.getInputStream().getText("UTF-8"))
-    } finally {
-        conn?.disconnect()
-    }
+http = loader.load("proto.http", "0").httpSnippetFactory(hostProps)
+def response = http.rawGet(url, ["Accept": "application/json"])
+if (response.responseCode != 200) {
+    println "HTTP ${response.responseCode} from ${url}"
+    return 1
 }
+def body = response.inputStream.text
 ```
 
-For proxy-aware requests, read `Settings.getSetting("proxy.enable")`,
-`proxy.host`, and `proxy.port` and build a `java.net.Proxy` — the OOTB approach.
+`rawGet(url, headers)` is the signature used by StatusPageIO. The http-rest
+recipe also passes connect/read timeouts as extra arguments when you need them.
+
+If `loader.load("proto.http", "0")` throws, the Collector Snippets module on that
+collector is missing or outdated — install/update **LogicMonitor_Collector_Snippets**,
+do not treat it as a fake API.
+
+For scripts that cannot depend on snippets, the common OOTB fallback is a
+binding-scoped helper over `URL.openConnection()` (`Jenkins_*`, `SilverPeak_*`).
+That is an alternative, not a replacement for the snippet.
 
 ---
 
@@ -260,7 +253,7 @@ See `recipes/groovy/topology-edges/` and `recipes/groovy/add-eri/`.
 |------|-------------|-------|
 | SNMP walk/get | `proto.snmp` | Raw `Snmp.*` without retries |
 | SSH one-shot command | `lm.remote` | Raw JSCH |
-| HTTP REST API | `URL.openConnection()` helper | `proto.http` — not a real snippet |
+| HTTP REST API | `proto.http` | Hand-rolled HTTP that ignores collector proxy settings |
 | JDBC query | `lm.sql` | Manual `Sql.newInstance` without error maps |
 | Format output | `lm.emit` | Hand-rolled `println "key=value"` |
 | Cache auth token | `lm.cache` | File-based token storage |

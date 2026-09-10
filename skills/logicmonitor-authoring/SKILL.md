@@ -10,7 +10,7 @@ license: Apache-2.0
 compatibility: LogicMonitor Collector; references monitoring-recipes repo
 metadata:
   author: logicmonitor
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # LogicMonitor Module Authoring
@@ -73,7 +73,7 @@ Read [references/output-formats.md](references/output-formats.md) for the chosen
 
 | Module type | Output type |
 |-------------|-------------|
-| DataSource | `key=value` or `instance.key=value` |
+| DataSource | `key=value` or `wildvalue.key=value` |
 | PropertySource | `auto.*=value` or `system.categories=value` only |
 | Active Discovery | `wildvalue##wildalias` |
 | ConfigSource | Raw text (Script) or JSON (BatchScript) |
@@ -104,7 +104,11 @@ Checklist:
 - [ ] Groovy: load snippets with `.withBinding(getBinding())`; assign `emit` without `def`
 - [ ] Groovy: use `lm.emit` for key=value / AD output; load snippets via loader (not copied source)
 - [ ] Groovy: timeout from Settings with buffer; `proto.snmp` / `lm.remote` over raw APIs
-- [ ] Groovy HTTP: `URL.openConnection()` helper — do not load `proto.http` (not a real snippet)
+- [ ] Groovy HTTP: prefer `proto.http` (LM protocol snippet); `URL.openConnection()` is the non-snippet fallback
+- [ ] Groovy: `println` fatal errors even when `debug` is false; debug is for tracing only
+- [ ] BatchScript keys are **wildvalue**, never the displayed instance name
+- [ ] DataSource file import is XML; PropertySource file import is JSON — see [module-packaging.md](references/module-packaging.md)
+- [ ] DataSource display names: `-` only as the last character
 - [ ] PowerShell: `Write-Output` for data (not `Write-Host`); validate unset `##prop##` tokens
 - [ ] BatchScript: use `Write-Output` not `Write-Host` in PowerShell
 - [ ] Placeholders replaced with actual values
@@ -126,6 +130,7 @@ Checklist:
 | [powershell.md](references/powershell.md) | PowerShell, WinRM, WMI, output |
 | [module-snippets.md](references/module-snippets.md) | Platform snippet rules and requirements |
 | [script-cache.md](references/script-cache.md) | Caching auth tokens between polls (Collector 29.100+) |
+| [module-packaging.md](references/module-packaging.md) | XML vs JSON import, display-name hyphens, complex datapoints |
 
 ## Official documentation
 

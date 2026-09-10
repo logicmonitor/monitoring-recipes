@@ -27,7 +27,7 @@ See [snippets-catalog.md](snippets-catalog.md) for all available snippets and ve
 |------|---------|-------|
 | SNMP | `proto.snmp` | Raw `Snmp.*` without retries |
 | SSH | `lm.remote` | Raw JSCH |
-| HTTP | `URL.openConnection()` helper | `proto.http` — not a real snippet |
+| HTTP | `proto.http` | Raw `Http` / `openConnection` without proxy handling |
 | JDBC | `lm.sql` | Manual connection without error maps |
 | Output | `lm.emit` | Hand-rolled `println "key=value"` |
 
@@ -53,14 +53,19 @@ Normalize props to lowercase for SNMP key case-insensitivity.
 | `datasourceinstanceProps` | DataSource/ConfigSource BatchScript | Loop all discovered instances |
 | `alertProps` | DiagnosticSource / RemediationSource (alert-triggered only) | Alert context — see [alert-properties.md](alert-properties.md) |
 
-**BatchScript:** Cannot use `instanceProps.get()`. Use `datasourceinstanceProps` instead.
+**BatchScript:** Cannot use `instanceProps.get()`. Use `datasourceinstanceProps` (Collector 29.105+).
+The loop **key** is the displayed instance name (`DataSourceName-alias`). Collection
+output must use `instanceProperties.get("wildvalue")`, which matches Active Discovery.
 
 ```groovy
-datasourceinstanceProps.each { instance, instanceProperties ->
-    def wildValue = instanceProperties.wildvalue
-    // generate metrics for each instance
+datasourceinstanceProps.each { displayedName, instanceProperties ->
+    def wildValue = instanceProperties.get("wildvalue")
+    emit.dp(wildValue, "metric", value)
 }
 ```
+
+When one API payload already contains every instance id, iterate that payload and
+emit those ids. Do not reconstruct wildvalue from `displayedName`.
 
 ## SNMP collection (proto.snmp)
 
@@ -93,23 +98,19 @@ def output = remote.exec(hostProps, 'INSERT_COMMAND_HERE')
 
 See `recipes/groovy/ssh-exec/` for one-shot commands and `recipes/groovy/ssh-interactive-config/` for ConfigSource collection.
 
-## HTTP REST
+## HTTP REST (proto.http)
 
-There is no verified `proto.http` snippet — see [snippets-catalog.md](snippets-catalog.md#http--no-verified-snippet).
-Use a binding-scoped helper over `URL.openConnection()`:
+`proto.http` is an official LogicMonitor protocol snippet (same family as
+`proto.snmp`), not a third-party library. Load it through
+**LogicMonitor_Collector_Snippets**. See [snippets-catalog.md](snippets-catalog.md#protohttp--http-client).
 
 ```groovy
-connectTimeoutMs = 10000
-readTimeoutMs = 30000
-
-def getJson(String url) {
-    def conn = new URL(url).openConnection()
-    conn.setConnectTimeout(connectTimeoutMs)
-    conn.setReadTimeout(readTimeoutMs)
-    conn.setRequestProperty('User-Agent', 'LM-Module/1.0')
-    // check conn.responseCode, then parse conn.inputStream
-}
+http = loader.load("proto.http", "0").httpSnippetFactory(hostProps)
+def response = http.rawGet('https://api.example.com/endpoint', ['Authorization': 'Bearer token'])
 ```
+
+`URL.openConnection()` is the common OOTB fallback when a script does not use
+snippets. Prefer `proto.http` for new snippet-first modules.
 
 See `recipes/groovy/http-rest/` for metrics, `recipes/groovy/script-logs/` for LogSources, and `recipes/groovy/script-events/` for EventSources.
 
@@ -148,6 +149,11 @@ def timeout = Settings.getSettingInt("collector.batchscript.timeout",
     Settings.getSettingInt("collector.script.timeout", 120)) * 1000
 timeout -= 2500  // cleanup buffer
 ```
+
+`getSettingInt(name, default)` exists on current collectors (see OOTB SNMP
+interfaces). Older scripts use `Settings.getSetting("collector.script.timeout").toInteger()`.
+Active Discovery should budget `discover.script.timeoutInSec` when that setting
+is the one the collector actually applies to AD.
 
 ## Output format by module type
 

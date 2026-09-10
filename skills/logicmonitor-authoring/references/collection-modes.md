@@ -12,10 +12,12 @@ See also: [docs/concepts/collection-modes.md](../../../docs/concepts/collection-
 
 - Runs **once per device** per poll — required for scale
 - Requires Multi-Instance + Active Discovery
-- Output: `instance.key=value` or JSON
-- Datapoint keys use `##WILDVALUE##.metricName` — **not inside the script**
+- Output: `wildvalue.key=value` or JSON
+- Datapoint keys in the module UI use `##WILDVALUE##.metricName` — **not inside the script**
 - Cannot use `instanceProps.get()` or `##WILDVALUE##` in script body
-- Use `datasourceinstanceProps` to loop all instances in Groovy
+- Use `datasourceinstanceProps` to loop instances (Collector 29.105+). The map
+  **key** is the displayed instance name. The AD identifier is
+  `instanceProperties.get("wildvalue")`. Emit that, not the map key.
 
 ## Script types
 
@@ -37,6 +39,8 @@ See also: [docs/concepts/collection-modes.md](../../../docs/concepts/collection-
 ## BatchScript pitfalls
 
 - Invalid wildvalue chars (`:`, `#`, `\`, spaces) → NoData; sanitize in AD and output
+- Emitting `DisplayedName.metric=` instead of `wildvalue.metric=` → `param not found in output`
+- Prefer one upstream request that covers every instance; do not loop HTTP per instance
 - PowerShell: use `Write-Output`, not `Write-Host`
 - `collector.batchscript.timeout` in agent.conf applies to BatchScript only
 

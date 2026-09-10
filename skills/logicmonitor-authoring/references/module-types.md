@@ -7,6 +7,8 @@ See also: individual pages in [docs/module-types/](../../../docs/module-types/).
 - **Purpose:** Time-series numeric metrics
 - **Output:** `key=value` (Script) or `instance.key=value` (BatchScript)
 - **Style:** `Vendor_Product_Monitor` naming; category-based appliesTo
+- **File import:** XML. JSON is the API v3 model, not the Toolbox file-import format.
+- **Display name:** `-` is only legal as the last character — see [module-packaging.md](module-packaging.md)
 - **Docs:** https://www.logicmonitor.com/support/logicmodules/datasources/creating-managing-datasources/datasource-style-guidelines
 
 ## PropertySource
@@ -14,6 +16,9 @@ See also: individual pages in [docs/module-types/](../../../docs/module-types/).
 - **Purpose:** Set device properties and metadata
 - **Output:** `auto.property=value` or `system.categories=value` only — **not** arbitrary `system.*`
 - **Runs:** Daily, on update, manual run, or on AD execution
+- **File import:** JSON only (no XML export). PropertySources do not set collection
+  URLs the DataSource still needs as required device properties unless you
+  document that split clearly.
 - **Docs:** https://www.logicmonitor.com/support/logicmodules/propertysources/creating-propertysources
 
 ## ConfigSource
