@@ -101,8 +101,10 @@ Checklist:
 - [ ] PropertySource: only `auto.*` and `system.categories` — no other `system.*`
 - [ ] JSON modules: use `JsonOutput.toJson()` in Groovy, not manual string building
 - [ ] Diag/Remediation: handle missing `alertProps` on manual execution
+- [ ] Groovy: load snippets with `.withBinding(getBinding())`; assign `emit` without `def`
 - [ ] Groovy: use `lm.emit` for key=value / AD output; load snippets via loader (not copied source)
 - [ ] Groovy: timeout from Settings with buffer; `proto.snmp` / `lm.remote` over raw APIs
+- [ ] Groovy HTTP: `URL.openConnection()` helper — do not load `proto.http` (not a real snippet)
 - [ ] PowerShell: `Write-Output` for data (not `Write-Host`); validate unset `##prop##` tokens
 - [ ] BatchScript: use `Write-Output` not `Write-Host` in PowerShell
 - [ ] Placeholders replaced with actual values

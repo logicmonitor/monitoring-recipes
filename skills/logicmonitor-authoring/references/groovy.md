@@ -12,8 +12,14 @@ import com.logicmonitor.mod.Snippets
 
 def loader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
-def emit = loader.load("lm.emit", "0")
+    .withBinding(getBinding())
+emit = loader.load("lm.emit", "0")
 ```
+
+`.withBinding(getBinding())` is **required** — snippets write through the calling
+script's binding, so without it `emit.*` calls are silently discarded and the
+script produces no output while still exiting 0. Assign `emit` without `def` so
+helper methods can reach it.
 
 See [snippets-catalog.md](snippets-catalog.md) for all available snippets and version pins.
 
@@ -21,7 +27,7 @@ See [snippets-catalog.md](snippets-catalog.md) for all available snippets and ve
 |------|---------|-------|
 | SNMP | `proto.snmp` | Raw `Snmp.*` without retries |
 | SSH | `lm.remote` | Raw JSCH |
-| HTTP | `proto.http` | Raw `Http` without proxy handling |
+| HTTP | `URL.openConnection()` helper | `proto.http` — not a real snippet |
 | JDBC | `lm.sql` | Manual connection without error maps |
 | Output | `lm.emit` | Hand-rolled `println "key=value"` |
 
@@ -87,12 +93,22 @@ def output = remote.exec(hostProps, 'INSERT_COMMAND_HERE')
 
 See `recipes/groovy/ssh-exec/` for one-shot commands and `recipes/groovy/ssh-interactive-config/` for ConfigSource collection.
 
-## HTTP REST (proto.http)
+## HTTP REST
+
+There is no verified `proto.http` snippet — see [snippets-catalog.md](snippets-catalog.md#http--no-verified-snippet).
+Use a binding-scoped helper over `URL.openConnection()`:
 
 ```groovy
-def httpMod = loader.load("proto.http", "0")
-def http = httpMod.httpSnippetFactory(hostProps)
-def response = http.rawGet('https://api.example.com/endpoint', ['Authorization': 'Bearer token'])
+connectTimeoutMs = 10000
+readTimeoutMs = 30000
+
+def getJson(String url) {
+    def conn = new URL(url).openConnection()
+    conn.setConnectTimeout(connectTimeoutMs)
+    conn.setReadTimeout(readTimeoutMs)
+    conn.setRequestProperty('User-Agent', 'LM-Module/1.0')
+    // check conn.responseCode, then parse conn.inputStream
+}
 ```
 
 See `recipes/groovy/http-rest/` for metrics, `recipes/groovy/script-logs/` for LogSources, and `recipes/groovy/script-events/` for EventSources.
@@ -100,7 +116,7 @@ See `recipes/groovy/http-rest/` for metrics, `recipes/groovy/script-logs/` for L
 ## Output with lm.emit
 
 ```groovy
-def emit = loader.load("lm.emit", "0")
+emit = loader.load("lm.emit", "0")
 
 emit.dp("cpuUsage", 42)                              // DataSource Script
 emit.dp("instanceId", "cpuUsage", 42)                // BatchScript

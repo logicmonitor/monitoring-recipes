@@ -16,6 +16,38 @@ import com.logicmonitor.mod.Snippets
 
 def loader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
+    .withBinding(getBinding())
+```
+
+### `.withBinding(getBinding())` is mandatory, not optional
+
+Snippets write their output through the **calling script's binding**. Omit
+`.withBinding(getBinding())` and `lm.emit` still loads and every `emit.*` call
+still returns without error — the output is simply discarded. The script prints
+nothing and exits 0, which Active Discovery reads as "zero instances found" and
+which silently deletes every existing instance.
+
+This failure has no error message. If a snippet-based script produces no output
+at all, check the bootstrap first.
+
+In the OOTB module corpus, 272 of the 273 scripts that load a snippet use
+`.withBinding(getBinding())`; the sole exception is the ScriptCache module
+itself. Treat it as part of the bootstrap, not a per-snippet decision.
+
+### Binding scope vs. `def` in helper methods
+
+Groovy methods cannot see script-local `def` variables — only bindings. Anything
+a helper method reads (timeouts, user agent, `debug`, the loaded snippet) must be
+assigned **without** `def`:
+
+```groovy
+emit = loader.load("lm.emit", "0")   // no def: helper methods can read it
+debug = false
+readTimeoutMs = 30000
+
+def fetch(String url) {
+    // `readTimeoutMs` resolves only because it is a binding, not a local
+}
 ```
 
 ## Snippet reference
@@ -25,7 +57,7 @@ def loader = GSH.getInstance(GroovySystem.version)
 | `lm.emit` | `"0"` | `loader.load("lm.emit", "0")` | `.dp()`, `.instance()`, `.property()` | All Groovy output |
 | `proto.snmp` | `"0"` | `loader.load("proto.snmp", "0")` | `.create(host).withRetries(5).walk(oid)` | snmp-walk, snmp-get, snmp-discovery |
 | `lm.remote` | `"0.6.0"` | `loader.load("lm.remote", "0.6.0")` | `.exec(hostProps, cmd)`, `.create(hostProps).exec(cmd)` | ssh-exec, ssh-interactive-config, diagnostic, remediation |
-| `proto.http` | `"0"` | `loader.load("proto.http", "0")` | `.httpSnippetFactory(hostProps)` | http-rest, script-logs, script-events |
+| ~~`proto.http`~~ | — | **Unverified — do not use.** See [HTTP](#http--no-verified-snippet) | — | — |
 | `lm.sql` | `"0"` | `loader.load("lm.sql", "0")` | `.attemptConnection()`, `.runQuery()` | jdbc |
 | `lm.cache` | `"0"` | `loader.load("lm.cache", "0")` | `.cacheSnippetFactory(debug, keySuffix)` | http-rest, script-logs |
 | `lm.debug` | `"0"` | `loader.load("lm.debug", "0")` | `.create(out)` → `.LMDebugPrint()` | Optional debugging |
@@ -102,20 +134,45 @@ For ConfigSource collection (pager + enable), see `recipes/groovy/ssh-interactiv
 
 ---
 
-## proto.http — HTTP client
+## HTTP — no verified snippet
 
-Proxy-aware HTTP with collector and device proxy settings:
+**There is no confirmed `proto.http` snippet.** An audit of 926 Groovy scripts
+across 556 OOTB DataSources found zero uses of `proto.http` or
+`httpSnippetFactory`. Loading it fails at `loader.load(...)`, and because that
+line usually sits in the bootstrap, the script dies before producing any output.
+
+Use the OOTB pattern instead — a `getBinding()`-scoped helper over
+`URL.openConnection()`. This is what `Jenkins_*` and `SilverPeak_*` do:
 
 ```groovy
-def httpMod = loader.load("proto.http", "0")
-def http = httpMod.httpSnippetFactory(hostProps)
+// Binding scope so the helper method below can read them.
+userAgent = hostProps.get("example.user_agent") ?: "LM-Module/1.0"
+connectTimeoutMs = 10000
+readTimeoutMs = 30000
 
-def response = http.rawGet("https://api.example.com/data", ["Authorization": "Bearer ${token}"])
-def body = response.inputStream.text
-def statusCode = response.responseCode
+def getJson(String url) {
+    def conn
+    try {
+        conn = new URL(url).openConnection()
+        conn.setRequestMethod("GET")
+        conn.setConnectTimeout(connectTimeoutMs)
+        conn.setReadTimeout(readTimeoutMs)
+        conn.setRequestProperty("Accept", "application/json")
+        conn.setRequestProperty("User-Agent", userAgent)
+
+        def responseCode = conn.getResponseCode()
+        if (responseCode != 200) {
+            throw new IOException("HTTP ${responseCode} from ${url}")
+        }
+        return new groovy.json.JsonSlurper().parseText(conn.getInputStream().getText("UTF-8"))
+    } finally {
+        conn?.disconnect()
+    }
+}
 ```
 
-Methods: `rawGet()`, `rawPost()`, `rawDelete()` — each accepts headers, timeouts, and `ignoreProxy` flag.
+For proxy-aware requests, read `Settings.getSetting("proxy.enable")`,
+`proxy.host`, and `proxy.port` and build a `java.net.Proxy` — the OOTB approach.
 
 ---
 
@@ -175,12 +232,9 @@ Requires Collector 29.100+ for ScriptCache API.
 
 ## lm.topo — topology edges and ERIs
 
-Exchange TopologySources and `addERI_*` PropertySources load `lm.topo` **with** `.withBinding(getBinding())`. Prefer this over hand-built `{ "edges": [...] }` JSON.
+Prefer `lm.topo` over hand-built `{ "edges": [...] }` JSON.
 
 ```groovy
-def loader = GSH.getInstance(GroovySystem.version)
-    .getScript("Snippets", Snippets.getLoader())
-    .withBinding(getBinding())
 def lmtopo = loader.load("lm.topo", "0")
 
 def keyNamespace = hostProps.get(hostProps.get("topo.namespace", ""), "")
@@ -206,7 +260,7 @@ See `recipes/groovy/topology-edges/` and `recipes/groovy/add-eri/`.
 |------|-------------|-------|
 | SNMP walk/get | `proto.snmp` | Raw `Snmp.*` without retries |
 | SSH one-shot command | `lm.remote` | Raw JSCH |
-| HTTP REST API | `proto.http` | Raw `Http` API without proxy handling |
+| HTTP REST API | `URL.openConnection()` helper | `proto.http` — not a real snippet |
 | JDBC query | `lm.sql` | Manual `Sql.newInstance` without error maps |
 | Format output | `lm.emit` | Hand-rolled `println "key=value"` |
 | Cache auth token | `lm.cache` | File-based token storage |

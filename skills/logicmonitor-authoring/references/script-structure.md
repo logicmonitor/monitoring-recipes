@@ -34,9 +34,12 @@ import com.santaba.agent.util.Settings
 import groovy.json.JsonOutput
 
 // --- Snippet bootstrap ---
+// withBinding is required: snippets write through the calling script's binding.
+// Without it, emit.* calls return without error and produce no output.
 def loader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
-def emit = loader.load("lm.emit", "0")
+    .withBinding(getBinding())
+emit = loader.load("lm.emit", "0")
 
 // --- Configuration ---
 debug = false
