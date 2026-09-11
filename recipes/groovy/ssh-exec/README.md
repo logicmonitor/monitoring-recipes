@@ -6,7 +6,7 @@ Execute a one-shot remote command over SSH using the `lm.remote` snippet (SSHJ).
 
 Connects to a remote device via SSH and executes a single command, returning output for parsing. Uses the platform `lm.remote` snippet — not raw JSCH.
 
-For interactive shell sessions (ConfigSource with prompt handling), see Phase 2 `ssh-interactive-config`.
+For ConfigSource collection (pager + optional enable), see [`ssh-interactive-config`](../ssh-interactive-config/). Exchange `SSH_Interactive_Standard` covers full PTY/prompt handling this building block does not.
 
 ## Prerequisites
 

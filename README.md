@@ -9,6 +9,7 @@ Best-practice script snippets, documentation, and Agent Skills for building [Log
 | [`recipes/`](recipes/) | Copy-paste Groovy and PowerShell script building blocks | Engineers writing module scripts |
 | [`docs/`](docs/) | Module-type guides, concepts, and decision trees | Engineers learning LM module authoring |
 | [`skills/`](skills/) | Installable [Agent Skill](https://agentskills.io/specification) for AI-assisted authoring | Engineers using Cursor, Claude Code, or other Agent Skills-compatible tools |
+| [`LogicMonitor_LogicModule_Repo_Download/`](LogicMonitor_LogicModule_Repo_Download/) | Portal export/search scripts for mining Exchange modules | Engineers comparing recipes to live LogicModules |
 
 ## Quick start
 
@@ -22,9 +23,9 @@ Install the `logicmonitor-authoring` skill for AI-assisted module development. S
 
 ## Project status
 
-**Last updated:** 2026-07-18  
-**Branch:** `doc-overhaul` (uncommitted)  
-**Status:** Phase 1 complete — recipes implemented; Phase 2 expansion next
+**Last updated:** 2026-08-20  
+**Branch:** `doc-overhaul`  
+**Status:** Phase 2 recipes added — LogSource, EventSource, TopologySource, ConfigSource session, ERISource, DiagnosticSource, RemediationSource
 
 ## Help & documentation
 

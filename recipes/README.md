@@ -10,9 +10,18 @@ Groovy recipes use platform snippets (`proto.snmp`, `lm.remote`, etc.) and requi
 |--------|----------|---------|--------------|--------|
 | [snmp-walk](groovy/snmp-walk/) | Groovy | SNMP | DataSource, PropertySource, AD | Ready |
 | [snmp-get](groovy/snmp-get/) | Groovy | SNMP | DataSource, PropertySource | Ready |
+| [snmp-discovery](groovy/snmp-discovery/) | Groovy | SNMP | Active Discovery | Ready |
 | [ssh-exec](groovy/ssh-exec/) | Groovy | SSH | DataSource, ConfigSource, DiagnosticSource | Ready |
+| [ssh-interactive-config](groovy/ssh-interactive-config/) | Groovy | SSH | ConfigSource | Ready |
 | [http-rest](groovy/http-rest/) | Groovy | HTTP | DataSource, PropertySource | Ready |
+| [script-logs](groovy/script-logs/) | Groovy | HTTP | LogSource | Ready |
+| [script-events](groovy/script-events/) | Groovy | HTTP | EventSource | Ready |
 | [jdbc](groovy/jdbc/) | Groovy | JDBC | DataSource | Ready |
+| [topology-edges](groovy/topology-edges/) | Groovy | Topology | TopologySource | Ready |
+| [add-category](groovy/add-category/) | Groovy | Property | PropertySource | Ready |
+| [add-eri](groovy/add-eri/) | Groovy | Topology | PropertySource (ERISource) | Ready |
+| [diagnostic](groovy/diagnostic/) | Groovy | SSH | DiagnosticSource | Ready |
+| [remediation](groovy/remediation/) | Groovy | SSH | RemediationSource | Ready |
 | [winrm-exec](powershell/winrm-exec/) | PowerShell | WinRM | DataSource, DiagnosticSource, RemediationSource | Ready |
 | [wmi-query](powershell/wmi-query/) | PowerShell | WMI | DataSource, PropertySource | Ready |
 | [wmi-discovery](powershell/wmi-discovery/) | PowerShell | WMI | Active Discovery | Ready |

@@ -68,6 +68,8 @@ Groovy or PowerShell. Use `hostProps` for device properties and credentials — 
 
 ## Related recipes
 
+- [`groovy/add-category`](../../recipes/groovy/add-category/) — `system.categories` tagging
+- [`groovy/add-eri`](../../recipes/groovy/add-eri/) — ERISource topology identity
 - [`groovy/snmp-walk`](../../recipes/groovy/snmp-walk/) — adapt output to `auto.propertyname=value`
 - [`groovy/snmp-get`](../../recipes/groovy/snmp-get/)
 - [`groovy/http-rest`](../../recipes/groovy/http-rest/) — API-based inventory

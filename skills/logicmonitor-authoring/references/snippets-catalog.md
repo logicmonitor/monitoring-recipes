@@ -16,6 +16,38 @@ import com.logicmonitor.mod.Snippets
 
 def loader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
+    .withBinding(getBinding())
+```
+
+### `.withBinding(getBinding())` is mandatory, not optional
+
+Snippets write their output through the **calling script's binding**. Omit
+`.withBinding(getBinding())` and `lm.emit` still loads and every `emit.*` call
+still returns without error — the output is simply discarded. The script prints
+nothing and exits 0, which Active Discovery reads as "zero instances found" and
+which silently deletes every existing instance.
+
+This failure has no error message. If a snippet-based script produces no output
+at all, check the bootstrap first.
+
+In the OOTB module corpus, 272 of the 273 scripts that load a snippet use
+`.withBinding(getBinding())`; the sole exception is the ScriptCache module
+itself. Treat it as part of the bootstrap, not a per-snippet decision.
+
+### Binding scope vs. `def` in helper methods
+
+Groovy methods cannot see script-local `def` variables — only bindings. Anything
+a helper method reads (timeouts, user agent, `debug`, the loaded snippet) must be
+assigned **without** `def`:
+
+```groovy
+emit = loader.load("lm.emit", "0")   // no def: helper methods can read it
+debug = false
+readTimeoutMs = 30000
+
+def fetch(String url) {
+    // `readTimeoutMs` resolves only because it is a binding, not a local
+}
 ```
 
 ## Snippet reference
@@ -23,13 +55,13 @@ def loader = GSH.getInstance(GroovySystem.version)
 | Snippet | Min version | Load | Primary methods | Recipe |
 |---------|-------------|------|-----------------|--------|
 | `lm.emit` | `"0"` | `loader.load("lm.emit", "0")` | `.dp()`, `.instance()`, `.property()` | All Groovy output |
-| `proto.snmp` | `"0"` | `loader.load("proto.snmp", "0")` | `.create(host).withRetries(5).walk(oid)` | snmp-walk, snmp-get |
-| `lm.remote` | `"0.6.0"` | `loader.load("lm.remote", "0.6.0")` | `.exec(hostProps, cmd)`, `.create(hostProps).exec(cmd)` | ssh-exec |
-| `proto.http` | `"0"` | `loader.load("proto.http", "0")` | `.httpSnippetFactory(hostProps)` | http-rest |
+| `proto.snmp` | `"0"` | `loader.load("proto.snmp", "0")` | `.create(host).withRetries(5).walk(oid)` | snmp-walk, snmp-get, snmp-discovery |
+| `lm.remote` | `"0.6.0"` | `loader.load("lm.remote", "0.6.0")` | `.exec(hostProps, cmd)`, `.create(hostProps).exec(cmd)` | ssh-exec, ssh-interactive-config, diagnostic, remediation |
+| `proto.http` | `"0"` | `loader.load("proto.http", "0")` | `.httpSnippetFactory(hostProps)` then `.rawGet()` | http-rest, script-logs, script-events |
 | `lm.sql` | `"0"` | `loader.load("lm.sql", "0")` | `.attemptConnection()`, `.runQuery()` | jdbc |
-| `lm.cache` | `"0"` | `loader.load("lm.cache", "0")` | `.cacheSnippetFactory(debug, keySuffix)` | http-rest (token auth) |
+| `lm.cache` | `"0"` | `loader.load("lm.cache", "0")` | `.cacheSnippetFactory(debug, keySuffix)` | http-rest, script-logs |
 | `lm.debug` | `"0"` | `loader.load("lm.debug", "0")` | `.create(out)` → `.LMDebugPrint()` | Optional debugging |
-| `lm.topo` | `"0"` | `loader.load("lm.topo", "0")` | Topology edge registration | Phase 2 — not a building block |
+| `lm.topo` | `"0"` | `loader.load("lm.topo", "0")` | `.registerEdge()`, `.generateTopology()`, `.emitEri()`, `.printEriArray()` | topology-edges, add-eri |
 | `lm.api` | `"0"` | `loader.load("lm.api", "0")` | LM REST API client | Phase 2 — niche |
 
 ---
@@ -98,24 +130,42 @@ def session = remote.create(hostProps).withDebug(out)
 def output = session.exec("INSERT_COMMAND_HERE")
 ```
 
-For interactive shell sessions (ConfigSource), see Phase 2 `ssh-interactive-config` — not covered by this building block.
+For ConfigSource collection (pager + enable), see `recipes/groovy/ssh-interactive-config/`. Exchange `SSH_Interactive_Standard` covers full PTY/prompt handling.
 
 ---
 
 ## proto.http — HTTP client
 
-Proxy-aware HTTP with collector and device proxy settings:
+`proto.*` is LogicMonitor's **protocol snippet family**, not a third-party library.
+Load it the same way as `proto.snmp` or `lm.emit`: through
+`LogicMonitor_Collector_Snippets`. Confirmed members in OOTB modules include
+`proto.snmp`, `proto.openmetrics`, and `proto.http`.
+
+`proto.http` is real and official; it is just uncommon. In this portal's
+downloaded DataSources the only consumer is `StatusPageIO_Service_Status`. Most
+other OOTB HTTP scripts still use `URL.openConnection()` because they predate
+the snippet or do not pull in snippets at all.
 
 ```groovy
-def httpMod = loader.load("proto.http", "0")
-def http = httpMod.httpSnippetFactory(hostProps)
-
-def response = http.rawGet("https://api.example.com/data", ["Authorization": "Bearer ${token}"])
+http = loader.load("proto.http", "0").httpSnippetFactory(hostProps)
+def response = http.rawGet(url, ["Accept": "application/json"])
+if (response.responseCode != 200) {
+    println "HTTP ${response.responseCode} from ${url}"
+    return 1
+}
 def body = response.inputStream.text
-def statusCode = response.responseCode
 ```
 
-Methods: `rawGet()`, `rawPost()`, `rawDelete()` — each accepts headers, timeouts, and `ignoreProxy` flag.
+`rawGet(url, headers)` is the signature used by StatusPageIO. The http-rest
+recipe also passes connect/read timeouts as extra arguments when you need them.
+
+If `loader.load("proto.http", "0")` throws, the Collector Snippets module on that
+collector is missing or outdated — install/update **LogicMonitor_Collector_Snippets**,
+do not treat it as a fake API.
+
+For scripts that cannot depend on snippets, the common OOTB fallback is a
+binding-scoped helper over `URL.openConnection()` (`Jenkins_*`, `SilverPeak_*`).
+That is an alternative, not a replacement for the snippet.
 
 ---
 
@@ -173,13 +223,37 @@ Requires Collector 29.100+ for ScriptCache API.
 
 ---
 
+## lm.topo — topology edges and ERIs
+
+Prefer `lm.topo` over hand-built `{ "edges": [...] }` JSON.
+
+```groovy
+def lmtopo = loader.load("lm.topo", "0")
+
+def keyNamespace = hostProps.get(hostProps.get("topo.namespace", ""), "")
+def keyBlacklist = hostProps.get("topo.blacklist", "").tokenize(",")
+def edges = []
+
+lmtopo.registerEdge("NETWORK", fromEri, toEri, edges)
+println lmtopo.generateTopology(edges, keyNamespace, keyBlacklist, null, false)
+
+// ERISource PropertySource
+def eriArray = new org.json.JSONArray()
+lmtopo.emitEri("docker", 1, ["docker--${hostProps.get('system.displayname')}"], "Container", eriArray)
+lmtopo.printEriArray(eriArray, keyNamespace, keyBlacklist)
+```
+
+See `recipes/groovy/topology-edges/` and `recipes/groovy/add-eri/`.
+
+---
+
 ## Selection guide
 
 | Task | Use snippet | Avoid |
 |------|-------------|-------|
 | SNMP walk/get | `proto.snmp` | Raw `Snmp.*` without retries |
 | SSH one-shot command | `lm.remote` | Raw JSCH |
-| HTTP REST API | `proto.http` | Raw `Http` API without proxy handling |
+| HTTP REST API | `proto.http` | Hand-rolled HTTP that ignores collector proxy settings |
 | JDBC query | `lm.sql` | Manual `Sql.newInstance` without error maps |
 | Format output | `lm.emit` | Hand-rolled `println "key=value"` |
 | Cache auth token | `lm.cache` | File-based token storage |

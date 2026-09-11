@@ -1,0 +1,13 @@
+name: add-category
+language: groovy
+pattern: property
+applicable_module_types:
+  - propertysource
+tags: [building-block, propertysource, categories]
+status: implemented
+requires_snippets: true
+snippets_used:
+  - name: lm.emit
+    min_version: "0"
+official_docs:
+  - https://www.logicmonitor.com/support/logicmodules/propertysources/creating-propertysources

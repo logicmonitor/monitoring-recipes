@@ -36,6 +36,14 @@ WILDVALUE##WILDALIAS##DESCRIPTION####auto.foo=bar&auto.baz=qux
 - **Non-zero** = failure; existing instances preserved (use on SNMP timeout, etc.)
 - Empty/malformed output + exit 0 = **all instances removed** — dangerous
 
+Snippet-based AD must use `.withBinding(getBinding())` before `emit.instance`.
+Without it the script exits 0 with no lines and LogicMonitor deletes every
+instance. Transient failures must `return 1` **and** `println` the reason
+(debug-gated prints are invisible in the debug pane).
+
+Prefer `emit.instance(wildvalue, alias, description, ilpMap)` over hand-built
+`##` lines so wildvalues and ILPs are sanitized.
+
 Never assign instance properties with blank values.
 
 ## Discovery methods

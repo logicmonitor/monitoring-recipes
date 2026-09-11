@@ -1,0 +1,16 @@
+name: snmp-discovery
+language: groovy
+pattern: snmp
+applicable_module_types:
+  - datasource
+tags: [building-block, snmp, active-discovery]
+status: implemented
+requires_snippets: true
+snippets_used:
+  - name: proto.snmp
+    min_version: "0"
+  - name: lm.emit
+    min_version: "0"
+official_docs:
+  - https://www.logicmonitor.com/support/active-discovery
+  - https://www.logicmonitor.com/support/logicmodules/datasources/active-discovery/script-active-discovery

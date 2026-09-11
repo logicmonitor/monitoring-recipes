@@ -48,6 +48,11 @@ TopologySource scripts output JSON with an `edges` array:
 
 See [Output Formats](../concepts/output-formats.md).
 
+## Related recipes
+
+- [`groovy/topology-edges`](../../recipes/groovy/topology-edges/)
+- [`groovy/add-eri`](../../recipes/groovy/add-eri/) — ERISource PropertySource for vertex IDs
+
 ## Official documentation
 
 - [TopologySources Scripts](https://www.logicmonitor.com/support/topologysources-scripts)

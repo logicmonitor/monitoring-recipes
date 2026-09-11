@@ -1,0 +1,13 @@
+name: ssh-interactive-config
+language: groovy
+pattern: ssh
+applicable_module_types:
+  - configsource
+tags: [building-block, ssh, config]
+status: implemented
+requires_snippets: true
+snippets_used:
+  - name: lm.remote
+    min_version: "0.6.0"
+official_docs:
+  - https://www.logicmonitor.com/support/configsource-configuration

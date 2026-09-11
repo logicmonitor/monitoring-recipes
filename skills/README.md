@@ -6,7 +6,7 @@ Installable [Agent Skills](https://agentskills.io/specification) for AI-assisted
 
 | Skill | Description |
 |-------|-------------|
-| [logicmonitor-authoring](logicmonitor-authoring/) | End-to-end LogicModule authoring workflow with script structure standards and snippet-first recipes (v0.3.0) |
+| [logicmonitor-authoring](logicmonitor-authoring/) | End-to-end LogicModule authoring workflow with script structure standards and snippet-first recipes (v0.5.0) |
 
 ## Installation
 

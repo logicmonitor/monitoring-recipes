@@ -87,6 +87,11 @@ if (alertProps.containsKey("alert.datapoint")) {
 
 Alert properties are also unavailable during script testing in the module editor.
 
+## Related recipes
+
+- [`groovy/diagnostic`](../../recipes/groovy/diagnostic/)
+- [`powershell/winrm-exec`](../../recipes/powershell/winrm-exec/)
+
 ## Official documentation
 
 - [Creating DiagnosticSources](https://www.logicmonitor.com/support/logicmodules/diagnosticsources/creating-diagnosticsources/)

@@ -12,8 +12,14 @@ import com.logicmonitor.mod.Snippets
 
 def loader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
-def emit = loader.load("lm.emit", "0")
+    .withBinding(getBinding())
+emit = loader.load("lm.emit", "0")
 ```
+
+`.withBinding(getBinding())` is **required** — snippets write through the calling
+script's binding, so without it `emit.*` calls are silently discarded and the
+script produces no output while still exiting 0. Assign `emit` without `def` so
+helper methods can reach it.
 
 See [snippets-catalog.md](snippets-catalog.md) for all available snippets and version pins.
 
@@ -21,7 +27,7 @@ See [snippets-catalog.md](snippets-catalog.md) for all available snippets and ve
 |------|---------|-------|
 | SNMP | `proto.snmp` | Raw `Snmp.*` without retries |
 | SSH | `lm.remote` | Raw JSCH |
-| HTTP | `proto.http` | Raw `Http` without proxy handling |
+| HTTP | `proto.http` | Raw `Http` / `openConnection` without proxy handling |
 | JDBC | `lm.sql` | Manual connection without error maps |
 | Output | `lm.emit` | Hand-rolled `println "key=value"` |
 
@@ -47,14 +53,19 @@ Normalize props to lowercase for SNMP key case-insensitivity.
 | `datasourceinstanceProps` | DataSource/ConfigSource BatchScript | Loop all discovered instances |
 | `alertProps` | DiagnosticSource / RemediationSource (alert-triggered only) | Alert context — see [alert-properties.md](alert-properties.md) |
 
-**BatchScript:** Cannot use `instanceProps.get()`. Use `datasourceinstanceProps` instead.
+**BatchScript:** Cannot use `instanceProps.get()`. Use `datasourceinstanceProps` (Collector 29.105+).
+The loop **key** is the displayed instance name (`DataSourceName-alias`). Collection
+output must use `instanceProperties.get("wildvalue")`, which matches Active Discovery.
 
 ```groovy
-datasourceinstanceProps.each { instance, instanceProperties ->
-    def wildValue = instanceProperties.wildvalue
-    // generate metrics for each instance
+datasourceinstanceProps.each { displayedName, instanceProperties ->
+    def wildValue = instanceProperties.get("wildvalue")
+    emit.dp(wildValue, "metric", value)
 }
 ```
+
+When one API payload already contains every instance id, iterate that payload and
+emit those ids. Do not reconstruct wildvalue from `displayedName`.
 
 ## SNMP collection (proto.snmp)
 
@@ -75,7 +86,7 @@ walkResult.each { index, value ->
 return 0
 ```
 
-See `recipes/groovy/snmp-walk/` and `recipes/groovy/snmp-get/`.
+See `recipes/groovy/snmp-walk/` and `recipes/groovy/snmp-get/` for collection, and `recipes/groovy/snmp-discovery/` for Active Discovery.
 
 ## SSH execution (lm.remote)
 
@@ -85,22 +96,28 @@ def output = remote.exec(hostProps, 'INSERT_COMMAND_HERE')
 // Parse output and emit via lm.emit
 ```
 
-See `recipes/groovy/ssh-exec/`.
+See `recipes/groovy/ssh-exec/` for one-shot commands and `recipes/groovy/ssh-interactive-config/` for ConfigSource collection.
 
 ## HTTP REST (proto.http)
 
+`proto.http` is an official LogicMonitor protocol snippet (same family as
+`proto.snmp`), not a third-party library. Load it through
+**LogicMonitor_Collector_Snippets**. See [snippets-catalog.md](snippets-catalog.md#protohttp--http-client).
+
 ```groovy
-def httpMod = loader.load("proto.http", "0")
-def http = httpMod.httpSnippetFactory(hostProps)
+http = loader.load("proto.http", "0").httpSnippetFactory(hostProps)
 def response = http.rawGet('https://api.example.com/endpoint', ['Authorization': 'Bearer token'])
 ```
 
-See `recipes/groovy/http-rest/`.
+`URL.openConnection()` is the common OOTB fallback when a script does not use
+snippets. Prefer `proto.http` for new snippet-first modules.
+
+See `recipes/groovy/http-rest/` for metrics, `recipes/groovy/script-logs/` for LogSources, and `recipes/groovy/script-events/` for EventSources.
 
 ## Output with lm.emit
 
 ```groovy
-def emit = loader.load("lm.emit", "0")
+emit = loader.load("lm.emit", "0")
 
 emit.dp("cpuUsage", 42)                              // DataSource Script
 emit.dp("instanceId", "cpuUsage", 42)                // BatchScript
@@ -133,6 +150,11 @@ def timeout = Settings.getSettingInt("collector.batchscript.timeout",
 timeout -= 2500  // cleanup buffer
 ```
 
+`getSettingInt(name, default)` exists on current collectors (see OOTB SNMP
+interfaces). Older scripts use `Settings.getSetting("collector.script.timeout").toInteger()`.
+Active Discovery should budget `discover.script.timeoutInSec` when that setting
+is the one the collector actually applies to AD.
+
 ## Output format by module type
 
 | Module type | Groovy output |
@@ -159,4 +181,4 @@ Return `0` on success. Non-zero on failure.
 
 ## Recipes
 
-See `recipes/groovy/` in the monitoring-recipes repo.
+See `recipes/groovy/` in the monitoring-recipes repo. JSON module types: `script-logs`, `script-events`, `topology-edges`, `diagnostic`, `remediation`.

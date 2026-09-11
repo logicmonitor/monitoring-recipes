@@ -1,0 +1,10 @@
+.DS_Store
+*.log
+download-failures.csv
+download-summary.json
+download.log
+catalog.csv
+catalog.json
+module-state.json
+updates.csv
+logicmodules/
