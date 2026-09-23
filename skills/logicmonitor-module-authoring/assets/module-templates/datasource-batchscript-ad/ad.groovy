@@ -6,12 +6,12 @@ def modLoader = GSH.getInstance(GroovySystem.version)
     .withBinding(getBinding())
 emit = modLoader.load("lm.emit", "0")
 
-emit.instance("instance-a", "Instance A")
+emit.instance("instance-a", "Instance A", "", [tier: "standard", role: "primary"])
 emit.instance("instance-b", "Instance B", "Second instance with description")
 emit.instance(
     "instance-c",
     "Instance C",
-    "Instance with ILPs",
-    [role: "primary", "auto.env": "prod"]
+    "Instance with ILPs for filters/grouping",
+    [role: "replica", "auto.env": "prod", feature_x: "enabled"]
 )
 return 0

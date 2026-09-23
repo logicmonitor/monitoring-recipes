@@ -29,6 +29,10 @@ See [assets/examples/http-rest-collect-snippet.groovy](../assets/examples/http-r
 - `emit.dp("literal_metric_name", value)` with **string-literal** names when using `validate-module.py` (dynamic keys are not extracted)
 - **BatchScript + AD** (one poll, many API resources): `emit.dp(wild, "literal_metric_name", value)` and JSON `interpretExpr`: `##WILDVALUE##.literal_metric_name` — see [script-json-alignment.md](script-json-alignment.md)
 
+## Active Discovery (multi-instance APIs)
+
+In `ad.groovy`, emit one instance per API resource. Put **stable** response fields on the instance as ILPs (`emit.instance` fourth-arg map) — types, generations, plan tier, region — so operators can filter and group without re-querying each poll. See [active-discovery.md](active-discovery.md#instance-level-properties-ilps--prefer-rich-discovery).
+
 ## Import JSON
 
 Greenfield rules: [import-json-overview.md](import-json-overview.md), [module-deliverable-layout.md](module-deliverable-layout.md).

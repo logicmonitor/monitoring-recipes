@@ -66,7 +66,7 @@ Booleans become `1.0` / `0.0`. Null/empty values are emitted with collector-safe
 
 ### Active Discovery
 
-See [active-discovery.md](active-discovery.md) for `emit.instance` overloads and ILPs.
+See [active-discovery.md](active-discovery.md) for `emit.instance` overloads and ILPs. **Prefer** the `(wv, alias, description, ilpMap)` overload when discovery exposes stable metadata (`auto.version`, feature flags, types) for filters and instance context — not metrics.
 
 ### PropertySource
 

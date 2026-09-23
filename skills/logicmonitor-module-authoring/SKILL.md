@@ -11,7 +11,7 @@ license: Apache-2.0
 compatibility: LogicMonitor Collector; references monitoring-recipes repo
 metadata:
   author: logicmonitor
-  version: "0.5.6"
+  version: "0.5.7"
 ---
 
 # LogicMonitor Module Authoring
@@ -98,7 +98,7 @@ For DiagnosticSource/RemediationSource alert context, read [references/alert-pro
 
 Read [references/active-discovery.md](references/active-discovery.md).
 
-`emit.instance(...)` in `ad.groovy` — [active-discovery.md](references/active-discovery.md).
+`emit.instance(...)` in `ad.groovy` — [active-discovery.md](references/active-discovery.md). **Prefer ILPs:** when discovery returns stable metadata (version, type, role, feature flags), pass the fourth-argument map so instances carry `auto.*` props for filters, grouping, and operator context — not only wildvalue/alias.
 
 ### 9. Create module bundle
 
@@ -157,6 +157,7 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 - [ ] Groovy: `emit.dp()` / `emit.instance()` per [snippet-loader.md](references/snippet-loader.md) and templates
 - [ ] Groovy: `emit = modLoader.load(...)` and other snippet handles **without** `def` (like `debug = false`) so `def` helpers can call them — never `def emit = ...` when helpers emit — [groovy.md](references/groovy.md#script-scoping-locals-vs-helpers)
 - [ ] AD: `emit.instance()` only (ILPs via map arg) — [active-discovery.md](references/active-discovery.md)
+- [ ] AD: attach `auto.*` ILPs for static discovery metadata (type, version, features) when available — omit null/empty — [active-discovery.md](references/active-discovery.md#instance-level-properties-ilps--prefer-rich-discovery)
 - [ ] Test Script exit 0 but empty metrics while parent `println` works → fix snippet binding
 - [ ] Groovy: timeout from Settings with buffer; `proto.snmp` / `lm.remote` over raw APIs
 - [ ] PowerShell: `Write-Output` for data (not `Write-Host`); validate unset `##prop##` tokens
