@@ -6,7 +6,7 @@ Installable [Agent Skills](https://agentskills.io/specification) for AI-assisted
 
 | Skill | Description |
 |-------|-------------|
-| [logicmonitor-module-authoring](logicmonitor-module-authoring/) | End-to-end LogicModule authoring workflow with script structure standards and snippet-first recipes (v0.3.1) |
+| [logicmonitor-module-authoring](logicmonitor-module-authoring/) | LogicModule authoring: scripts, import JSON bundles, schema validation (v0.4.0) |
 | [logicmonitor-dashboard-authoring](logicmonitor-dashboard-authoring/) | Self-contained dashboard JSON authoring (schema, scripts, widget templates; v0.2.2) |
 
 ## Installation
@@ -38,6 +38,21 @@ ln -s "$(pwd)/monitoring-recipes/skills/logicmonitor-module-authoring" ~/.cursor
 
 ## Validation
 
+LogicModule bundles (from the skill root):
+
+```bash
+python skills/logicmonitor-module-authoring/scripts/pack-module.py path/to/ModuleBundle/
+python skills/logicmonitor-module-authoring/scripts/validate-module.py path/to/ModuleBundle/
+```
+
+Optional: add `--with-schema` after `pip install jsonschema` for JSON Schema validation.
+
+A local [`LogicModules/`](../LogicModules/) export tree (gitignored) can refresh bundled schema:
+
+```bash
+python scripts/logicmodule-schema/extract-schema.py
+```
+
 If you have the [skills-ref](https://agentskills.io/specification) validator installed:
 
 ```bash
@@ -56,8 +71,11 @@ Example prompts:
 - "Build a dashboard JSON for these exported DataSources"
 - "Create a cgraph and dynamicTable for Lambda invocation metrics"
 
-## Dashboard schema
+## Bundled schema and scripts
 
-The [logicmonitor-dashboard-authoring](logicmonitor-dashboard-authoring/) skill ships a **portable** copy under `logicmonitor-dashboard-authoring/schema/` and `logicmonitor-dashboard-authoring/scripts/`.
+| Skill | Schema | Tools |
+|-------|--------|--------|
+| [logicmonitor-module-authoring](logicmonitor-module-authoring/) | `logicmonitor-module-authoring/schema/` | `pack-module.py`, `validate-module.py` |
+| [logicmonitor-dashboard-authoring](logicmonitor-dashboard-authoring/) | `logicmonitor-dashboard-authoring/schema/` | `validate-dashboard.py` |
 
-Dashboard JSON Schema and `validate-dashboard.py` live inside [`logicmonitor-dashboard-authoring/schema/`](logicmonitor-dashboard-authoring/schema/) and [`logicmonitor-dashboard-authoring/scripts/`](logicmonitor-dashboard-authoring/scripts/). Maintainers with a local dashboard export corpus may run `scripts/dashboard-schema/extract-enums.py`; output under `schemas/` is gitignored.
+Maintainers with local export corpora (`LogicModules/`, `Dashboards/`, gitignored) can regenerate module schema via `scripts/logicmodule-schema/extract-schema.py`. Dashboard enum extraction may use `scripts/dashboard-schema/`; output under `schemas/` is gitignored.

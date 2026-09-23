@@ -1,0 +1,67 @@
+{
+  "name": "Example_Script_Single",
+  "displayedAs": "Example Script Single",
+  "description": "Template single-instance scripted DataSource.",
+  "appliesTo": "hasCategory(\"example\")",
+  "searchKeywords": "example,template",
+  "technicalNotes": "",
+  "group": "",
+  "type": 0,
+  "dataSourceType": 1,
+  "collectionMethod": "script",
+  "collectionInterval": "3m",
+  "multiInstance": false,
+  "useWildValueAsUniqueIdentifier": false,
+  "collectionAttrs": {
+    "type": "groovy",
+    "content": "// Template: single-instance DataSource collection\nlm.emit('example_metric', '0')\nreturn 0\n"
+  },
+  "datapoints": [
+    {
+      "name": "example_metric",
+      "description": "",
+      "dataType": 7,
+      "type": "gauge",
+      "interpretMethod": "namevalue",
+      "interpretExpr": "example_metric",
+      "useValue": "output",
+      "min": "",
+      "max": "",
+      "maxDigits": 4,
+      "noData": "Do not trigger an alert",
+      "clearInterval": 0,
+      "triggerInterval": 0,
+      "originId": "template_dp_example_metric",
+      "statusDisplayNames": []
+    }
+  ],
+  "graphs": [
+    {
+      "name": "Example Metric",
+      "title": "Example Metric",
+      "verticalLabel": "",
+      "min": 0,
+      "max": 100,
+      "timeScale": "1day",
+      "displayPriority": 1,
+      "scale1024": false,
+      "rigid": false,
+      "lines": [
+        {
+          "datapointName": "example_metric",
+          "legend": "Example",
+          "color": "blue",
+          "type": "line",
+          "isVirtual": false
+        }
+      ],
+      "datapoints": [
+        {
+          "name": "example_metric",
+          "datapointName": "example_metric",
+          "consolidationFn": "average"
+        }
+      ]
+    }
+  ]
+}

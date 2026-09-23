@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "datasource.schema.json",
+  "title": "LogicMonitor DataSource import JSON",
+  "type": "object",
+  "required": [
+    "name",
+    "type",
+    "displayedAs",
+    "description",
+    "appliesTo",
+    "collectionMethod",
+    "collectionAttrs",
+    "collectionInterval",
+    "dataSourceType",
+    "multiInstance",
+    "datapoints"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "displayedAs": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "appliesTo": {
+      "type": "string"
+    },
+    "searchKeywords": {
+      "type": "string"
+    },
+    "technicalNotes": {
+      "type": "string"
+    },
+    "group": {
+      "type": "string"
+    },
+    "type": {
+      "const": 0
+    },
+    "dataSourceType": {
+      "type": "integer",
+      "enum": [
+        1
+      ]
+    },
+    "collectionMethod": {
+      "type": "string",
+      "enum": [
+        "batchscript",
+        "script"
+      ]
+    },
+    "collectionInterval": {
+      "type": "string"
+    },
+    "multiInstance": {
+      "type": "boolean"
+    },
+    "useWildValueAsUniqueIdentifier": {
+      "type": "boolean"
+    },
+    "version": {
+      "type": "integer"
+    },
+    "collectionAttrs": {
+      "$ref": "logicmodule.common.defs.json#/$defs/scriptBlob"
+    },
+    "datapoints": {
+      "type": "array",
+      "items": {
+        "$ref": "logicmodule.common.defs.json#/$defs/datapoint"
+      }
+    },
+    "graphs": {
+      "type": "array",
+      "items": {
+        "$ref": "logicmodule.common.defs.json#/$defs/graph"
+      }
+    },
+    "activeDiscovery": {
+      "$ref": "logicmodule.common.defs.json#/$defs/activeDiscovery"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "collectionMethod": {
+            "const": "batchscript"
+          }
+        },
+        "required": [
+          "collectionMethod"
+        ]
+      },
+      "then": {
+        "required": [
+          "activeDiscovery"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,453 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "logicmodule.common.defs.json",
+  "$defs": {
+    "scriptBlob": {
+      "type": "object",
+      "required": [
+        "type",
+        "content"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "groovy",
+            "powershell"
+          ]
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "datapoint": {
+      "type": "object",
+      "required": [
+        "name",
+        "dataType",
+        "type",
+        "interpretMethod",
+        "noData",
+        "originId"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "dataType": {
+          "type": "integer",
+          "enum": [
+            2,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "counter",
+            "derive",
+            "gauge"
+          ]
+        },
+        "interpretMethod": {
+          "type": "string",
+          "enum": [
+            "csv",
+            "expression",
+            "groovy",
+            "json",
+            "namevalue",
+            "none",
+            "regex",
+            "textmatch"
+          ]
+        },
+        "interpretExpr": {
+          "type": "string"
+        },
+        "useValue": {
+          "type": "string"
+        },
+        "min": {
+          "type": "string"
+        },
+        "max": {
+          "type": "string"
+        },
+        "maxDigits": {
+          "type": "integer"
+        },
+        "noData": {
+          "type": "string"
+        },
+        "clearInterval": {
+          "type": "integer"
+        },
+        "triggerInterval": {
+          "type": "integer"
+        },
+        "originId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "statusDisplayNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "threshold": {
+          "type": "string"
+        },
+        "alertBody": {
+          "type": "string"
+        },
+        "alertSubject": {
+          "type": "string"
+        }
+      }
+    },
+    "graph": {
+      "type": "object",
+      "required": [
+        "name",
+        "title",
+        "lines"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "verticalLabel": {
+          "type": "string"
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "timeScale": {
+          "type": "string"
+        },
+        "displayPriority": {
+          "type": "integer"
+        },
+        "scale1024": {
+          "type": "boolean"
+        },
+        "rigid": {
+          "type": "boolean"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "datapointName",
+              "type"
+            ],
+            "additionalProperties": true,
+            "properties": {
+              "datapointName": {
+                "type": "string"
+              },
+              "legend": {
+                "type": "string"
+              },
+              "color": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "area",
+                  "line",
+                  "stack"
+                ]
+              },
+              "isVirtual": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "datapoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "datapointName",
+              "consolidationFn"
+            ],
+            "additionalProperties": true,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "datapointName": {
+                "type": "string"
+              },
+              "consolidationFn": {
+                "type": "string",
+                "enum": [
+                  "average",
+                  "max",
+                  "min"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "activeDiscovery": {
+      "type": "object",
+      "required": [
+        "discoveryMethod",
+        "enabled",
+        "discoveryInterval",
+        "groupMethod"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "discoveryMethod": {
+          "type": "string",
+          "enum": [
+            "ad_script"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "discoveryInterval": {
+          "type": "string"
+        },
+        "groupMethod": {
+          "type": "string"
+        },
+        "deleteInactiveInstances": {
+          "type": "boolean"
+        },
+        "autoDeleteInstances": {
+          "type": "boolean"
+        },
+        "disableDiscoveredInstances": {
+          "type": "boolean"
+        },
+        "showDeletedInstanceDays": {
+          "type": "integer"
+        },
+        "filters": {
+          "type": "array"
+        },
+        "groupExpr": {
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/scriptBlob"
+        }
+      }
+    }
+  },
+  "x-corpusStats": {
+    "byType": {
+      "0": {
+        "label": "DataSource",
+        "folder": "DataSources",
+        "count": 670,
+        "topLevelKeys": {
+          "collectionMethod": 670,
+          "datapoints": 670,
+          "searchKeywords": 670,
+          "displayedAs": 670,
+          "description": 670,
+          "appliesTo": 670,
+          "collectionAttrs": 670,
+          "type": 670,
+          "technicalNotes": 670,
+          "useWildValueAsUniqueIdentifier": 670,
+          "version": 670,
+          "registryMetadata": 670,
+          "multiInstance": 670,
+          "integrationMetadata": 670,
+          "name": 670,
+          "collectionInterval": 670,
+          "dataSourceType": 670,
+          "group": 670,
+          "graphs": 659,
+          "activeDiscovery": 547,
+          "overviewGraphs": 432,
+          "eriConfig": 4
+        }
+      },
+      "1": {
+        "label": "EventSource",
+        "folder": "EventSources",
+        "count": 44,
+        "topLevelKeys": {
+          "severity": 44,
+          "clearAfterMin": 44,
+          "collectionMethod": 44,
+          "doMapping": 44,
+          "searchKeywords": 44,
+          "description": 44,
+          "appliesTo": 44,
+          "collectionAttrs": 44,
+          "type": 44,
+          "technicalNotes": 44,
+          "version": 44,
+          "registryMetadata": 44,
+          "name": 44,
+          "clearAfterAck": 44,
+          "group": 44,
+          "integrationMetadata": 41,
+          "alertBody": 22,
+          "alertSubject": 10,
+          "filters": 9
+        }
+      },
+      "5": {
+        "label": "PropertySource",
+        "folder": "PropertySources",
+        "count": 44,
+        "topLevelKeys": {
+          "searchKeywords": 44,
+          "integrationMetadata": 44,
+          "name": 44,
+          "description": 44,
+          "appliesTo": 44,
+          "type": 44,
+          "technicalNotes": 44,
+          "version": 44,
+          "registryMetadata": 44,
+          "script": 44,
+          "group": 44
+        }
+      },
+      "6": {
+        "label": "ConfigSource",
+        "folder": "ConfigSources",
+        "count": 91,
+        "topLevelKeys": {
+          "collectionMethod": 91,
+          "searchKeywords": 91,
+          "displayedAs": 91,
+          "configChecks": 91,
+          "description": 91,
+          "appliesTo": 91,
+          "collectionAttrs": 91,
+          "type": 91,
+          "technicalNotes": 91,
+          "useWildValueAsUniqueIdentifier": 91,
+          "version": 91,
+          "registryMetadata": 91,
+          "multiInstance": 91,
+          "name": 91,
+          "collectionInterval": 91,
+          "dataSourceType": 91,
+          "fileFormat": 91,
+          "group": 91,
+          "integrationMetadata": 89,
+          "activeDiscovery": 41
+        }
+      },
+      "11": {
+        "label": "DiagnosticSource",
+        "folder": "DiagnosticSources",
+        "count": 20,
+        "topLevelKeys": {
+          "searchKeywords": 20,
+          "name": 20,
+          "description": 20,
+          "appliesTo": 20,
+          "type": 20,
+          "technicalNotes": 20,
+          "version": 20,
+          "registryMetadata": 20,
+          "script": 20,
+          "group": 20,
+          "integrationMetadata": 10
+        }
+      },
+      "12": {
+        "label": "RemediationSource",
+        "folder": "RemediationSources",
+        "count": 9,
+        "topLevelKeys": {
+          "searchKeywords": 9,
+          "integrationMetadata": 9,
+          "name": 9,
+          "description": 9,
+          "appliesTo": 9,
+          "type": 9,
+          "technicalNotes": 9,
+          "version": 9,
+          "registryMetadata": 9,
+          "script": 9,
+          "group": 9
+        }
+      }
+    },
+    "datasource": {
+      "count": 670,
+      "enums": {
+        "collectionMethod": [
+          "batchscript",
+          "script"
+        ],
+        "dataType": [
+          2,
+          4,
+          5,
+          6,
+          7
+        ],
+        "dpType": [
+          "counter",
+          "derive",
+          "gauge"
+        ],
+        "interpretMethod": [
+          "csv",
+          "expression",
+          "groovy",
+          "json",
+          "namevalue",
+          "none",
+          "regex",
+          "textmatch"
+        ],
+        "noData": [
+          "Do not trigger an alert",
+          "Trigger warning alert"
+        ],
+        "lineType": [
+          "area",
+          "line",
+          "stack"
+        ],
+        "consolidationFn": [
+          "average",
+          "max",
+          "min"
+        ]
+      }
+    }
+  }
+}

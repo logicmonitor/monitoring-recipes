@@ -1,0 +1,13 @@
+{
+  "name": "Example_RemediationSource",
+  "description": "Template RemediationSource.",
+  "appliesTo": "hasCategory(\"example\")",
+  "searchKeywords": "example,remediation,template",
+  "technicalNotes": "",
+  "group": "",
+  "type": 12,
+  "script": {
+    "type": "groovy",
+    "content": "import groovy.json.JsonOutput\n\nprint JsonOutput.toJson([\n    data: 'Remediation output',\n    format: 'markdown',\n    remediationStatus: 'true'\n])\nreturn 0\n"
+  }
+}

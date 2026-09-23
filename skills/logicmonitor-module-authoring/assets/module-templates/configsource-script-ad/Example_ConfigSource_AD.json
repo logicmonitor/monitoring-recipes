@@ -1,0 +1,44 @@
+{
+  "name": "Example_ConfigSource_AD",
+  "displayedAs": "Example ConfigSource",
+  "description": "Template ConfigSource with active discovery.",
+  "appliesTo": "hasCategory(\"example\")",
+  "searchKeywords": "example,config,template",
+  "technicalNotes": "",
+  "group": "",
+  "type": 6,
+  "dataSourceType": 2,
+  "collectionMethod": "script",
+  "collectionInterval": "1d",
+  "multiInstance": true,
+  "fileFormat": "arbitrary",
+  "useWildValueAsUniqueIdentifier": false,
+  "configChecks": [
+    {
+      "severity": "warn",
+      "name": "RetrievalTest",
+      "type": "fetch",
+      "triggerInterval": 0,
+      "description": ""
+    }
+  ],
+  "collectionAttrs": {
+    "type": "groovy",
+    "content": "// Template: output raw config text for wildvalue instance\nprintln 'configuration line 1'\nprintln 'configuration line 2'\nreturn 0\n"
+  },
+  "activeDiscovery": {
+    "discoveryMethod": "ad_script",
+    "enabled": true,
+    "discoveryInterval": "0m",
+    "groupMethod": "none",
+    "deleteInactiveInstances": false,
+    "autoDeleteInstances": true,
+    "disableDiscoveredInstances": false,
+    "showDeletedInstanceDays": 0,
+    "filters": [],
+    "params": {
+      "type": "groovy",
+      "content": "println 'running-config##Running configuration'\nprintln 'startup-config##Startup configuration'\nreturn 0\n"
+    }
+  }
+}

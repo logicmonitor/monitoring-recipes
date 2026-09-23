@@ -1,0 +1,18 @@
+{
+  "name": "Example_EventSource",
+  "description": "Template scripted EventSource.",
+  "appliesTo": "hasCategory(\"example\")",
+  "searchKeywords": "example,event,template",
+  "technicalNotes": "",
+  "group": "",
+  "type": 1,
+  "collectionMethod": "scriptevent",
+  "severity": "warn",
+  "clearAfterAck": true,
+  "clearAfterMin": 0,
+  "doMapping": false,
+  "collectionAttrs": {
+    "type": "groovy",
+    "content": "import groovy.json.JsonOutput\n\nprint JsonOutput.toJson([\n    events: [[\n        happenedOn: new Date().format(\"yyyy-MM-dd'T'HH:mm:ssZ\"),\n        severity: 'warn',\n        message: 'Example script event'\n    ]]\n])\nreturn 0\n"
+  }
+}

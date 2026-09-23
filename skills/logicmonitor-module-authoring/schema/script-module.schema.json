@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "script-module.schema.json",
+  "title": "PropertySource / DiagnosticSource / RemediationSource",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "name",
+        "type",
+        "description",
+        "appliesTo",
+        "script"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "appliesTo": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            5,
+            11,
+            12
+          ]
+        },
+        "script": {
+          "$ref": "logicmodule.common.defs.json#/$defs/scriptBlob"
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

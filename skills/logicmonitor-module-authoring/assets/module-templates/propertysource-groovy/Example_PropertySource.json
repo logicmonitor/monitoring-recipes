@@ -1,0 +1,13 @@
+{
+  "name": "Example_PropertySource",
+  "description": "Template PropertySource.",
+  "appliesTo": "hasCategory(\"example\")",
+  "searchKeywords": "example,property,template",
+  "technicalNotes": "",
+  "group": "",
+  "type": 5,
+  "script": {
+    "type": "groovy",
+    "content": "println 'auto.example.property=template'\nreturn 0\n"
+  }
+}

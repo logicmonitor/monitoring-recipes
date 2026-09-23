@@ -40,6 +40,8 @@ Thank you for helping improve Monitoring Recipes.
 - Keep `SKILL.md` under ~500 lines
 - Run `skills-ref validate ./skills/logicmonitor-module-authoring` before submitting
 - Update `PROJECT.md` skill reference tracker
+- After changing import JSON rules, run template checks: `pack-module.py` and `validate-module.py` on `skills/logicmonitor-module-authoring/assets/module-templates/*`
+- With a local `LogicModules/` corpus, refresh bundled schema: `python scripts/logicmodule-schema/extract-schema.py`
 
 ## Updating docs
 

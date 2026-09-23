@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "configsource.schema.json",
+  "title": "LogicMonitor ConfigSource import JSON",
+  "type": "object",
+  "required": [
+    "name",
+    "type",
+    "displayedAs",
+    "description",
+    "appliesTo",
+    "collectionMethod",
+    "collectionAttrs",
+    "collectionInterval",
+    "dataSourceType",
+    "multiInstance",
+    "fileFormat"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "displayedAs": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "appliesTo": {
+      "type": "string"
+    },
+    "type": {
+      "const": 6
+    },
+    "dataSourceType": {
+      "type": "integer",
+      "enum": [
+        2
+      ]
+    },
+    "collectionMethod": {
+      "type": "string",
+      "enum": [
+        "script"
+      ]
+    },
+    "collectionInterval": {
+      "type": "string"
+    },
+    "multiInstance": {
+      "type": "boolean"
+    },
+    "fileFormat": {
+      "type": "string"
+    },
+    "configChecks": {
+      "type": "array"
+    },
+    "collectionAttrs": {
+      "$ref": "logicmodule.common.defs.json#/$defs/scriptBlob"
+    },
+    "activeDiscovery": {
+      "$ref": "logicmodule.common.defs.json#/$defs/activeDiscovery"
+    }
+  }
+}

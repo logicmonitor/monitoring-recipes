@@ -5,15 +5,23 @@ description: >-
   PropertySource, TopologySource, EventSource, DiagnosticSource,
   RemediationSource) using Groovy or PowerShell. Use when creating or
   editing LogicModule scripts, active discovery, collection output,
-  SNMP/SSH/HTTP/WinRM/WMI integration, or choosing between module types.
+  import JSON bundles (datapoints, graphs), SNMP/SSH/HTTP/WinRM/WMI
+  integration, or choosing between module types.
 license: Apache-2.0
 compatibility: LogicMonitor Collector; references monitoring-recipes repo
 metadata:
   author: logicmonitor
-  version: "0.3.1"
+  version: "0.4.0"
 ---
 
 # LogicMonitor Module Authoring
+
+| Path | Purpose |
+|------|---------|
+| `schema/` | JSON Schema for import validation |
+| `scripts/` | `pack-module.py`, `validate-module.py`, `extract-keys-from-script.py` |
+| `assets/module-templates/` | Example bundles (JSON + `collect.*` / `ad.*`) |
+| `references/` | Import JSON, script structure, output formats |
 
 ## Workflow
 
@@ -47,7 +55,7 @@ For **DataSource** and **ConfigSource**, read [references/collection-modes.md](r
 - Scripted (Groovy/PowerShell) for complex logic or APIs
 - Script mode: runs per instance; BatchScript: runs once per device (multi-instance)
 
-Other module types use their own output models — skip to step 6 for JSON-based types (Event, Log, Topology, Diag, Remediation).
+Other module types use their own output models — see import JSON references for Event, Log, Topology, Diag, Remediation.
 
 ### 4. Choose language
 
@@ -91,9 +99,48 @@ Read [references/active-discovery.md](references/active-discovery.md).
 
 Output: `wildvalue##wildalias` per line. Wildvalue must not contain spaces, `:`, `=`, `\`, or `#`.
 
-### 9. Validate before finishing
+### 9. Create module bundle
 
-Checklist:
+Read [references/module-deliverable-layout.md](references/module-deliverable-layout.md).
+
+Deliver **one directory per LogicModule**:
+
+- `Vendor_Product_Monitor.json` — datapoints, graphs, metadata
+- `collect.groovy` or `collect.ps1` — collection (or single-script module types)
+- `ad.groovy` or `ad.ps1` — when `activeDiscovery.params` is used
+
+Copy a starter from [assets/module-templates/README.md](assets/module-templates/README.md). Type-specific JSON fields: [references/import-json-overview.md](references/import-json-overview.md).
+
+### 10. Pack for import
+
+```bash
+python scripts/pack-module.py path/to/Vendor_Product_Monitor/
+```
+
+Inlines script files into JSON `content` fields before portal import. Use `--check` to detect drift without writing.
+
+### 11. Align script ↔ JSON
+
+Read [references/script-json-alignment.md](references/script-json-alignment.md). Datapoint names, `interpretExpr`, and graph lines must match keys emitted from `collect.*`.
+
+### 12. Validate
+
+```bash
+python scripts/validate-module.py path/to/Vendor_Product_Monitor/
+```
+
+Uses Python stdlib only (pack sync, datapoints vs `collect.*`, graphs). Optional JSON Schema pass: `--with-schema` if `jsonschema` is installed.
+
+Optional: `python scripts/extract-keys-from-script.py path/to/bundle/ --batchscript`
+
+### 13. Deliver
+
+Hand off the **full bundle directory** (JSON + script files). Run pack before import if the user imports JSON only.
+
+For dashboards on a new DataSource, read [references/dashboard-handoff.md](references/dashboard-handoff.md).
+
+### 14. Validate scripts (checklist)
+
 - [ ] Script follows [script-structure.md](references/script-structure.md) section order
 - [ ] No hardcoded credentials — use `hostProps` / device properties
 - [ ] Return `0` on success (LogSource discards output on non-zero)
@@ -108,11 +155,22 @@ Checklist:
 - [ ] Placeholders replaced with actual values
 - [ ] API auth tokens: consider `lm.cache` or `ScriptCache` on Collector 29.100+ — see [references/script-cache.md](references/script-cache.md)
 - [ ] Module Snippets referenced (not copied) where applicable — see [references/snippets-catalog.md](references/snippets-catalog.md)
+- [ ] `validate-module.py` passes on the bundle after `pack-module.py`
+- [ ] DataSource: every `namevalue` datapoint matches a collect script key; graph lines reference defined datapoints
+- [ ] Each datapoint has `originId` before import
 
 ## Reference files
 
 | File | When to read |
 |------|--------------|
+| [module-deliverable-layout.md](references/module-deliverable-layout.md) | Bundle layout, collect/ad files, pack workflow |
+| [import-json-overview.md](references/import-json-overview.md) | Portal import JSON shape and type codes |
+| [datasource-import-json.md](references/datasource-import-json.md) | DataSource datapoints, graphs, AD |
+| [configsource-import-json.md](references/configsource-import-json.md) | ConfigSource JSON |
+| [scripted-module-import-json.md](references/scripted-module-import-json.md) | Property / Diag / Rem JSON |
+| [eventsource-import-json.md](references/eventsource-import-json.md) | Scripted EventSource JSON |
+| [script-json-alignment.md](references/script-json-alignment.md) | Script keys vs datapoints and graphs |
+| [dashboard-handoff.md](references/dashboard-handoff.md) | Dashboard `dataSourceFullName` after import |
 | [script-structure.md](references/script-structure.md) | Arranging any Groovy or PowerShell script |
 | [snippet-loader.md](references/snippet-loader.md) | Bootstrap, version pins, collector resolution |
 | [snippets-catalog.md](references/snippets-catalog.md) | Snippet APIs (proto.snmp, lm.emit, lm.remote, etc.) |
