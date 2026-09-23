@@ -43,7 +43,7 @@ When building custom LogicModules:
 - Check whether an existing snippet already implements the capability before writing custom code
 - If a LogicMonitor-provided module uses snippets, ensure `LogicMonitor_Collector_Snippets` is installed on Collectors that will run it
 - Do not replicate snippet logic in recipe scripts — link to official module documentation instead
-- For agent authoring, see the skill [snippets catalog](../../skills/logicmonitor-module-authoring/references/snippets-catalog.md) for which snippets to load and how
+- For agent authoring, see the skill [snippet loader](../../skills/logicmonitor-module-authoring/references/snippet-loader.md) and [snippets catalog](../../skills/logicmonitor-module-authoring/references/snippets-catalog.md)
 
 ## Related concepts
 

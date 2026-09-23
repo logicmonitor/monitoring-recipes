@@ -15,7 +15,7 @@ def loader = GSH.getInstance(GroovySystem.version)
 def emit = loader.load("lm.emit", "0")
 ```
 
-See [snippets-catalog.md](snippets-catalog.md) for all available snippets and version pins.
+See [snippet-loader.md](snippet-loader.md) for bootstrap and version pins, and [snippets-catalog.md](snippets-catalog.md) for snippet APIs.
 
 | Task | Snippet | Avoid |
 |------|---------|-------|
@@ -24,6 +24,8 @@ See [snippets-catalog.md](snippets-catalog.md) for all available snippets and ve
 | HTTP | `proto.http` | Raw `Http` without proxy handling |
 | JDBC | `lm.sql` | Manual connection without error maps |
 | Output | `lm.emit` | Hand-rolled `println "key=value"` |
+| Events JSON | `lm.emit.events` | Manual `events` JSON strings |
+| Large JSON/XML slice | `lm.parse` | Fragile regex-only parsing |
 
 Requires **LogicMonitor_Collector_Snippets** module and monitoring enabled on collector host.
 

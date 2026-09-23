@@ -1,175 +1,311 @@
-# Snippets Catalog
+# Snippets catalog
 
-When to load which platform snippet, version pins, and entry points. **Do not copy snippet source** — load at runtime via the snippet loader.
+Which platform snippet to load, version pins, and **documented entry points** (distilled from platform snippet sources — not copied into this repo).
 
-See also: [module-snippets.md](module-snippets.md), [script-structure.md](script-structure.md)
+See also: [snippet-loader.md](snippet-loader.md), [module-snippets.md](module-snippets.md), [script-structure.md](script-structure.md)
 
 ## Prerequisites
 
-1. Install **LogicMonitor_Collector_Snippets** module on the collector
-2. Enable monitoring on the **Collector host resource**
-3. Use the standard bootstrap in every snippet-based Groovy script:
+1. Install **LogicMonitor_Collector_Snippets** on the collector
+2. Enable monitoring on the **Collector host** resource
+3. Use the bootstrap in [snippet-loader.md](snippet-loader.md)
 
-```groovy
-import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH
-import com.logicmonitor.mod.Snippets
+## Quick reference
 
-def loader = GSH.getInstance(GroovySystem.version)
-    .getScript("Snippets", Snippets.getLoader())
-```
+| Snippet | Min version | Load | Primary API | Typical module types |
+|---------|-------------|------|-------------|----------------------|
+| `lm.emit` | `"0"` | `loader.load("lm.emit", "0")` | `.dp()`, `.instance()`, `.property()`, `.events()` | DataSource, AD, PropertySource, Event/Log |
+| `proto.snmp` | `"0"` | `loader.load("proto.snmp", "0")` | `.create(host, props?, startTime?).withRetries(n).walk/get` | DataSource |
+| `lm.remote` | `"0.6.0"` | `loader.load("lm.remote", "0.6.0")` | `.exec()`, `.create(props).exec()`, `.sftp()`, `.scp()`, `.shell()` | DataSource, ConfigSource |
+| `proto.http` | `"0"` | `loader.load("proto.http", "0")` | `.httpSnippetFactory(hostProps)` → `rawGet/rawPost/rawDelete` | DataSource, PropertySource |
+| `lm.sql` | `"0"` | `loader.load("lm.sql", "0")` | `.attemptConnection()`, `.runQuery()`, `.validatePorts()` | DataSource |
+| `lm.cache` | `"0"` | `loader.load("lm.cache", "0")` | `.cacheSnippetFactory(debugSnip, keySuffix)` | HTTP auth caching |
+| `lm.debug` | `"0"` | `loader.load("lm.debug", "0")` | `.create(hostProps, debug, out)` → `.debug/.info/.warn/.error` | All scripted |
+| `lm.parse` | `"0"` | `loader.load("lm.parse", "0")` | `.getJsonStringNode()`, `.getXMLStringNode()` | DataSource (API/XML) |
+| `lm.bitsandbobs` | `"0"` | `loader.load("lm.bitsandbobs", "0")` | `.probeTcpPort()`, `.keepAlive(hostProps)`, `.timer()` | DataSource, long scripts |
+| `lm.topo` | `"0"` | `loader.load("lm.topo", "0")` | `.registerEdge()`, `.generateTopology()` | TopologySource |
+| `lm.api` | `"0"` | `loader.load("lm.api", "0")` | `.lmApiSnippetFactory(hostProps, http, debug)` | Netscan, portal lookups |
 
-## Snippet reference
-
-| Snippet | Min version | Load | Primary methods | Recipe |
-|---------|-------------|------|-----------------|--------|
-| `lm.emit` | `"0"` | `loader.load("lm.emit", "0")` | `.dp()`, `.instance()`, `.property()` | All Groovy output |
-| `proto.snmp` | `"0"` | `loader.load("proto.snmp", "0")` | `.create(host).withRetries(5).walk(oid)` | snmp-walk, snmp-get |
-| `lm.remote` | `"0.6.0"` | `loader.load("lm.remote", "0.6.0")` | `.exec(hostProps, cmd)`, `.create(hostProps).exec(cmd)` | ssh-exec |
-| `proto.http` | `"0"` | `loader.load("proto.http", "0")` | `.httpSnippetFactory(hostProps)` | http-rest |
-| `lm.sql` | `"0"` | `loader.load("lm.sql", "0")` | `.attemptConnection()`, `.runQuery()` | jdbc |
-| `lm.cache` | `"0"` | `loader.load("lm.cache", "0")` | `.cacheSnippetFactory(debug, keySuffix)` | http-rest (token auth) |
-| `lm.debug` | `"0"` | `loader.load("lm.debug", "0")` | `.create(out)` → `.LMDebugPrint()` | Optional debugging |
-| `lm.topo` | `"0"` | `loader.load("lm.topo", "0")` | Topology edge registration | Phase 2 — not a building block |
-| `lm.api` | `"0"` | `loader.load("lm.api", "0")` | LM REST API client | Phase 2 — niche |
+`lm.topo.snmp` and other protocol-specific topology helpers may exist as separate snippet names in the platform catalog; prefer official TopologySource modules as templates before reimplementing.
 
 ---
 
-## lm.emit — output formatting
+## lm.emit — collector-parseable output
 
-Load once, use for all collector-parseable output:
+Load once per script. Prefer over hand-built `println` lines.
+
+### DataSource
 
 ```groovy
 def emit = loader.load("lm.emit", "0")
 
-// DataSource Script mode
-emit.dp("cpuUsage", 42)
+emit.dp("cpuUsage", 42)                        // Script: key=value
+emit.dp("eth0", "ifInOctets", 12345)           // BatchScript: instance.field=value
+```
 
-// DataSource BatchScript mode
-emit.dp("instanceId", "cpuUsage", 42)
+Booleans become `1.0` / `0.0`. Null/empty values are emitted with collector-safe rules. Field and wildvalue names are sanitized (`# \ : =` and spaces in wildvalues → `_`).
 
-// Active Discovery
-emit.instance("eth0", "GigabitEthernet0", "Uplink", ["auto.speed": "1000"])
+### Active Discovery
 
-// PropertySource
+```groovy
+emit.instance("eth0", "GigabitEthernet0")                           // wv##alias
+emit.instance("eth0", "GigabitEthernet0", "Uplink")                 // + description
+emit.instance("eth0", "GigabitEthernet0", "Uplink", ["speed": "1000"]) // + ILP; non-auto keys get auto. prefix
+```
+
+### PropertySource
+
+```groovy
 emit.property("auto.vendor", "Cisco")
 emit.property("system.categories", "MyCategory")
 ```
 
-Only `auto.*` and `system.categories` are allowed for PropertySource.
+Only `auto.*` and `system.categories` are valid for PropertySource output.
 
----
-
-## proto.snmp — SNMP operations
+### EventSource / LogSource
 
 ```groovy
-def snmp = loader.load("proto.snmp", "0").create(host, props, startTime)
-    .withRetries(5)
-
-// Walk — returns Map[index: value]
-def walkResult = snmp.walk("INSERT_OID_HERE")
-
-// Get — returns scalar value
-def value = snmp.get("INSERT_OID_HERE.1")
+emit.events([
+    [happenedOn: System.currentTimeMillis(), severity: "warn", message: "Example"]
+])
 ```
 
-Handles timeout budgeting from collector Settings internally. Prefer over raw `Snmp.walk()` / `Snmp.get()`.
+Uses `JsonOutput` — do not hand-build the `events` JSON when this snippet is available.
+
+### Netscan (advanced)
+
+Legacy line format: `emit.resource(ip, displayName)` and overloads with host props / group.
+
+Enhanced JSON netscan: list of maps with keys `hostname`, `displayname`, `hostProps`, `groupName`, `collectorId` — invalid keys and disallowed `hostProps` (e.g. `auto.*`, most `system.*`) are stripped/sanitized by the snippet.
+
+### hostProps parsing helpers (on emit object)
+
+| Method | Purpose |
+|--------|---------|
+| `parseCsl(input)` | Comma-separated list → `List` (e.g. categories) |
+| `parseBool(input)` / `parseBool(input, default)` | `"true"`/`"1"`/`"false"`/`"0"` |
+| `parseInt` / `parseFloat` | Typed parsing with optional defaults |
 
 ---
 
-## lm.remote — SSH execution
+## proto.snmp — SNMP walk/get with retries and timeout budget
 
-Uses SSHJ (not raw JSCH). Reads credentials from hostProps:
+```groovy
+def host = hostProps.get("system.hostname")
+Map props = hostProps.toProperties().collectEntries { k, v -> [(k.toLowerCase()): v] }
+
+def snmp = loader.load("proto.snmp", "0").create(host, props, System.currentTimeMillis())
+    .withRetries(5)
+
+def walkResult = snmp.walk("INSERT_OID")   // Map index → value
+def scalar     = snmp.get("INSERT_OID.1")
+```
+
+Notes:
+
+- `create(host)` works with defaults; pass lowercase **props** map for SNMP v3/community props.
+- Timeout is derived from `collector.script.timeout` minus an internal buffer (default 1000 ms).
+- Optional `withThreads(n)` + `addWalk`/`addGet` + `fetch` batch multiple OIDs; use only when necessary — threading has overhead.
+- Failed operations can throw `SNMP Error: ...` after retries; handle or fail the script with `return 1`.
+
+Prefer this over raw `Snmp.walk` / `Snmp.get` without retry/time budgeting.
+
+---
+
+## lm.remote — SSH (SSHJ)
+
+Credential resolution from `hostProps`:
 
 | Property | Fallback |
 |----------|----------|
 | `ssh.user` | `config.user` |
 | `ssh.pass` | `config.pass` |
 | `ssh.cert` | `ssh.publickey` |
+| `ssh.cert.pass` | `ssh.publickey.pass` |
 | `ssh.port` | `22` |
+| `ssh.challenge` / `auto.ssh.challenge` | `prompt=>response` pairs (comma-separated) |
+| `ssh.preferredauthentications` / `auto.ssh.preferredauthentications` | collector SSH auth order |
 
 ```groovy
 def remote = loader.load("lm.remote", "0.6.0")
 
-// One-shot exec
-def output = remote.exec(hostProps, "INSERT_COMMAND_HERE")
+def output = remote.exec(hostProps, "INSERT_COMMAND")
 
-// Stateful session with debug
-def session = remote.create(hostProps).withDebug(out)
-def output = session.exec("INSERT_COMMAND_HERE")
+def session = remote.create(hostProps).withDebug(out).withKeepAlive(true)
+output = session.exec("INSERT_COMMAND")
 ```
 
-For interactive shell sessions (ConfigSource), see Phase 2 `ssh-interactive-config` — not covered by this building block.
+Also available: `remote.sftp(hostProps, remotePath)`, `remote.scp(hostProps, remotePath)`, and `session.shell()` for interactive ConfigSource-style sessions (allocate PTY, manage shell lifecycle, call `exit()` when done).
+
+Host key verification uses a promiscuous verifier (platform default for monitoring scripts). Do not reimplement with raw JSCH.
 
 ---
 
-## proto.http — HTTP client
-
-Proxy-aware HTTP with collector and device proxy settings:
+## proto.http — proxy-aware HTTP
 
 ```groovy
 def httpMod = loader.load("proto.http", "0")
 def http = httpMod.httpSnippetFactory(hostProps)
 
-def response = http.rawGet("https://api.example.com/data", ["Authorization": "Bearer ${token}"])
-def body = response.inputStream.text
-def statusCode = response.responseCode
+def conn = http.rawGet("https://api.example.com/data",
+    ["Authorization": "Bearer ${token}"],
+    60000, 60000, false)
+
+def body = conn.inputStream.text
+def status = conn.responseCode
 ```
 
-Methods: `rawGet()`, `rawPost()`, `rawDelete()` — each accepts headers, timeouts, and `ignoreProxy` flag.
+| Method | Notes |
+|--------|--------|
+| `rawGet(endpoint, headers, …)` | Optional query map overload |
+| `rawPost(endpoint, headers, body, …)` | UTF-8 body |
+| `rawDelete(endpoint, headers, body?, …)` | Optional body |
+
+Proxy: honored when **device** `proxy.enable` (default true if unset) **and** collector `proxy.enable` are true. `proxy.exclude` on device or collector supports `|`/`glob *` host patterns. Pass `ignoreProxy: true` to bypass.
 
 ---
 
-## lm.sql — JDBC database queries
+## lm.sql — JDBC
 
 ```groovy
 def sql = loader.load("lm.sql", "0")
 
-def user = hostProps.get("jdbc.user")
-def pass = hostProps.get("jdbc.pass")
-def url  = hostProps.get("jdbc.url")  // jdbc:vendor://host:port/database
+def conn = sql.attemptConnection(
+    hostProps.get("jdbc.user"),
+    hostProps.get("jdbc.pass"),
+    hostProps.get("jdbc.url"))   // jdbc:vendor://host:port/db
 
-Map conn = sql.attemptConnection(user, pass, url)
 if (conn.status != "success") {
     println "error=${conn.errors?.join(',')}"
     return 1
 }
 
-Map result = sql.runQuery("INSERT_SQL_QUERY_HERE", conn.connection)
+def result = sql.runQuery("SELECT …", conn.connection)
 if (result.status == "success") {
-    result.data.each { row ->
-        emit.dp("columnName", row.columnName)
-    }
+    result.data.each { row -> emit.dp("col", row.col) }
 } else if (result.status == "no data") {
-    // handle empty result set
+    // empty result set
 } else {
     println "error=${result.error}"
     return 1
 }
 
 conn.connection?.close()
-return 0
 ```
 
-`runQuery` returns `{status: 'success'|'no data'|'failed', data, error}`.
+`runQuery` status: `success` | `no data` | `failed`. Connection status: `success` | `failed`.
+
+`validatePorts("3306,foo,42")` → `"3306,42"` for comma-separated port lists.
 
 ---
 
 ## lm.cache — ScriptCache wrapper
 
-Pairs with [script-cache.md](script-cache.md). Use for auth tokens between collection intervals:
+Requires Collector **29.100+** (`ScriptCache`). See [script-cache.md](script-cache.md).
+
+The factory expects a **debug helper** with `LMDebugPrint(String)` (used internally). When not debugging, pass a no-op:
 
 ```groovy
 def cacheMod = loader.load("lm.cache", "0")
-def cache = cacheMod.cacheSnippetFactory(null, "myModule")
+def debugSnip = [LMDebugPrint: { msg -> if (debug) println msg }]
+def cache = cacheMod.cacheSnippetFactory(debugSnip, "myModule")
 
 def token = cache.cacheGet("authToken")
 if (!token) {
     token = authenticate()
-    cache.cacheSet("authToken", token, 3600)  // expiry in seconds
+    cache.cacheSet("authToken", token, 3600)   // expiry seconds; default 43200
 }
 ```
 
-Requires Collector 29.100+ for ScriptCache API.
+| Method | Purpose |
+|--------|---------|
+| `cacheGet` / `cacheSet` / `cacheRemove` | String values; keys prefixed with `keySuffix` |
+| `cacheGetJson` | Parse JSON or return raw string |
+| `filterData` / `filterJsonToString` | Shrink large objects before caching |
+
+---
+
+## lm.debug — structured debug logging
+
+```groovy
+def dbgMod = loader.load("lm.debug", "0")
+def dbg = dbgMod.create(hostProps, debug, out)
+
+dbg.debug("detail")
+dbg.info("progress")
+dbg.warn("recoverable")
+dbg.error("failure")
+```
+
+Device properties: `debug.log` (`1`/`true`), `debug.logFile`, `debug.log.level` (1–4). Fluent: `withDebug()`, `withOutput()`, `withLogging()`, `withLogFile("../logs/…")`.
+
+Pair with `lm.cache` via a small `LMDebugPrint` adapter (see above), not by assuming `LMDebugPrint` exists on the debug object.
+
+---
+
+## lm.parse — substring extraction from large responses
+
+When full `JsonSlurper` / XML parser is heavy or fragile:
+
+```groovy
+def parse = loader.load("lm.parse", "0")
+def node = parse.getJsonStringNode(bigJson, '"items":', false)
+def xmlFrag = parse.getXMLStringNode(bigXml, "<entry>", false)
+```
+
+`multi: true` returns concatenated matches. Useful for trimming API payloads before metric emission.
+
+---
+
+## lm.bitsandbobs — misc collector helpers
+
+```groovy
+def b = loader.load("lm.bitsandbobs", "0")
+
+if (b.probeTcpPort(host, 443)) { … }
+
+b.keepAlive(hostProps)   // flags system.deviceId alive for long BatchScripts
+
+def (result, ms) = b.timer({ expensiveCall() })
+```
+
+`getProxyInfo()` exists but **proto.http** is the supported path for HTTP proxy behavior in new modules.
+
+---
+
+## lm.topo — TopologySource JSON
+
+Build edges in memory, then render:
+
+```groovy
+def topo = loader.load("lm.topo", "0")
+def edges = []
+
+topo.registerEdge(edges, "fromEri", "toEri", "dependsOn")
+// Or use extended registerEdge overloads for displayType, instances, health metadata
+
+def json = topo.generateTopology(edges, "myNamespace", [], false)
+print json
+return 0
+```
+
+`generateTopology` returns pretty-printed JSON with `vertices` and `edges` maps. Namespace prefixes ERIs and applies blacklist prefixes. Additional helpers (`eriPreProcessor`, `propsToErt`, LLDP/CDP processors) support LM-style topology modules — copy patterns from an official TopologySource when possible.
+
+---
+
+## lm.api — LogicMonitor REST from the collector
+
+```groovy
+def httpMod = loader.load("proto.http", "0")
+def http = httpMod.httpSnippetFactory(hostProps)
+def dbg = loader.load("lm.debug", "0").create(hostProps, false, out)
+def apiMod = loader.load("lm.api", "0")
+def api = apiMod.lmApiSnippetFactory(hostProps, http, dbg)
+```
+
+Credentials on device: `logicmonitor.access.id` / `logicmonitor.access.key` (aliases `lmaccess.id` / `lmaccess.key`).
+
+Common methods: `getPortalDevices`, `findPortalDevice*`, `apiGetV2`, `apiGetManyV2` (pagination), `generateLMTokenAuth` for signed requests. Use for netscan dedupe and portal-side lookups — not for routine per-poll metric collection unless required.
 
 ---
 
@@ -177,10 +313,14 @@ Requires Collector 29.100+ for ScriptCache API.
 
 | Task | Use snippet | Avoid |
 |------|-------------|-------|
-| SNMP walk/get | `proto.snmp` | Raw `Snmp.*` without retries |
-| SSH one-shot command | `lm.remote` | Raw JSCH |
-| HTTP REST API | `proto.http` | Raw `Http` API without proxy handling |
-| JDBC query | `lm.sql` | Manual `Sql.newInstance` without error maps |
-| Format output | `lm.emit` | Hand-rolled `println "key=value"` |
-| Cache auth token | `lm.cache` | File-based token storage |
-| Topology edges | `lm.topo` + `lm.topo.snmp` | Custom JSON edge building |
+| SNMP walk/get | `proto.snmp` | Raw `Snmp.*` without retries/time budget |
+| SSH command / file | `lm.remote` | Raw JSCH |
+| HTTP REST | `proto.http` | Raw `Http` without proxy/exclude handling |
+| JDBC | `lm.sql` | Ad-hoc `Sql.newInstance` without status maps |
+| Script output | `lm.emit` | Hand-rolled `println` key=value / AD lines |
+| Events JSON | `lm.emit.events` | Manual JSON string for events |
+| Auth token reuse | `lm.cache` | Local files on collector |
+| Debug | `lm.debug` | Unconditional `println` in production |
+| Slice JSON/XML | `lm.parse` | Regex-only parsing of large bodies |
+| Topology | `lm.topo` | Hand-built edge JSON without sanitization |
+| Portal API | `lm.api` | Hard-coded portal URLs without signing |

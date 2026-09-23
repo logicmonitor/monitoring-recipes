@@ -2,7 +2,7 @@
 
 Canonical code arrangement for LogicMonitor collector scripts. Follow this layout in all custom Groovy and PowerShell modules.
 
-See also: [snippets-catalog.md](snippets-catalog.md), [module-snippets.md](module-snippets.md)
+See also: [snippet-loader.md](snippet-loader.md), [snippets-catalog.md](snippets-catalog.md), [module-snippets.md](module-snippets.md)
 
 ## Groovy (snippet-first)
 

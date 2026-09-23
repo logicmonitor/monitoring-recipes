@@ -10,7 +10,7 @@ license: Apache-2.0
 compatibility: LogicMonitor Collector; references monitoring-recipes repo
 metadata:
   author: logicmonitor
-  version: "0.3.0"
+  version: "0.3.1"
 ---
 
 # LogicMonitor Module Authoring
@@ -59,7 +59,7 @@ Read the appropriate reference:
 
 Read [references/script-structure.md](references/script-structure.md).
 
-Follow the canonical section order for the chosen language. For Groovy, use the snippet loader bootstrap and prefer platform snippets over raw APIs — see [references/snippets-catalog.md](references/snippets-catalog.md).
+Follow the canonical section order for the chosen language. For Groovy, use the snippet loader bootstrap — see [references/snippet-loader.md](references/snippet-loader.md) — and prefer platform snippets over raw APIs — see [references/snippets-catalog.md](references/snippets-catalog.md).
 
 ### 6. Find a recipe
 
@@ -114,7 +114,8 @@ Checklist:
 | File | When to read |
 |------|--------------|
 | [script-structure.md](references/script-structure.md) | Arranging any Groovy or PowerShell script |
-| [snippets-catalog.md](references/snippets-catalog.md) | Loading platform snippets (proto.snmp, lm.remote, etc.) |
+| [snippet-loader.md](references/snippet-loader.md) | Bootstrap, version pins, collector resolution |
+| [snippets-catalog.md](references/snippets-catalog.md) | Snippet APIs (proto.snmp, lm.emit, lm.remote, etc.) |
 | [module-types.md](references/module-types.md) | Choosing or confirming module type |
 | [output-formats.md](references/output-formats.md) | Formatting script output |
 | [active-discovery.md](references/active-discovery.md) | Multi-instance discovery |

@@ -10,8 +10,9 @@ Reusable platform code (functions, classes, data) used by newer LogicModules for
 
 - Snippets are **platform-managed** — customers cannot create, modify, or deploy them
 - Snippets cannot exist standalone — they support modules that reference them
-- **Do not copy** snippet source into custom scripts or this repository
+- **Do not copy** snippet source into custom scripts or this repository (local `example-code/snippets-ref` exports are for maintainer distillation only)
 - Check if a snippet already solves the problem before writing custom code
+- Load via the collector bootstrap — see [snippet-loader.md](snippet-loader.md)
 - See [snippets-catalog.md](snippets-catalog.md) for which snippet to load, version pins, and API entry points
 
 ## Collector requirements
