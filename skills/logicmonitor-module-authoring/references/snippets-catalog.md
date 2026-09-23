@@ -30,17 +30,17 @@ Factories are **not** interchangeable with the `emit` snippet object — each pl
 
 | Snippet | Min version | Load | Primary API | Typical module types |
 |---------|-------------|------|-------------|----------------------|
-| `lm.emit` | `"0"` | `modLoader.load("lm.emit", "0")` | `.dp()`, `.instance()`, `.property()`, `.events()` | DataSource, AD, PropertySource, Event/Log |
-| `proto.snmp` | `"0"` | `loader.load("proto.snmp", "0")` | `.create(host, props?, startTime?).withRetries(n).walk/get` | DataSource |
-| `lm.remote` | `"0.6.0"` | `loader.load("lm.remote", "0.6.0")` | `.exec()`, `.create(props).exec()`, `.sftp()`, `.scp()`, `.shell()` | DataSource, ConfigSource |
-| `proto.http` | `"0"` | `loader.load("proto.http", "0")` | `.httpSnippetFactory(hostProps)` → `rawGet/rawPost/rawDelete` | DataSource, PropertySource |
-| `lm.sql` | `"0"` | `loader.load("lm.sql", "0")` | `.attemptConnection()`, `.runQuery()`, `.validatePorts()` | DataSource |
-| `lm.cache` | `"0"` | `loader.load("lm.cache", "0")` | `.cacheSnippetFactory(debugSnip, keySuffix)` | HTTP auth caching |
-| `lm.debug` | `"0"` | `loader.load("lm.debug", "0")` | `.create(hostProps, debug, out)` → `.debug/.info/.warn/.error` | All scripted |
-| `lm.parse` | `"0"` | `loader.load("lm.parse", "0")` | `.getJsonStringNode()`, `.getXMLStringNode()` | DataSource (API/XML) |
-| `lm.bitsandbobs` | `"0"` | `loader.load("lm.bitsandbobs", "0")` | `.probeTcpPort()`, `.keepAlive(hostProps)`, `.timer()` | DataSource, long scripts |
-| `lm.topo` | `"0"` | `loader.load("lm.topo", "0")` | `.registerEdge()`, `.generateTopology()` | TopologySource |
-| `lm.api` | `"0"` | `loader.load("lm.api", "0")` | `.lmApiSnippetFactory(hostProps, http, debug)` | Netscan, portal lookups |
+| `lm.emit` | `"1.3.0"` | `modLoader.load("lm.emit", "1.3.0")` | `.dp()`, `.instance()`, `.property()`, `.events()` | DataSource, AD, PropertySource, Event/Log |
+| `proto.snmp` | `"0.2.0"` | `loader.load("proto.snmp", "0.2.0")` | `.create(host, props?, startTime?).withRetries(n).walk/get` | DataSource |
+| `lm.remote` | `"0.7.1"` | `loader.load("lm.remote", "0.7.1")` | `.exec()`, `.create(props).exec()`, `.sftp()`, `.scp()`, `.shell()` | DataSource, ConfigSource |
+| `proto.http` | `"1.0.0"` | `loader.load("proto.http", "1.0.0")` | `.httpSnippetFactory(hostProps)` → `rawGet/rawPost/rawDelete` | DataSource, PropertySource |
+| `lm.sql` | `"0.1.0"` | `loader.load("lm.sql", "0.1.0")` | `.attemptConnection()`, `.runQuery()`, `.validatePorts()` | DataSource |
+| `lm.cache` | `"0.3.1"` | `loader.load("lm.cache", "0.3.1")` | `.cacheSnippetFactory(debugSnip, keySuffix)` | HTTP auth caching |
+| `lm.debug` | `"2.0.0"` | `loader.load("lm.debug", "2.0.0")` | `.create(hostProps, debug, out)` → `.debug/.info/.warn/.error` | All scripted |
+| `lm.parse` | `"0.0.1"` | `loader.load("lm.parse", "0.0.1")` | `.getJsonStringNode()`, `.getXMLStringNode()` | DataSource (API/XML) |
+| `lm.bitsandbobs` | `"0.2.0"` | `loader.load("lm.bitsandbobs", "0.2.0")` | `.probeTcpPort()`, `.keepAlive(hostProps)`, `.timer()` | DataSource, long scripts |
+| `lm.topo` | `"0.4.4"` | `loader.load("lm.topo", "0.4.4")` | `.registerEdge()`, `.generateTopology()` | TopologySource |
+| `lm.api` | `"0.2.3"` | `loader.load("lm.api", "0.2.3")` | `.lmApiSnippetFactory(hostProps, http, debug)` | Netscan, portal lookups |
 
 `lm.topo.snmp` and other protocol-specific topology helpers may exist as separate snippet names in the platform catalog; prefer official TopologySource modules as templates before reimplementing.
 
