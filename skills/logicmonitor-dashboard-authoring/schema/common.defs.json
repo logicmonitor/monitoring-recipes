@@ -1,0 +1,807 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logicmonitor.com/schemas/dashboard/common.defs.json",
+  "$defs": {
+    "globOrString": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "required": ["isGlob", "value"],
+          "properties": {
+            "isGlob": { "type": "boolean" },
+            "value": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "plainStringScope": {
+      "type": "string"
+    },
+    "globObjectScope": {
+      "type": "object",
+      "required": ["isGlob", "value"],
+      "properties": {
+        "isGlob": { "const": true },
+        "value": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "borderPurple",
+        "borderGray",
+        "borderBlue",
+        "solidPurple",
+        "solidGray",
+        "solidBlue",
+        "simplePurple",
+        "simpleBlue",
+        "simpleGray",
+        "newBorderGray",
+        "newBorderBlue",
+        "newBorderDarkBlue",
+        "newSolidGray",
+        "newSolidBlue",
+        "newSolidDarkBlue",
+        "newSimpleGray",
+        "newSimpleBlue",
+        "newSimpleDarkBlue"
+      ]
+    },
+    "graphColor": {
+      "type": ["string", "null"],
+      "enum": [
+        "Auto",
+        "auto",
+        "AUTO",
+        "aqua",
+        "black",
+        "blue",
+        "fuchsia",
+        "gray",
+        "green",
+        "lime",
+        "maroon",
+        "navy",
+        "olive",
+        "orange",
+        "orange2",
+        "purple",
+        "red",
+        "red1",
+        "red2",
+        "silver",
+        "teal",
+        "yellow",
+        null
+      ]
+    },
+    "graphLineType": {
+      "type": "string",
+      "enum": ["line", "stack", "area", "column"]
+    },
+    "displayOption": {
+      "type": "string",
+      "enum": ["custom", "none", "default"]
+    },
+    "colorThreshold": {
+      "type": "object",
+      "required": ["level", "threshold", "relation"],
+      "properties": {
+        "level": { "type": "integer" },
+        "threshold": { "type": "number" },
+        "relation": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "graphDisplay": {
+      "type": "object",
+      "required": ["color", "legend", "type", "option"],
+      "properties": {
+        "color": { "$ref": "#/$defs/graphColor" },
+        "legend": { "type": ["string", "null"] },
+        "type": { "$ref": "#/$defs/graphLineType" },
+        "option": { "$ref": "#/$defs/displayOption" }
+      },
+      "additionalProperties": false
+    },
+    "cgraphDataPoint": {
+      "type": "object",
+      "required": [
+        "dataPointName",
+        "instanceName",
+        "dataSourceFullName",
+        "display",
+        "name",
+        "deviceDisplayName",
+        "deviceGroupFullPath"
+      ],
+      "properties": {
+        "dataPointName": { "type": "string" },
+        "instanceName": { "$ref": "#/$defs/globObjectScope" },
+        "dataSourceFullName": { "type": "string" },
+        "consolidateFunction": {
+          "type": "string",
+          "enum": ["average", "max", "min"]
+        },
+        "display": { "$ref": "#/$defs/graphDisplay" },
+        "name": { "type": "string" },
+        "aggregateFunction": { "type": "string" },
+        "deviceDisplayName": { "$ref": "#/$defs/globObjectScope" },
+        "deviceGroupFullPath": { "$ref": "#/$defs/globObjectScope" },
+        "instanceId": {},
+        "rpn": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "bigNumberDataPoint": {
+      "type": "object",
+      "required": [
+        "dataPointName",
+        "instanceName",
+        "dataSourceFullName",
+        "name",
+        "deviceGroupFullPath",
+        "deviceDisplayName"
+      ],
+      "properties": {
+        "dataPointName": { "type": "string" },
+        "instanceName": { "$ref": "#/$defs/plainStringScope" },
+        "dataSourceFullName": { "type": "string" },
+        "name": { "type": "string" },
+        "aggregateFunction": { "type": "string" },
+        "deviceGroupFullPath": { "$ref": "#/$defs/plainStringScope" },
+        "deviceDisplayName": { "$ref": "#/$defs/plainStringScope" }
+      },
+      "additionalProperties": false
+    },
+    "bigNumberItem": {
+      "type": "object",
+      "required": [
+        "dataPointName",
+        "useCommaSeparators",
+        "bottomLabel",
+        "rounding",
+        "position",
+        "rightLabel",
+        "colorThresholds"
+      ],
+      "properties": {
+        "dataPointName": { "type": "string" },
+        "useCommaSeparators": { "type": "boolean" },
+        "bottomLabel": { "type": "string" },
+        "rounding": { "type": "integer" },
+        "position": { "type": "integer" },
+        "rightLabel": { "type": "string" },
+        "colorThresholds": {
+          "oneOf": [
+            { "type": "array", "items": { "$ref": "#/$defs/colorThreshold" } },
+            { "type": "null" }
+          ]
+        },
+        "actions": { "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "pieChartDataPoint": {
+      "type": "object",
+      "required": [
+        "dataPointName",
+        "instanceName",
+        "dataSourceFullName",
+        "deviceGroupFullPath",
+        "deviceDisplayName"
+      ],
+      "properties": {
+        "dataPointName": { "type": "string" },
+        "instanceName": { "$ref": "#/$defs/plainStringScope" },
+        "dataSourceFullName": { "type": "string" },
+        "name": { "type": "string" },
+        "aggregateFunction": { "type": "string" },
+        "deviceGroupFullPath": { "$ref": "#/$defs/plainStringScope" },
+        "deviceDisplayName": { "$ref": "#/$defs/plainStringScope" }
+      },
+      "additionalProperties": true
+    },
+    "pieChartItem": {
+      "type": "object",
+      "required": ["dataPointName", "color", "legend"],
+      "properties": {
+        "dataPointName": { "type": "string" },
+        "color": { "$ref": "#/$defs/graphColor" },
+        "legend": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "gaugeDataPoint": {
+      "type": "object",
+      "required": [
+        "dataPointName",
+        "instanceName",
+        "dataSourceFullName",
+        "deviceGroupFullPath",
+        "deviceDisplayName"
+      ],
+      "properties": {
+        "rpn": { "type": "string" },
+        "dataPointName": { "type": "string" },
+        "instanceName": { "$ref": "#/$defs/plainStringScope" },
+        "dataSourceFullName": { "type": "string" },
+        "dataSeries": { "type": "string" },
+        "aggregateFunction": { "type": "string" },
+        "deviceGroupFullPath": { "$ref": "#/$defs/plainStringScope" },
+        "deviceDisplayName": { "$ref": "#/$defs/plainStringScope" }
+      },
+      "additionalProperties": false
+    },
+    "dynamicTableColumn": {
+      "type": "object",
+      "required": [
+        "dataPointName",
+        "displayType",
+        "columnName",
+        "colorThresholds"
+      ],
+      "properties": {
+        "rpn": { "type": "string" },
+        "dataPointName": { "type": "string" },
+        "displayType": {
+          "type": "string",
+          "enum": ["raw", "percent", "colorBar"]
+        },
+        "minValue": { "type": "number" },
+        "unitLabel": { "type": "string" },
+        "maxValue": { "type": "number" },
+        "colorThresholds": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/colorThreshold" }
+        },
+        "columnName": { "type": "string" },
+        "enableForecast": { "type": "boolean" },
+        "roundingDecimal": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+    "dynamicTableRow": {
+      "type": "object",
+      "required": ["instanceName", "label", "deviceDisplayName", "groupFullPath"],
+      "properties": {
+        "instanceName": { "$ref": "#/$defs/plainStringScope" },
+        "label": { "type": "string" },
+        "deviceDisplayName": { "$ref": "#/$defs/plainStringScope" },
+        "groupFullPath": { "$ref": "#/$defs/plainStringScope" }
+      },
+      "additionalProperties": false
+    },
+    "nocItem": {
+      "type": "object",
+      "required": [
+        "dataPointName",
+        "instanceName",
+        "name",
+        "dataSourceDisplayName",
+        "groupBy",
+        "type",
+        "deviceGroupFullPath",
+        "deviceDisplayName"
+      ],
+      "properties": {
+        "dataPointName": { "type": "string" },
+        "instanceName": { "$ref": "#/$defs/plainStringScope" },
+        "name": { "type": "string" },
+        "dataSourceDisplayName": { "type": "string" },
+        "groupBy": { "type": "string" },
+        "type": { "type": "string" },
+        "deviceGroupFullPath": { "$ref": "#/$defs/plainStringScope" },
+        "deviceDisplayName": { "$ref": "#/$defs/plainStringScope" }
+      },
+      "additionalProperties": false,
+      "not": {
+        "required": ["dataSourceFullName"]
+      }
+    },
+    "deviceSlaMetric": {
+      "type": "object",
+      "required": [
+        "groupName",
+        "instances",
+        "metric",
+        "dataSourceFullName",
+        "bottomLabel",
+        "threshold",
+        "deviceName",
+        "exclusionSDTType"
+      ],
+      "properties": {
+        "groupName": { "type": "string" },
+        "instances": { "type": "string" },
+        "metric": { "type": "string" },
+        "dataSourceFullName": { "type": "string" },
+        "bottomLabel": { "type": "string" },
+        "threshold": { "type": "string" },
+        "deviceName": { "type": "string" },
+        "exclusionSDTType": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "commonWidgetBase": {
+      "type": "object",
+      "required": [
+        "type",
+        "name",
+        "description",
+        "theme",
+        "interval",
+        "timescale",
+        "version",
+        "displaySettings"
+      ],
+      "properties": {
+        "type": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "theme": { "$ref": "#/$defs/theme" },
+        "interval": { "type": "integer" },
+        "timescale": { "type": "string" },
+        "version": { "const": 2 },
+        "displaySettings": { "type": "object" },
+        "isSupportCustomProperty": { "type": "boolean" },
+        "supportCustomProperty": { "type": "boolean" },
+        "widgetFilters": { "oneOf": [{ "type": "array" }, { "type": "object" }] }
+      }
+    },
+    "widgetConfigCgraph": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": ["graphInfo"],
+          "properties": {
+            "type": { "const": "cgraph" },
+            "graphInfo": {
+              "type": "object",
+              "required": [
+                "dataPoints",
+                "virtualDataPoints",
+                "minValue",
+                "maxValue",
+                "topX",
+                "verticalLabel",
+                "aggregate",
+                "desc",
+                "scaleUnit",
+                "globalConsolidateFunction"
+              ],
+              "properties": {
+                "dataPoints": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/cgraphDataPoint" }
+                },
+                "virtualDataPoints": { "type": "array" },
+                "minValue": {},
+                "maxValue": {},
+                "topX": { "type": "integer" },
+                "verticalLabel": { "type": "string" },
+                "aggregate": { "type": "boolean" },
+                "desc": { "type": "boolean" },
+                "scaleUnit": { "type": "number" },
+                "globalConsolidateFunction": { "type": ["string", "null"] }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigBigNumber": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": ["bigNumberInfo"],
+          "properties": {
+            "type": { "const": "bigNumber" },
+            "bigNumberInfo": {
+              "type": "object",
+              "required": [
+                "dataPoints",
+                "virtualDataPoints",
+                "counters",
+                "bigNumberItems"
+              ],
+              "properties": {
+                "dataPoints": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/bigNumberDataPoint" }
+                },
+                "virtualDataPoints": { "type": "array" },
+                "counters": { "type": "array" },
+                "bigNumberItems": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/bigNumberItem" }
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigDynamicTable": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": [
+            "columns",
+            "rows",
+            "forecast",
+            "dataSourceFullName",
+            "topX",
+            "sortOrder"
+          ],
+          "properties": {
+            "type": { "const": "dynamicTable" },
+            "columns": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/dynamicTableColumn" }
+            },
+            "rows": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/dynamicTableRow" }
+            },
+            "forecast": { "type": "object" },
+            "dataSourceFullName": { "type": "string" },
+            "topX": { "type": "integer" },
+            "sortOrder": {
+              "type": "string",
+              "enum": ["descending", "ascending"]
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigNoc": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": [
+            "items",
+            "ackChecked",
+            "sdtChecked",
+            "displayWarnAlert",
+            "displayErrorAlert",
+            "displayCriticalAlert",
+            "displayColumn",
+            "sortBy"
+          ],
+          "properties": {
+            "type": { "const": "noc" },
+            "items": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/nocItem" }
+            },
+            "ackChecked": { "type": "boolean" },
+            "sdtChecked": { "type": "boolean" },
+            "displayWarnAlert": { "type": "boolean" },
+            "displayErrorAlert": { "type": "boolean" },
+            "displayCriticalAlert": { "type": "boolean" },
+            "displayColumn": { "type": "integer" },
+            "sortBy": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "alertPlaySound": {
+      "type": "object",
+      "properties": {
+        "criticalAlertAudioFileName": { "type": "string" },
+        "errorAlertAudioFileName": { "type": "string" },
+        "warningAlertAudioFileName": { "type": "string" },
+        "shouldPlay": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "alertDisplaySettings": {
+      "type": "object",
+      "required": ["columns", "playSound", "fontsize", "sort"],
+      "properties": {
+        "isShowAll": { "type": "boolean" },
+        "showFilter": { "type": "boolean" },
+        "columns": { "type": "array" },
+        "playSound": { "$ref": "#/$defs/alertPlaySound" },
+        "fontsize": { "type": "string" },
+        "sort": {
+          "type": "string",
+          "description": "Must be a string such as -startEpoch. Objects cause portal render errors."
+        }
+      },
+      "additionalProperties": true
+    },
+    "alertFilters": {
+      "type": "object",
+      "required": [
+        "severity",
+        "sdted",
+        "chain",
+        "instance",
+        "dataPoint",
+        "rule",
+        "acked",
+        "dependencyRoutingState",
+        "dependencyRole",
+        "host",
+        "keyword",
+        "dataSource",
+        "cleared",
+        "group"
+      ],
+      "properties": {
+        "severity": { "type": "string" },
+        "sdted": { "type": "string" },
+        "chain": { "type": "string" },
+        "instance": { "type": "string" },
+        "dataPoint": { "type": "string" },
+        "rule": { "type": "string" },
+        "acked": { "type": "string" },
+        "dependencyRoutingState": { "type": "string" },
+        "dependencyRole": { "type": "string" },
+        "host": { "type": "string" },
+        "keyword": { "type": "string" },
+        "dataSource": { "type": "string" },
+        "cleared": { "type": "string" },
+        "group": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "widgetConfigAlert": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": ["filters", "displaySettings"],
+          "properties": {
+            "type": { "const": "alert" },
+            "filters": { "$ref": "#/$defs/alertFilters" },
+            "displaySettings": { "$ref": "#/$defs/alertDisplaySettings" }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigPieChart": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": ["pieChartInfo"],
+          "properties": {
+            "type": { "const": "pieChart" },
+            "pieChartInfo": {
+              "type": "object",
+              "required": [
+                "dataPoints",
+                "pieChartItems",
+                "virtualDataPoints",
+                "counters"
+              ],
+              "properties": {
+                "dataPoints": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/pieChartDataPoint" }
+                },
+                "pieChartItems": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/pieChartItem" }
+                },
+                "virtualDataPoints": { "type": "array" },
+                "counters": { "type": "array" },
+                "maxSlicesCanBeShown": { "type": "integer" },
+                "showLabelsAndLinesOnPC": { "type": "boolean" },
+                "hideZeroPercentSlices": { "type": "boolean" },
+                "groupRemainingAsOthers": { "type": "boolean" },
+                "title": { "type": "string" }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigGauge": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": [
+            "dataPoint",
+            "legend",
+            "minValue",
+            "maxValue",
+            "displayUnit",
+            "displayType",
+            "peakTimeRange",
+            "showPeak"
+          ],
+          "properties": {
+            "type": { "const": "gauge" },
+            "dataPoint": { "$ref": "#/$defs/gaugeDataPoint" },
+            "legend": { "type": "string" },
+            "minValue": { "type": "number" },
+            "maxValue": { "type": "number" },
+            "displayUnit": { "type": "string" },
+            "displayType": { "type": "integer" },
+            "peakTimeRange": { "type": "string" },
+            "showPeak": { "type": "boolean" },
+            "colorThresholds": {}
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigGmap": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": [
+            "mapPoints",
+            "ackChecked",
+            "sdtChecked",
+            "displayWarnAlert",
+            "displayErrorAlert",
+            "displayCriticalAlert"
+          ],
+          "properties": {
+            "type": { "const": "gmap" },
+            "mapPoints": { "type": "array" },
+            "ackChecked": { "type": "boolean" },
+            "sdtChecked": { "type": "boolean" },
+            "displayWarnAlert": { "type": "boolean" },
+            "displayErrorAlert": { "type": "boolean" },
+            "displayCriticalAlert": { "type": "boolean" }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigDeviceSla": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": [
+            "metrics",
+            "timezone",
+            "calculationMethod",
+            "daysInWeek",
+            "periodInOneDay",
+            "unmonitoredTimeType",
+            "displayType"
+          ],
+          "properties": {
+            "type": { "const": "deviceSLA" },
+            "metrics": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/deviceSlaMetric" }
+            },
+            "timezone": { "type": "string" },
+            "calculationMethod": { "type": "integer" },
+            "daysInWeek": { "type": "string" },
+            "periodInOneDay": { "type": "string" },
+            "unmonitoredTimeType": { "type": "integer" },
+            "displayType": { "type": "integer" },
+            "topX": { "type": "integer" },
+            "bottomLabel": { "type": "string" },
+            "displayPercentageBar": { "type": "boolean" },
+            "colorThresholds": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/colorThreshold" }
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigText": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": ["content"],
+          "properties": {
+            "type": { "const": "text" },
+            "content": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigBilling": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "required": ["billingInfo"],
+          "properties": {
+            "type": { "const": "billing" },
+            "billingInfo": { "type": "object" },
+            "widgetConfig": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigCloudRecommendation": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "properties": {
+            "type": { "const": "cloudRecommendation" },
+            "widgetConfig": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfigViz": {
+      "allOf": [
+        { "$ref": "#/$defs/commonWidgetBase" },
+        {
+          "type": "object",
+          "properties": {
+            "type": { "const": "viz" },
+            "widgetConfig": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "widgetConfig": {
+      "oneOf": [
+        { "$ref": "#/$defs/widgetConfigCgraph" },
+        { "$ref": "#/$defs/widgetConfigBigNumber" },
+        { "$ref": "#/$defs/widgetConfigDynamicTable" },
+        { "$ref": "#/$defs/widgetConfigNoc" },
+        { "$ref": "#/$defs/widgetConfigAlert" },
+        { "$ref": "#/$defs/widgetConfigPieChart" },
+        { "$ref": "#/$defs/widgetConfigGauge" },
+        { "$ref": "#/$defs/widgetConfigGmap" },
+        { "$ref": "#/$defs/widgetConfigDeviceSla" },
+        { "$ref": "#/$defs/widgetConfigText" },
+        { "$ref": "#/$defs/widgetConfigBilling" },
+        { "$ref": "#/$defs/widgetConfigCloudRecommendation" },
+        { "$ref": "#/$defs/widgetConfigViz" }
+      ]
+    },
+    "widget": {
+      "type": "object",
+      "required": ["position", "config"],
+      "properties": {
+        "position": {
+          "type": "object",
+          "required": ["col", "row", "sizex", "sizey"],
+          "properties": {
+            "col": { "type": "integer", "minimum": 1 },
+            "row": { "type": "integer", "minimum": 1 },
+            "sizex": { "type": "integer", "minimum": 1 },
+            "sizey": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": false
+        },
+        "config": { "$ref": "#/$defs/widgetConfig" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

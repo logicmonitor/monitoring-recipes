@@ -42,4 +42,4 @@ Connects to a database using JDBC and executes a SQL query, mapping result colum
 
 - [DataSource](../../../docs/module-types/datasource.md)
 - [Collection Modes](../../../docs/concepts/collection-modes.md)
-- [Snippets catalog — lm.sql](../../../skills/logicmonitor-authoring/references/snippets-catalog.md#lmsql--jdbc-database-queries)
+- [Snippets catalog — lm.sql](../../../skills/logicmonitor-module-authoring/references/snippets-catalog.md#lmsql--jdbc-database-queries)

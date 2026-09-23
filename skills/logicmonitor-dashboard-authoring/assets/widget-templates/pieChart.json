@@ -1,0 +1,54 @@
+{
+  "position": { "col": 1, "row": 1, "sizex": 4, "sizey": 4 },
+  "config": {
+    "type": "pieChart",
+    "name": "Example Pie Chart",
+    "description": "",
+    "theme": "newSolidDarkBlue",
+    "interval": 3,
+    "timescale": "day",
+    "version": 2,
+    "displaySettings": {},
+    "pieChartInfo": {
+      "virtualDataPoints": [],
+      "counters": [],
+      "maxSlicesCanBeShown": 10,
+      "showLabelsAndLinesOnPC": true,
+      "hideZeroPercentSlices": false,
+      "groupRemainingAsOthers": true,
+      "title": "",
+      "dataPoints": [
+        {
+          "dataPointName": "DATAPOINT_A",
+          "name": "DATAPOINT_A",
+          "dataSourceFullName": "Display Name (LogicModule_Name)",
+          "aggregateFunction": "SUM",
+          "instanceName": "*",
+          "deviceDisplayName": "*",
+          "deviceGroupFullPath": "##defaultResourceGroup##"
+        },
+        {
+          "dataPointName": "DATAPOINT_B",
+          "name": "DATAPOINT_B",
+          "dataSourceFullName": "Display Name (LogicModule_Name)",
+          "aggregateFunction": "SUM",
+          "instanceName": "*",
+          "deviceDisplayName": "*",
+          "deviceGroupFullPath": "##defaultResourceGroup##"
+        }
+      ],
+      "pieChartItems": [
+        {
+          "dataPointName": "DATAPOINT_A",
+          "color": "blue",
+          "legend": "Series A"
+        },
+        {
+          "dataPointName": "DATAPOINT_B",
+          "color": "orange",
+          "legend": "Series B"
+        }
+      ]
+    }
+  }
+}

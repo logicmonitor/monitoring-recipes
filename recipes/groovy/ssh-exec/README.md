@@ -45,4 +45,4 @@ For interactive shell sessions (ConfigSource with prompt handling), see Phase 2 
 - [DataSource](../../../docs/module-types/datasource.md)
 - [ConfigSource](../../../docs/module-types/configsource.md)
 - [DiagnosticSource](../../../docs/module-types/diagnosticsource.md)
-- [Snippets catalog — lm.remote](../../../skills/logicmonitor-authoring/references/snippets-catalog.md#lmremote--ssh-execution)
+- [Snippets catalog — lm.remote](../../../skills/logicmonitor-module-authoring/references/snippets-catalog.md#lmremote--ssh-execution)

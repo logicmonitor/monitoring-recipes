@@ -1,0 +1,53 @@
+{
+  "position": { "col": 1, "row": 1, "sizex": 6, "sizey": 3 },
+  "config": {
+    "type": "cgraph",
+    "name": "Capacity Trend (bytes scale)",
+    "description": "",
+    "theme": "newBorderDarkBlue",
+    "interval": 3,
+    "timescale": "2days",
+    "version": 2,
+    "displaySettings": {},
+    "graphInfo": {
+      "virtualDataPoints": [
+        {
+          "rpn": "CapacityGB*1024*1024*1024",
+          "name": "CapacityBytes",
+          "display": {
+            "color": "Auto",
+            "legend": "##RESOURCENAME##",
+            "type": "line",
+            "option": "custom"
+          }
+        }
+      ],
+      "minValue": 0,
+      "maxValue": "NaN",
+      "topX": 10,
+      "verticalLabel": "bytes",
+      "aggregate": false,
+      "desc": true,
+      "scaleUnit": 1024,
+      "globalConsolidateFunction": "VaST",
+      "dataPoints": [
+        {
+          "dataPointName": "CapacityGB",
+          "name": "CapacityGB",
+          "dataSourceFullName": "Display Name (LogicModule_Name)",
+          "consolidateFunction": "average",
+          "aggregateFunction": "AVERAGE",
+          "instanceName": { "isGlob": true, "value": "*" },
+          "deviceDisplayName": { "isGlob": true, "value": "*" },
+          "deviceGroupFullPath": { "isGlob": true, "value": "##defaultResourceGroup##" },
+          "display": {
+            "color": null,
+            "legend": null,
+            "type": "line",
+            "option": "none"
+          }
+        }
+      ]
+    }
+  }
+}

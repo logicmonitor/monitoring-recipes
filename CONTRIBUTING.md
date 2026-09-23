@@ -22,12 +22,12 @@ Thank you for helping improve Monitoring Recipes.
    - `recipe.yaml` — metadata (see an existing recipe for the schema)
    - `README.md` — use case, prerequisites, customization points, module-type adaptation table
 3. Update `recipes/README.md` index
-4. Update `skills/logicmonitor-authoring/assets/recipe-index.md`
+4. Update `skills/logicmonitor-module-authoring/assets/recipe-index.md`
 5. Update progress in `PROJECT.md`
 
 ### Recipe checklist
 
-- [ ] Follows [script-structure.md](../skills/logicmonitor-authoring/references/script-structure.md)
+- [ ] Follows [script-structure.md](../skills/logicmonitor-module-authoring/references/script-structure.md)
 - [ ] Tested on a LogicMonitor Collector
 - [ ] No hardcoded credentials (use device properties / `hostProps`)
 - [ ] Placeholders clearly marked (e.g. `INSERT_OID_HERE`)
@@ -38,7 +38,7 @@ Thank you for helping improve Monitoring Recipes.
 
 - Keep `SKILL.md` as a workflow — move detailed content to `references/`
 - Keep `SKILL.md` under ~500 lines
-- Run `skills-ref validate ./skills/logicmonitor-authoring` before submitting
+- Run `skills-ref validate ./skills/logicmonitor-module-authoring` before submitting
 - Update `PROJECT.md` skill reference tracker
 
 ## Updating docs

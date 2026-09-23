@@ -8,7 +8,7 @@ Best-practice script snippets, documentation, and Agent Skills for building [Log
 |-----------|------------|----------------|
 | [`recipes/`](recipes/) | Copy-paste Groovy and PowerShell script building blocks | Engineers writing module scripts |
 | [`docs/`](docs/) | Module-type guides, concepts, and decision trees | Engineers learning LM module authoring |
-| [`skills/`](skills/) | Installable [Agent Skill](https://agentskills.io/specification) for AI-assisted authoring | Engineers using Cursor, Claude Code, or other Agent Skills-compatible tools |
+| [`skills/`](skills/) | Installable [Agent Skills](https://agentskills.io/specification), including dashboard JSON schema and validation in [`logicmonitor-dashboard-authoring`](skills/logicmonitor-dashboard-authoring/) | Engineers using Cursor, Claude Code, or other Agent Skills-compatible tools |
 
 ## Quick start
 
@@ -18,7 +18,7 @@ Best-practice script snippets, documentation, and Agent Skills for building [Log
 
 ### Using the Agent Skill
 
-Install the `logicmonitor-authoring` skill for AI-assisted module development. See [`skills/README.md`](skills/README.md).
+Install the `logicmonitor-module-authoring` skill for AI-assisted module development, or `logicmonitor-dashboard-authoring` for dashboard JSON. See [`skills/README.md`](skills/README.md).
 
 ## Project status
 

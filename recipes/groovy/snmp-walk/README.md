@@ -43,4 +43,4 @@ Uncomment the appropriate `emit` line in `script.groovy` for your module type.
 - [DataSource](../../../docs/module-types/datasource.md)
 - [PropertySource](../../../docs/module-types/propertysource.md)
 - [Active Discovery](../../../docs/concepts/active-discovery.md)
-- [Snippets catalog](../../../skills/logicmonitor-authoring/references/snippets-catalog.md)
+- [Snippets catalog](../../../skills/logicmonitor-module-authoring/references/snippets-catalog.md)

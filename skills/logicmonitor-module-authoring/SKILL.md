@@ -1,5 +1,5 @@
 ---
-name: logicmonitor-authoring
+name: logicmonitor-module-authoring
 description: >-
   Authors LogicMonitor LogicModules (DataSource, LogSource, ConfigSource,
   PropertySource, TopologySource, EventSource, DiagnosticSource,

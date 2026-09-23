@@ -28,7 +28,7 @@ Performs an HTTP GET request with proxy-aware connection handling. Optionally ca
 | `INSERT_API_ENDPOINT_HERE` | Default endpoint if `api.url` property not set |
 | Response parsing block | Map JSON fields to `emit.dp()` or `emit.property()` |
 
-For POST requests or custom auth flows, extend using `http.rawPost()` — see [snippets-catalog](../../../skills/logicmonitor-authoring/references/snippets-catalog.md).
+For POST requests or custom auth flows, extend using `http.rawPost()` — see [snippets-catalog](../../../skills/logicmonitor-module-authoring/references/snippets-catalog.md).
 
 ## Adapting for your module type
 

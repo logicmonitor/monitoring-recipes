@@ -1,7 +1,44 @@
-.idea
+# IDE / OS
+.idea/
+*.iml
 Groovy.iml
 .DS_Store
-*.iml
 .cursor/
+
+# Local-only project notes (not published)
 PROJECT.md
+
+# Reference trees (local exports; not part of the published repo)
 example-code/**
+LogicModules/**
+Dashboards/**
+scripts/**
+
+# Dashboard schema tooling output (canonical copy lives in the dashboard authoring skill)
+schemas/**
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+.eggs/
+dist/
+build/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Local tool outputs
+datapoint-index.json

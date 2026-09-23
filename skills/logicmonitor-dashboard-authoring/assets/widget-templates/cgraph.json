@@ -1,0 +1,40 @@
+{
+  "position": { "col": 1, "row": 1, "sizex": 6, "sizey": 3 },
+  "config": {
+    "type": "cgraph",
+    "name": "Example Trend Graph",
+    "description": "",
+    "theme": "newBorderDarkBlue",
+    "interval": 3,
+    "timescale": "2days",
+    "version": 2,
+    "displaySettings": {},
+    "graphInfo": {
+      "virtualDataPoints": [],
+      "minValue": "NaN",
+      "maxValue": "NaN",
+      "topX": 10,
+      "verticalLabel": "",
+      "aggregate": false,
+      "desc": true,
+      "scaleUnit": 1000,
+      "globalConsolidateFunction": "VaST",
+      "dataPoints": [{
+        "dataPointName": "DATAPOINT_NAME",
+        "name": "DATAPOINT_NAME",
+        "dataSourceFullName": "Display Name (LogicModule_Name)",
+        "consolidateFunction": "average",
+        "aggregateFunction": "SUM",
+        "instanceName": { "isGlob": true, "value": "*" },
+        "deviceDisplayName": { "isGlob": true, "value": "*" },
+        "deviceGroupFullPath": { "isGlob": true, "value": "##defaultResourceGroup##" },
+        "display": {
+          "color": "Auto",
+          "legend": "##RESOURCENAME##",
+          "type": "line",
+          "option": "custom"
+        }
+      }]
+    }
+  }
+}

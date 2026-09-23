@@ -34,7 +34,7 @@ recipes/<language>/<pattern>/
 4. Adapt output format for your module type (see the adaptation table in the README)
 5. Paste into the appropriate script field in the LM portal
 
-For code organization rules, see [script-structure.md](../skills/logicmonitor-authoring/references/script-structure.md).
+For code organization rules, see [script-structure.md](../skills/logicmonitor-module-authoring/references/script-structure.md).
 
 ## Adding a recipe
 

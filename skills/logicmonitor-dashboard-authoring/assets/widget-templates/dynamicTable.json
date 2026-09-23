@@ -1,0 +1,40 @@
+{
+  "position": { "col": 1, "row": 1, "sizex": 8, "sizey": 8 },
+  "config": {
+    "type": "dynamicTable",
+    "name": "Example Table",
+    "description": "",
+    "theme": "newSolidDarkBlue",
+    "interval": 3,
+    "timescale": "day",
+    "version": 2,
+    "dataSourceFullName": "Display Name (LogicModule_Name)",
+    "topX": 10,
+    "sortOrder": "descending",
+    "displaySettings": { "pageSize": "20" },
+    "forecast": {
+      "severity": "warn",
+      "confidence": 70,
+      "timeRange": "Last 30 days",
+      "algorithm": "Linear"
+    },
+    "columns": [{
+      "rpn": "",
+      "dataPointName": "DATAPOINT_NAME",
+      "displayType": "raw",
+      "minValue": 0,
+      "unitLabel": "",
+      "maxValue": 100,
+      "colorThresholds": [],
+      "columnName": "Column Label",
+      "enableForecast": false,
+      "roundingDecimal": 2
+    }],
+    "rows": [{
+      "instanceName": "*",
+      "label": "##RESOURCENAME##",
+      "deviceDisplayName": "*",
+      "groupFullPath": "##defaultResourceGroup##"
+    }]
+  }
+}
