@@ -13,10 +13,45 @@ import com.logicmonitor.mod.Snippets
 def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
     .withBinding(getBinding())
-def emit = modLoader.load("lm.emit", "0")
+emit = modLoader.load("lm.emit", "0")
 ```
 
 See [snippet-loader.md](snippet-loader.md) for bootstrap and version pins, and [snippets-catalog.md](snippets-catalog.md) for snippet APIs.
+
+## Script scoping (locals vs helpers)
+
+Collector Groovy runs as a **Script** subclass. Top-level `def helper(...) { }` blocks are **methods** on that class, not nested functions. They see **binding / script properties** (same as `debug = false`), not other `def` locals from main flow.
+
+| Declaration | Visible in main flow | Visible in `def helper(...) { }` |
+|-------------|---------------------|----------------------------------|
+| `emit = modLoader.load("lm.emit", "0")` (no `def`) | Yes | Yes |
+| `httpMod = modLoader.load("proto.http", "0")` (no `def`) | Yes | Yes |
+| `def host = hostProps.get(...)` | Yes | **No** |
+| `def emit = modLoader.load(...)` | Yes | **No** → `MissingPropertyException` if a helper calls `emit` |
+
+**Convention (use everywhere):**
+
+- **`def`** — helpers, parsed values, loop locals, anything only used in main flow or passed as parameters.
+- **No `def`** — `debug`, `emit`, and every other loaded snippet or factory (`httpMod`, `http`, `snmp`, …) that a helper method might call. Same pattern as `debug = false`.
+
+```groovy
+def modLoader = GSH.getInstance(GroovySystem.version)
+    .getScript("Snippets", Snippets.getLoader())
+    .withBinding(getBinding())
+emit = modLoader.load("lm.emit", "0")
+httpMod = modLoader.load("proto.http", "0")
+
+def emitPokemonMetrics(String wildvalue, int httpStatus, pokemon) {
+    emit.dp(wildvalue, "http_status", httpStatus)
+    // ...
+}
+```
+
+`def modLoader` is fine when snippet loads happen only in bootstrap before helpers run. If a helper must call `modLoader.load(...)`, assign `modLoader` without `def` as well.
+
+**Symptom:** `groovy.lang.MissingPropertyException: No such property: emit for class: ScriptNN` — change `def emit = ...` to `emit = ...` (and the same for other snippet handles the helper uses).
+
+Closures (`each { emit.dp(...) }`) still capture `def` locals; prefer binding-style `emit` anyway so methods and closures behave the same.
 
 | Task | Snippet | Avoid |
 |------|---------|-------|
@@ -105,7 +140,7 @@ See `recipes/groovy/http-rest/`.
 After bootstrap in [snippet-loader.md](snippet-loader.md):
 
 ```groovy
-def emit = modLoader.load("lm.emit", "0")
+emit = modLoader.load("lm.emit", "0")
 
 emit.dp("cpuUsage", 42)                              // DataSource Script
 emit.dp("instanceId", "cpuUsage", 42)                // BatchScript

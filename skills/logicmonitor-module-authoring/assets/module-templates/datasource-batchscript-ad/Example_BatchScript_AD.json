@@ -14,7 +14,7 @@
   "useWildValueAsUniqueIdentifier": false,
   "collectionAttrs": {
     "type": "groovy",
-    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\ndef instance = instanceProps.get(\"wildvalue\") ?: \"default\"\nemit.dp(instance, \"example_metric\", 0)\nreturn 0\n"
+    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\nemit = modLoader.load(\"lm.emit\", \"0\")\n\ndatasourceinstanceProps.each { instance, props ->\n    def wild = props.wildvalue\n    emit.dp(wild, \"example_metric\", 0)\n}\nreturn 0\n"
   },
   "activeDiscovery": {
     "discoveryMethod": "ad_script",
@@ -28,7 +28,7 @@
     "filters": [],
     "params": {
       "type": "groovy",
-      "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\nemit.instance(\"instance-a\", \"Instance A\")\nemit.instance(\"instance-b\", \"Instance B\", \"Second instance with description\")\nemit.instance(\n    \"instance-c\",\n    \"Instance C\",\n    \"Instance with ILPs\",\n    [role: \"primary\", \"auto.env\": \"prod\"]\n)\nreturn 0\n"
+      "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\nemit = modLoader.load(\"lm.emit\", \"0\")\n\nemit.instance(\"instance-a\", \"Instance A\")\nemit.instance(\"instance-b\", \"Instance B\", \"Second instance with description\")\nemit.instance(\n    \"instance-c\",\n    \"Instance C\",\n    \"Instance with ILPs\",\n    [role: \"primary\", \"auto.env\": \"prod\"]\n)\nreturn 0\n"
     }
   },
   "datapoints": [
@@ -38,7 +38,7 @@
       "dataType": 7,
       "type": "gauge",
       "interpretMethod": "namevalue",
-      "interpretExpr": "example_metric",
+      "interpretExpr": "##WILDVALUE##.example_metric",
       "useValue": "output",
       "maxDigits": 4,
       "noData": "Do not trigger an alert",

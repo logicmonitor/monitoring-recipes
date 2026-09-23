@@ -6,8 +6,8 @@ import com.santaba.agent.util.Settings
 def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
     .withBinding(getBinding())
-def httpMod = modLoader.load("proto.http", "0")
-def emit = modLoader.load("lm.emit", "0")
+httpMod = modLoader.load("proto.http", "0")
+emit = modLoader.load("lm.emit", "0")
 
 def endpoint = hostProps.get("api.url", "https://api.example.com/status")
 def readTimeout = Settings.getSettingInt("collector.script.timeout", 120) * 1000 - 2500

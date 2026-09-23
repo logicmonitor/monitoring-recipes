@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib import extract_collection_keys
+from lib import extract_collection_keys, namevalue_script_output_key
 
 
 def main() -> int:
@@ -23,6 +23,11 @@ emit.dp(instance, "example_metric", 0)
     batch_keys = extract_collection_keys(batch, batchscript=True)
     assert keys == {"stat_hp", "stat_attack"}, keys
     assert batch_keys == {"example_metric"}, batch_keys
+    assert (
+        namevalue_script_output_key("##WILDVALUE##.example_metric", True, True)
+        == "example_metric"
+    )
+    assert namevalue_script_output_key("example_metric", False, False) == "example_metric"
     print("OK: extract_collection_keys")
     return 0
 

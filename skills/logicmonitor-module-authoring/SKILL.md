@@ -11,7 +11,7 @@ license: Apache-2.0
 compatibility: LogicMonitor Collector; references monitoring-recipes repo
 metadata:
   author: logicmonitor
-  version: "0.5.3"
+  version: "0.5.6"
 ---
 
 # LogicMonitor Module Authoring
@@ -68,7 +68,7 @@ Read the appropriate reference:
 
 Read [references/script-structure.md](references/script-structure.md).
 
-Follow the canonical section order for the chosen language. For Groovy, use the snippet loader bootstrap — see [references/snippet-loader.md](references/snippet-loader.md) — and prefer platform snippets over raw APIs — see [references/snippets-catalog.md](references/snippets-catalog.md).
+Follow the canonical section order for the chosen language. For Groovy, use the snippet loader bootstrap — see [references/snippet-loader.md](references/snippet-loader.md) — prefer platform snippets over raw APIs — see [references/snippets-catalog.md](references/snippets-catalog.md) — and follow [references/groovy.md](references/groovy.md#script-scoping-locals-vs-helpers) when helpers call `emit` or other loaded snippets.
 
 ### 6. Find a recipe
 
@@ -122,7 +122,7 @@ Inlines script files into JSON `content` fields before portal import. Use `--che
 
 ### 11. Align script ↔ JSON
 
-Read [references/script-json-alignment.md](references/script-json-alignment.md). Datapoint names, `interpretExpr`, and graph lines must match keys emitted from `collect.*`.
+Read [references/script-json-alignment.md](references/script-json-alignment.md). Datapoint `name` and graph lines use the short metric id; `interpretExpr` must match script output keys — for **batchscript + multi-instance**, use `##WILDVALUE##.<name>` in JSON (not bare `<name>`). Script emits `wildvalue.<name>=...` via `emit.dp(wild, "<name>", value)`.
 
 ### 12. Validate
 
@@ -155,6 +155,7 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 - [ ] Diag/Remediation: handle missing `alertProps` on manual execution
 - [ ] Groovy: `modLoader.withBinding(getBinding())` before snippet loads (or `emit.binding = binding` fallback) — [snippet-loader.md](references/snippet-loader.md)
 - [ ] Groovy: `emit.dp()` / `emit.instance()` per [snippet-loader.md](references/snippet-loader.md) and templates
+- [ ] Groovy: `emit = modLoader.load(...)` and other snippet handles **without** `def` (like `debug = false`) so `def` helpers can call them — never `def emit = ...` when helpers emit — [groovy.md](references/groovy.md#script-scoping-locals-vs-helpers)
 - [ ] AD: `emit.instance()` only (ILPs via map arg) — [active-discovery.md](references/active-discovery.md)
 - [ ] Test Script exit 0 but empty metrics while parent `println` works → fix snippet binding
 - [ ] Groovy: timeout from Settings with buffer; `proto.snmp` / `lm.remote` over raw APIs
@@ -165,6 +166,7 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 - [ ] Module Snippets referenced (not copied) where applicable — see [references/snippets-catalog.md](references/snippets-catalog.md)
 - [ ] `validate-module.py` passes on the bundle after `pack-module.py`
 - [ ] DataSource: every `namevalue` datapoint matches a collect script key; graph lines reference defined datapoints
+- [ ] DataSource batchscript + multi-instance: each `interpretExpr` is `##WILDVALUE##.<datapoint.name>` — [datasource-import-json.md](references/datasource-import-json.md), [script-json-alignment.md](references/script-json-alignment.md)
 - [ ] Each datapoint has `originId` before import
 - [ ] Greenfield JSON: no `version` / `registryMetadata` / `integrationMetadata`; category `appliesTo`
 - [ ] AD `discoveryInterval` is one of `0m`, `15m`, `60m`, `1440m` — default **`60m`** for greenfield (avoid `0m` unless AD is intentionally manual-only)

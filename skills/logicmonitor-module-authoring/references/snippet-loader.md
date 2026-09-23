@@ -35,6 +35,7 @@ Load `lm.emit` into `emit` and call `emit.dp(...)` / `emit.instance(...)` — se
 | Exit 0, empty metric output; `println` in the **parent** collect script works | Snippets loaded without shared binding |
 | Exit 0, empty output; snippet load throws | Snippets module missing or not updated on collector |
 | `Unable to load Snippet - <name>` | Install **LogicMonitor_Collector_Snippets**; monitor collector host |
+| `MissingPropertyException: No such property: emit` (or `httpMod`, `http`, …) inside a **helper method** | Use `emit = modLoader.load(...)` without `def` (same as `debug = false`) — see [groovy.md](groovy.md#script-scoping-locals-vs-helpers) |
 
 ## Version pins
 
@@ -83,8 +84,8 @@ Agents authoring modules should **not** call `clearCacheForUpdate()` from collec
 ## Loading pattern in scripts
 
 ```groovy
-def emit = modLoader.load("lm.emit", "0")
-def snmp = modLoader.load("proto.snmp", "0")
+emit = modLoader.load("lm.emit", "0")
+snmp = modLoader.load("proto.snmp", "0")
 ```
 
 Heavy modules may load optional snippets only on code paths that need them (HTTP, JDBC, topology).

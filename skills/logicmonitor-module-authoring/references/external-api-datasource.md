@@ -27,6 +27,7 @@ See [assets/examples/http-rest-collect-snippet.groovy](../assets/examples/http-r
 
 - Bound `modLoader.withBinding(getBinding())`
 - `emit.dp("literal_metric_name", value)` with **string-literal** names when using `validate-module.py` (dynamic keys are not extracted)
+- **BatchScript + AD** (one poll, many API resources): `emit.dp(wild, "literal_metric_name", value)` and JSON `interpretExpr`: `##WILDVALUE##.literal_metric_name` — see [script-json-alignment.md](script-json-alignment.md)
 
 ## Import JSON
 

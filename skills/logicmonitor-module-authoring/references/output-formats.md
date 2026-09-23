@@ -8,7 +8,7 @@ See also: [docs/concepts/output-formats.md](../../../docs/concepts/output-format
 |------|--------|
 | Active Discovery | `wildvalue##wildalias` (+ optional `##description`, `####auto.*=...&...` ILPs) — use `emit.instance()` |
 | DataSource Script | `key=value` via `emit.dp("key", value)` |
-| DataSource BatchScript | `instance.key=value` via `emit.dp(wild, "key", value)` |
+| DataSource BatchScript | `instance.key=value` via `emit.dp(wild, "key", value)`; JSON `interpretExpr`: `##WILDVALUE##.key` — see [datasource-import-json.md](datasource-import-json.md) |
 | PropertySource | `auto.*=value` or `system.categories=value` only via `emit.property()` |
 | ConfigSource Script | Raw config text |
 | ConfigSource BatchScript | JSON `data.<wildvalue>.configuration` |

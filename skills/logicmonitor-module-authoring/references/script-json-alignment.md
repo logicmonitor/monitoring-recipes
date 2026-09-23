@@ -6,9 +6,25 @@ Enforced by `validate-module.py` when validating a **bundle directory**.
 
 ### `namevalue`
 
-- Script emits `metric_key=value` (or `instance.metric_key=value` for batchscript).
+**Script mode**
+
+- Script emits `metric_key=value`.
 - Datapoint `name` is the metric identifier in graphs/alerts.
-- `interpretExpr` must equal the **key** portion of the emitted line (not the instance prefix).
+- `interpretExpr` equals the output line key: `metric_key`.
+
+**BatchScript + `multiInstance: true`**
+
+- Script emits `wildvalue.metric_key=value` (wildvalue must match AD wildvalues; sanitize invalid characters).
+- Datapoint `name` is still `metric_key` (graphs/alerts reference `datapoints[].name`).
+- `interpretExpr` must be **`##WILDVALUE##.metric_key`** — the portal key token, **not** the bare metric name and **not** used inside the Groovy/PowerShell script.
+- The segment after `##WILDVALUE##.` must match the key in `emit.dp(wild, "metric_key", value)` (second string argument).
+
+| Script stdout | `interpretExpr` in JSON |
+|---------------|-------------------------|
+| `pikachu.http_status=200` | `##WILDVALUE##.http_status` |
+| `disk1.iops=9024` | `##WILDVALUE##.iops` |
+
+`validate-module.py` compares the suffix after `##WILDVALUE##.` to keys found in `collect.*`.
 
 ### `none` (single output)
 

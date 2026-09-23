@@ -13,7 +13,7 @@ See also: [docs/concepts/collection-modes.md](../../../docs/concepts/collection-
 - Runs **once per device** per poll — required for scale
 - Requires Multi-Instance + Active Discovery
 - Output: `instance.key=value` or JSON
-- Datapoint keys use `##WILDVALUE##.metricName` — **not inside the script**
+- Import JSON `interpretExpr` uses `##WILDVALUE##.metricName` per datapoint (`datapoints[].name` stays `metricName`) — **never** put `##WILDVALUE##` in the script body
 - Cannot use `instanceProps.get()` or `##WILDVALUE##` in script body
 - Use `datasourceinstanceProps` to loop all instances in Groovy
 

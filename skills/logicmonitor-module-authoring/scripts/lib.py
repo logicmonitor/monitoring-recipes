@@ -253,6 +253,19 @@ def namevalue_datapoints(module: dict[str, Any]) -> dict[str, str]:
     return mapping
 
 
+WILDVALUE_PREFIX = "##WILDVALUE##."
+
+
+def namevalue_script_output_key(
+    interpret_expr: str, batchscript: bool, multi_instance: bool
+) -> str:
+    """Metric key as printed after 'wildvalue.' in batchscript stdout."""
+    expr = interpret_expr or ""
+    if batchscript and multi_instance and expr.startswith(WILDVALUE_PREFIX):
+        return expr[len(WILDVALUE_PREFIX) :]
+    return expr
+
+
 def graph_datapoint_refs(module: dict[str, Any]) -> list[str]:
     refs: list[str] = []
     for graph in module.get("graphs") or []:
@@ -282,12 +295,34 @@ def semantic_validate(
     nv = namevalue_datapoints(module)
     collect_text, _ = read_collect_script(bundle_dir)
     batch = module.get("collectionMethod") == "batchscript"
+    multi = bool(module.get("multiInstance"))
     if collect_text and nv:
         emitted = extract_collection_keys(collect_text, batchscript=batch)
         for dp_name, expr in nv.items():
-            if expr not in emitted and dp_name not in emitted:
+            if batch and multi:
+                if not (expr or "").startswith(WILDVALUE_PREFIX):
+                    errors.append(
+                        f"datapoint '{dp_name}' interpretExpr must be "
+                        f"'{WILDVALUE_PREFIX}<name>' for batchscript multi-instance "
+                        f"(got '{expr}')"
+                    )
+                script_key = namevalue_script_output_key(expr, batch, multi)
+                if script_key != dp_name:
+                    errors.append(
+                        f"datapoint '{dp_name}' interpretExpr should be "
+                        f"'{WILDVALUE_PREFIX}{dp_name}' "
+                        f"(suffix '{script_key}' does not match name)"
+                    )
+            else:
+                script_key = namevalue_script_output_key(expr, batch, multi)
+            if (
+                script_key not in emitted
+                and dp_name not in emitted
+                and expr not in emitted
+            ):
                 errors.append(
-                    f"datapoint '{dp_name}' interpretExpr '{expr}' not found in collect script output keys"
+                    f"datapoint '{dp_name}' interpretExpr '{expr}' "
+                    f"(script key '{script_key}') not found in collect script output keys"
                 )
 
     for ref in graph_datapoint_refs(module):

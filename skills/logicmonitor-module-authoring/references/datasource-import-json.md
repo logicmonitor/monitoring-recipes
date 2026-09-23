@@ -50,7 +50,9 @@ When `batchscript` + multi-instance:
 
 ## Datapoints
 
-Typical scripted numeric datapoint (`namevalue`):
+### Script mode (`collectionMethod: "script"`)
+
+Typical scripted numeric datapoint (`namevalue`). Script prints `metric_name=value`; JSON **Key** matches the line key:
 
 ```json
 {
@@ -69,6 +71,29 @@ Typical scripted numeric datapoint (`namevalue`):
   "statusDisplayNames": []
 }
 ```
+
+### BatchScript + multi-instance (`batchscript`, `multiInstance: true`)
+
+Script prints `wildvalue.metric_name=value` (e.g. `emit.dp(wild, "metric_name", value)`). **Do not** put `##WILDVALUE##` in the script — only in import JSON.
+
+| JSON field | Value |
+|------------|--------|
+| `datapoints[].name` | Short metric id (`metric_name`) — used in graphs, alerts, dashboards |
+| `interpretExpr` | **`##WILDVALUE##.metric_name`** — portal “Key” for multi-line key-value parsing |
+| Graph `datapointName` | Same as `datapoints[].name` (not the `##WILDVALUE##` string) |
+
+```json
+{
+  "name": "metric_name",
+  "interpretMethod": "namevalue",
+  "interpretExpr": "##WILDVALUE##.metric_name",
+  "useValue": "output"
+}
+```
+
+LogicMonitor substitutes each discovered instance wildvalue for `##WILDVALUE##` when matching script lines like `disk1.metric_name=9024`.
+
+JSON/BSON BatchScript output uses path-style keys instead, e.g. `data.##WILDVALUE##.values.metric_name` — see [collection-modes.md](collection-modes.md).
 
 | Field | Guidance |
 |-------|----------|
