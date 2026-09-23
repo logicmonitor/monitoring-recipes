@@ -14,12 +14,12 @@
   "useWildValueAsUniqueIdentifier": false,
   "collectionAttrs": {
     "type": "groovy",
-    "content": "// Template: batchscript collection \u2014 emit instance.key=value per line\ndef instance = instanceProps.get('wildvalue') ?: 'default'\nprintln \"${instance}.example_metric=0\"\nreturn 0\n"
+    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\ndef instance = instanceProps.get(\"wildvalue\") ?: \"default\"\nemit.dp(instance, \"example_metric\", 0)\nreturn 0\n"
   },
   "activeDiscovery": {
     "discoveryMethod": "ad_script",
     "enabled": true,
-    "discoveryInterval": "0m",
+    "discoveryInterval": "60m",
     "groupMethod": "none",
     "deleteInactiveInstances": false,
     "autoDeleteInstances": true,
@@ -28,7 +28,7 @@
     "filters": [],
     "params": {
       "type": "groovy",
-      "content": "// Template: active discovery\nprintln 'instance-a##Instance A'\nprintln 'instance-b##Instance B'\nreturn 0\n"
+      "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\nemit.instance(\"instance-a\", \"Instance A\")\nemit.instance(\"instance-b\", \"Instance B\", \"Second instance with description\")\nemit.instance(\n    \"instance-c\",\n    \"Instance C\",\n    \"Instance with ILPs\",\n    [role: \"primary\", \"auto.env\": \"prod\"]\n)\nreturn 0\n"
     }
   },
   "datapoints": [
@@ -40,8 +40,6 @@
       "interpretMethod": "namevalue",
       "interpretExpr": "example_metric",
       "useValue": "output",
-      "min": "",
-      "max": "",
       "maxDigits": 4,
       "noData": "Do not trigger an alert",
       "clearInterval": 0,

@@ -10,6 +10,9 @@ from typing import Any
 SCRIPT_COLLECT_NAMES = ("collect.groovy", "collect.ps1")
 SCRIPT_AD_NAMES = ("ad.groovy", "ad.ps1")
 
+ALLOWED_AD_DISCOVERY_INTERVALS = frozenset({"0m", "15m", "60m", "1440m"})
+GREENFIELD_DEFAULT_AD_DISCOVERY_INTERVAL = "60m"
+
 LANG_BY_FILE = {
     ".groovy": "groovy",
     ".ps1": "powershell",
@@ -155,7 +158,15 @@ _METRIC_KEY = r"([A-Za-z0-9_.-]+)"
 
 _PRINTLN_KEY_EQ = r"[\"']" + _METRIC_KEY + r"="
 
+EMIT_DP_SCRIPT = re.compile(
+    r"emit\.dp\s*\(\s*[\"']" + _METRIC_KEY + r"[\"']", re.MULTILINE
+)
+EMIT_DP_BATCH = re.compile(
+    r"emit\.dp\s*\([^,]+,\s*[\"']" + _METRIC_KEY + r"[\"']", re.MULTILINE
+)
+
 EMIT_KEY_PATTERNS = [
+    EMIT_DP_SCRIPT,
     re.compile(r"lm\.emit\s*\(\s*" + _EMIT_KEY_IN_QUOTES),
     re.compile(r"println\s+" + _PRINTLN_KEY_EQ, re.MULTILINE),
     re.compile(
@@ -164,9 +175,6 @@ EMIT_KEY_PATTERNS = [
     ),
 ]
 
-BATCH_KEY_PATTERN = re.compile(
-    r"lm\.emit\s*\(\s*" + _EMIT_KEY_IN_QUOTES, re.MULTILINE
-)
 BATCH_LINE_PATTERN = re.compile(
     r"println\s+[\"']" + _METRIC_KEY + r"\." + _METRIC_KEY + r"=",
     re.MULTILINE,
@@ -176,6 +184,8 @@ BATCH_LINE_PATTERN = re.compile(
 def extract_collection_keys(script_text: str, batchscript: bool = False) -> set[str]:
     keys: set[str] = set()
     if batchscript:
+        for match in EMIT_DP_BATCH.finditer(script_text):
+            keys.add(match.group(1))
         for match in BATCH_LINE_PATTERN.finditer(script_text):
             keys.add(match.group(2))
         for match in re.finditer(r"\.([A-Za-z0-9_.-]+)=", script_text):
@@ -184,11 +194,38 @@ def extract_collection_keys(script_text: str, batchscript: bool = False) -> set[
     for pattern in EMIT_KEY_PATTERNS:
         for match in pattern.finditer(script_text):
             key = match.group(1)
-            if "." in key and batchscript:
-                keys.add(key.split(".", 1)[1])
-            else:
-                keys.add(key)
+            keys.add(key)
     return keys
+
+
+def greenfield_validate(module: dict[str, Any]) -> list[str]:
+    """Checks for repo-authored import JSON (not portal exports)."""
+    errors: list[str] = []
+    if module.get("registryMetadata") is not None:
+        errors.append("greenfield JSON should omit registryMetadata")
+    if module.get("integrationMetadata") is not None:
+        errors.append("greenfield JSON should omit integrationMetadata")
+    if module.get("version") is not None:
+        errors.append("greenfield JSON should omit version (portal assigns on save)")
+
+    ad = module.get("activeDiscovery")
+    if isinstance(ad, dict):
+        interval = str(ad.get("discoveryInterval") or "")
+        if interval and interval not in ALLOWED_AD_DISCOVERY_INTERVALS:
+            allowed = ", ".join(sorted(ALLOWED_AD_DISCOVERY_INTERVALS))
+            errors.append(
+                f'activeDiscovery.discoveryInterval must be one of: {allowed} (got "{interval}")'
+            )
+
+    for dp in module.get("datapoints") or []:
+        if not isinstance(dp, dict):
+            continue
+        for bound in ("min", "max"):
+            if dp.get(bound) == "":
+                errors.append(
+                    f"datapoint '{dp.get('name')}' has empty string {bound}; omit or use a number"
+                )
+    return errors
 
 
 def read_collect_script(bundle_dir: Path) -> tuple[str | None, bool]:
@@ -230,8 +267,12 @@ def graph_datapoint_refs(module: dict[str, Any]) -> list[str]:
     return refs
 
 
-def semantic_validate(bundle_dir: Path, module: dict[str, Any]) -> list[str]:
+def semantic_validate(
+    bundle_dir: Path, module: dict[str, Any], strict_greenfield: bool = False
+) -> list[str]:
     errors: list[str] = []
+    if strict_greenfield:
+        errors.extend(greenfield_validate(module))
     errors.extend(check_pack_sync(bundle_dir, module))
 
     if module.get("type") != 0:

@@ -10,11 +10,31 @@ See also: [module-snippets.md](module-snippets.md), [snippets-catalog.md](snippe
 import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH
 import com.logicmonitor.mod.Snippets
 
-def loader = GSH.getInstance(GroovySystem.version)
+def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
+    .withBinding(getBinding())
 ```
 
-The object returned by `Snippets.getLoader()` exposes `load(name, minimumVersion)` (and related helpers). Recipes pin a **minimum compatible version** per snippet, for example `loader.load("lm.emit", "0")`.
+`getBinding()` is the same binding object as the implicit `binding` in collector scripts (`hostProps`, `instanceProps`, etc.). Load **every** snippet from `modLoader`, not from an unbound loader instance.
+
+## Sharing binding with loaded snippets
+
+Loaded snippets run as separate script objects. Without the parent binding, `emit.dp()` can exit 0 while producing **no** collector-parseable output.
+
+| Approach | When |
+|----------|------|
+| **`modLoader.withBinding(getBinding())`** (preferred) | Any script that loads one or more snippets |
+| **`emit.binding = binding`** after `load("lm.emit")` | Minimal scripts with only `lm.emit` on an unbound loader |
+
+Load `lm.emit` into `emit` and call `emit.dp(...)` / `emit.instance(...)` — see templates and [snippets-catalog.md](snippets-catalog.md).
+
+### Troubleshooting
+
+| Symptom | Likely cause |
+|---------|----------------|
+| Exit 0, empty metric output; `println` in the **parent** collect script works | Snippets loaded without shared binding |
+| Exit 0, empty output; snippet load throws | Snippets module missing or not updated on collector |
+| `Unable to load Snippet - <name>` | Install **LogicMonitor_Collector_Snippets**; monitor collector host |
 
 ## Version pins
 
@@ -62,11 +82,9 @@ Agents authoring modules should **not** call `clearCacheForUpdate()` from collec
 
 ## Loading pattern in scripts
 
-Load snippets once after bootstrap; reuse the returned script object:
-
 ```groovy
-def emit = loader.load("lm.emit", "0")
-def snmp = loader.load("proto.snmp", "0")
+def emit = modLoader.load("lm.emit", "0")
+def snmp = modLoader.load("proto.snmp", "0")
 ```
 
 Heavy modules may load optional snippets only on code paths that need them (HTTP, JDBC, topology).

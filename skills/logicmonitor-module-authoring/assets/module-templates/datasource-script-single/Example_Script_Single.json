@@ -14,7 +14,7 @@
   "useWildValueAsUniqueIdentifier": false,
   "collectionAttrs": {
     "type": "groovy",
-    "content": "// Template: single-instance DataSource collection\nlm.emit('example_metric', '0')\nreturn 0\n"
+    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\nemit.dp(\"example_metric\", 0)\nreturn 0\n"
   },
   "datapoints": [
     {
@@ -25,8 +25,6 @@
       "interpretMethod": "namevalue",
       "interpretExpr": "example_metric",
       "useValue": "output",
-      "min": "",
-      "max": "",
       "maxDigits": 4,
       "noData": "Do not trigger an alert",
       "clearInterval": 0,

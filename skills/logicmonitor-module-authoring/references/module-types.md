@@ -7,6 +7,7 @@ See also: individual pages in [docs/module-types/](../../../docs/module-types/).
 - **Purpose:** Time-series numeric metrics
 - **Output:** `key=value` (Script) or `instance.key=value` (BatchScript)
 - **Style:** `Vendor_Product_Monitor` naming; category-based appliesTo
+- **External / SaaS APIs:** [external-api-datasource.md](external-api-datasource.md)
 - **Docs:** https://www.logicmonitor.com/support/logicmodules/datasources/creating-managing-datasources/datasource-style-guidelines
 
 ## PropertySource

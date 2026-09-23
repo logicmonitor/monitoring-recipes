@@ -29,7 +29,7 @@
   "activeDiscovery": {
     "discoveryMethod": "ad_script",
     "enabled": true,
-    "discoveryInterval": "0m",
+    "discoveryInterval": "60m",
     "groupMethod": "none",
     "deleteInactiveInstances": false,
     "autoDeleteInstances": true,

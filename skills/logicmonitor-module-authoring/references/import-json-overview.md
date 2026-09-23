@@ -29,7 +29,17 @@ LogicMonitor portal **LogicModule** imports use a JSON shape that differs from d
 | `searchKeywords` | Comma-separated tags |
 | `technicalNotes` | Operator notes (markdown/plain) |
 | `group` | Exchange folder; often `""` for new modules |
-| `version` | Integer; portal manages on save |
+| `version` | Portal assigns on save — **omit in greenfield repo bundles** |
+
+## Greenfield checklist (repo-authored imports)
+
+Use `validate-module.py --strict-greenfield` on bundles before commit.
+
+- [ ] **No** `version`, `registryMetadata`, or `integrationMetadata`
+- [ ] `appliesTo` uses a **category** (e.g. `hasCategory("myapi")`) for in-repo modules; portal exports may use device-specific appliesTo — do not copy export appliesTo back blindly
+- [ ] `activeDiscovery.discoveryInterval` is one of **`0m`**, **`15m`**, **`60m`**, **`1440m`** — **default greenfield to `60m`** (`0m` = AD only when triggered manually on the device, not on a schedule)
+- [ ] Datapoint `min` / `max`: numeric string or omitted — not `""`
+- [ ] Graph `min` / `max`: numbers or omitted
 
 ## Omit on new modules
 
@@ -37,8 +47,9 @@ Do not copy from vendor exports:
 
 - `registryMetadata`
 - `integrationMetadata`
+- `version`
 
-These are registry/exchange bookkeeping, not required for custom imports.
+These are portal/registry bookkeeping, not required for custom imports.
 
 ## Script embedding
 

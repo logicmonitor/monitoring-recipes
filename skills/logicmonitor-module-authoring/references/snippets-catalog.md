@@ -8,13 +8,29 @@ See also: [snippet-loader.md](snippet-loader.md), [module-snippets.md](module-sn
 
 1. Install **LogicMonitor_Collector_Snippets** on the collector
 2. Enable monitoring on the **Collector host** resource
-3. Use the bootstrap in [snippet-loader.md](snippet-loader.md)
+3. Use the bound bootstrap in [snippet-loader.md](snippet-loader.md)
+
+## Snippet instance patterns
+
+After `def modLoader = ...withBinding(getBinding())`, load snippets from **`modLoader`**:
+
+| Snippet | After `modLoader.load(...)` | Typical next step |
+|---------|----------------------------|-------------------|
+| `lm.emit` | Script object | `emit.dp()` / `.instance()` / `.property()` / `.events()` |
+| `proto.http` | Module object | `.httpSnippetFactory(hostProps)` → HTTP client |
+| `proto.snmp` | Module object | `.create(host, props, startTime).withRetries(n)` |
+| `lm.remote` | Module object | `.exec(hostProps, cmd)` or `.create(props)` |
+| `lm.debug` | Module object | `.debugSnippetFactory(out, debug, log, logCacheContext)` |
+| `lm.cache` | Module object | `.cacheSnippetFactory(lmDebug, logCacheContext)` |
+| `lm.parse` | Module object | `.getJsonStringNode()` / `.getXMLStringNode()` |
+
+Factories are **not** interchangeable with the `emit` snippet object — each platform snippet documents its factory or method entry point.
 
 ## Quick reference
 
 | Snippet | Min version | Load | Primary API | Typical module types |
 |---------|-------------|------|-------------|----------------------|
-| `lm.emit` | `"0"` | `loader.load("lm.emit", "0")` | `.dp()`, `.instance()`, `.property()`, `.events()` | DataSource, AD, PropertySource, Event/Log |
+| `lm.emit` | `"0"` | `modLoader.load("lm.emit", "0")` | `.dp()`, `.instance()`, `.property()`, `.events()` | DataSource, AD, PropertySource, Event/Log |
 | `proto.snmp` | `"0"` | `loader.load("proto.snmp", "0")` | `.create(host, props?, startTime?).withRetries(n).walk/get` | DataSource |
 | `lm.remote` | `"0.6.0"` | `loader.load("lm.remote", "0.6.0")` | `.exec()`, `.create(props).exec()`, `.sftp()`, `.scp()`, `.shell()` | DataSource, ConfigSource |
 | `proto.http` | `"0"` | `loader.load("proto.http", "0")` | `.httpSnippetFactory(hostProps)` → `rawGet/rawPost/rawDelete` | DataSource, PropertySource |
@@ -30,14 +46,17 @@ See also: [snippet-loader.md](snippet-loader.md), [module-snippets.md](module-sn
 
 ---
 
-## lm.emit — collector-parseable output
+## `lm.emit` — collector-parseable output
 
-Load once per script. Prefer over hand-built `println` lines.
+Load with `def emit = modLoader.load("lm.emit", "0")` after [snippet-loader.md](snippet-loader.md) bootstrap. Call `emit.dp`, `emit.instance`, `emit.property`, or `emit.events` — not hand-built `println` lines.
 
 ### DataSource
 
 ```groovy
-def emit = loader.load("lm.emit", "0")
+def modLoader = GSH.getInstance(GroovySystem.version)
+    .getScript("Snippets", Snippets.getLoader())
+    .withBinding(getBinding())
+def emit = modLoader.load("lm.emit", "0")
 
 emit.dp("cpuUsage", 42)                        // Script: key=value
 emit.dp("eth0", "ifInOctets", 12345)           // BatchScript: instance.field=value
@@ -47,11 +66,7 @@ Booleans become `1.0` / `0.0`. Null/empty values are emitted with collector-safe
 
 ### Active Discovery
 
-```groovy
-emit.instance("eth0", "GigabitEthernet0")                           // wv##alias
-emit.instance("eth0", "GigabitEthernet0", "Uplink")                 // + description
-emit.instance("eth0", "GigabitEthernet0", "Uplink", ["speed": "1000"]) // + ILP; non-auto keys get auto. prefix
-```
+See [active-discovery.md](active-discovery.md) for `emit.instance` overloads and ILPs.
 
 ### PropertySource
 
@@ -317,8 +332,8 @@ Common methods: `getPortalDevices`, `findPortalDevice*`, `apiGetV2`, `apiGetMany
 | SSH command / file | `lm.remote` | Raw JSCH |
 | HTTP REST | `proto.http` | Raw `Http` without proxy/exclude handling |
 | JDBC | `lm.sql` | Ad-hoc `Sql.newInstance` without status maps |
-| Script output | `lm.emit` | Hand-rolled `println` key=value / AD lines |
-| Events JSON | `lm.emit.events` | Manual JSON string for events |
+| Script output | `emit` (`lm.emit` snippet) | Hand-rolled `println` key=value / AD lines |
+| Events JSON | `emit.events(...)` | Manual JSON string for events |
 | Auth token reuse | `lm.cache` | Local files on collector |
 | Debug | `lm.debug` | Unconditional `println` in production |
 | Slice JSON/XML | `lm.parse` | Regex-only parsing of large bodies |

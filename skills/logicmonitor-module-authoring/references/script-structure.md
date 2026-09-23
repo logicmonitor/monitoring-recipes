@@ -6,25 +6,29 @@ See also: [snippet-loader.md](snippet-loader.md), [snippets-catalog.md](snippets
 
 ## Groovy (snippet-first)
 
-### Section order
+### Section order — collection scripts (collect.groovy)
 
 ```
-1. Header comment        — purpose, supported module types, key device properties
-2. Imports               — GSH, Snippets, domain imports
-3. Snippet bootstrap     — loader + version-pinned snippet loads
-4. Configuration         — hostProps reads, normalized props map, timeouts
-5. Main flow             — linear top-level logic (no main() wrapper)
-6. Output emission       — lm.emit or JsonOutput.toJson (never hand-built JSON)
-7. Return code           — return 0 (success) / return 1 (failure)
-8. Helper defs           — def functions at bottom (valid even after return in AD scripts)
+1. Header comment
+2. Imports
+3. Snippet bootstrap     — modLoader.withBinding(getBinding()); load snippets from modLoader
+4. Configuration
+5. Helper defs           — before main flow (easier to debug than helpers after return)
+6. Main flow
+7. Output emission       — emit.dp / JsonOutput.toJson
+8. Return code           — return 0 / return 1
 ```
 
-### Template
+### Section order — Active Discovery (ad.groovy)
+
+Same as collection, except helper `def` blocks **after** `return 0` are idiomatic in Groovy AD scripts.
+
+### Template (collection)
 
 ```groovy
 /*******************************************************************************
  * Purpose: <one-line description>
- * Module types: DataSource, PropertySource, Active Discovery
+ * Module types: DataSource, PropertySource
  * Device properties: system.hostname, snmp.community (or v3 props)
  ******************************************************************************/
 
@@ -34,9 +38,10 @@ import com.santaba.agent.util.Settings
 import groovy.json.JsonOutput
 
 // --- Snippet bootstrap ---
-def loader = GSH.getInstance(GroovySystem.version)
+def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
-def emit = loader.load("lm.emit", "0")
+    .withBinding(getBinding())
+def emit = modLoader.load("lm.emit", "0")
 
 // --- Configuration ---
 debug = false
@@ -47,43 +52,48 @@ def timeout = Settings.getSettingInt("collector.batchscript.timeout",
     Settings.getSettingInt("collector.script.timeout", 120)) * 1000
 timeout -= 2500
 
+def debugPrint(message) {
+    if (debug) println "[DEBUG] ${message}"
+}
+
 // --- Main flow ---
 // ... collection logic ...
 
 // --- Output emission ---
-emit.dp("metricName", value)                    // DataSource Script: key=value
-// emit.dp(wildvalue, "fieldName", value)        // DataSource BatchScript: instance.field=value
-// emit.instance(wv, alias, desc, [auto.k: v])   // Active Discovery
-// emit.property("auto.name", value)             // PropertySource
-// print JsonOutput.toJson([data: "...", format: "markdown"])  // Diag/Remediation
+emit.dp("metricName", value)
+// emit.dp(wildvalue, "fieldName", value)        // BatchScript
+// print JsonOutput.toJson([data: "...", format: "markdown"])
 
 return 0
-
-// --- Helpers (below return is valid in Groovy AD scripts) ---
-def debugPrint(message) {
-    if (debug) println "[DEBUG] ${message}"
-}
 ```
+
+Fallback if `withBinding` is unavailable: unbound loader + `emit.binding = binding` after `load("lm.emit")` — see [snippet-loader.md](snippet-loader.md).
+
+### Template (Active Discovery)
+
+Use bound `modLoader` and `emit.instance(...)` in main flow; helpers may appear after `return 0`.
 
 ### Rules
 
 | Rule | Why |
 |------|-----|
+| `modLoader.withBinding(getBinding())` before any `load()` | Snippet output reaches collector stdout |
 | Use `def` for module-local helpers | Matches production module style |
+| Collection: helpers before `return 0` | Avoids “unreachable helper” confusion when debugging |
 | Normalize props to lowercase map | SNMP property keys are case-insensitive |
 | Timeout from Settings with ~2500ms buffer | Collector needs cleanup window before kill |
-| Use `lm.emit` for key=value and AD lines | Sanitizes wildvalues, fields, nulls |
+| `emit.dp()` / `emit.instance()` after `modLoader.load("lm.emit", "0")` | Sanitized collector output |
 | Use `JsonOutput.toJson()` for JSON output | Avoids malformed JSON |
 | No hardcoded credentials | Use `hostProps` / device properties |
-| `debug` flag + conditional logging | Collector troubleshooting without noise |
 | Return `0` on success, `1` on failure | AD: non-zero preserves existing instances |
 
 ### Anti-patterns
 
-- Do **not** copy snippet source into scripts — load via `loader.load()`
+- Do **not** copy snippet source into scripts — load via `modLoader.load()`
+- Do **not** hand-roll AD/metric lines when `emit` is loaded — use `emit.dp()` / `emit.instance()`
 - Do **not** use raw JSCH for SSH — use `lm.remote` snippet
 - Do **not** build JSON with string concatenation
-- Do **not** use `println` for hand-rolled `key=value` when `lm.emit` is available
+- Prefer `emit.dp` for production metrics; `println "key=value"` is OK for minimal/debug scripts or when snippets are unavailable (parent `println` always hits stdout)
 - Do **not** wrap everything in a `main()` function — collector runs top-level script
 
 ---

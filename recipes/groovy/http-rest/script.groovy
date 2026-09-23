@@ -10,11 +10,12 @@ import com.santaba.agent.util.Settings
 import groovy.json.JsonSlurper
 
 // --- Snippet bootstrap ---
-def loader = GSH.getInstance(GroovySystem.version)
+def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
-def httpMod = loader.load("proto.http", "0")
-def emit = loader.load("lm.emit", "0")
-def cacheMod = loader.load("lm.cache", "0")
+    .withBinding(getBinding())
+def httpMod = modLoader.load("proto.http", "0")
+def emit = modLoader.load("lm.emit", "0")
+def cacheMod = modLoader.load("lm.cache", "0")
 
 // --- Configuration ---
 debug = false
@@ -25,6 +26,10 @@ def cache = cacheMod.cacheSnippetFactory(null, "http-rest-recipe")
 def startTime = System.currentTimeMillis()
 def connectTimeout = 30000
 def readTimeout = Settings.getSettingInt("collector.script.timeout", 120) * 1000 - 2500
+
+def debugPrint(message) {
+    if (debug) println "[DEBUG] ${message}"
+}
 
 // --- Main flow ---
 def token = cache.cacheGet(cacheKey)
@@ -65,8 +70,3 @@ if (parsed instanceof Map) {
 }
 
 return 0
-
-// --- Helpers ---
-def debugPrint(message) {
-    if (debug) println "[DEBUG] ${message}"
-}

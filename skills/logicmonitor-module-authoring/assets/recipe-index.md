@@ -1,8 +1,10 @@
 # Recipe Index
 
-Pointers to script building blocks in the monitoring-recipes repo. Adapt **output format** for your target module type.
+Pointers to script building blocks in the **monitoring-recipes repository root**. Paths like `recipes/groovy/http-rest/` are **not** inside the portable skill folder — clone the repo or copy recipes when the skill is installed alone.
 
-All Groovy recipes require **LogicMonitor_Collector_Snippets** and follow [script-structure.md](../references/script-structure.md).
+Portable minimal HTTP example: [examples/http-rest-collect-snippet.groovy](../examples/http-rest-collect-snippet.groovy).
+
+All Groovy recipes require **LogicMonitor_Collector_Snippets**, bound `modLoader`, and [script-structure.md](../references/script-structure.md).
 
 ## Groovy
 

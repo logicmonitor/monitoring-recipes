@@ -51,4 +51,12 @@ Do not mix Groovy and PowerShell in one module.
 4. Run `validate-module.py` on the bundle directory.
 5. Deliver the **whole directory** to the user (scripts + JSON).
 
-Embedded `content` strings in exports from the portal are derived artifacts; in this repo they are regenerated from the script files.
+## Portal round-trip
+
+1. Author bundle in repo (`collect.*`, `ad.*`, JSON) with greenfield rules in [import-json-overview.md](import-json-overview.md) (AD `discoveryInterval` default **`60m`**).
+2. `pack-module.py` → import JSON into portal.
+3. Set AD schedule, appliesTo refinements, and alerts in the UI.
+4. **Export once** from portal and keep as **reference** for AD intervals (`0m`, `15m`, `60m`, `1440m`), optional fields, and graph shapes.
+5. Continue editing **script files** as source of truth; re-pack before the next import.
+
+Embedded `content` in portal exports is a snapshot; repo bundles regenerate it via `pack-module.py`.

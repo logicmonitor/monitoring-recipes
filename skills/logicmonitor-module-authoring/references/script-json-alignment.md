@@ -43,10 +43,20 @@ Enforced by `validate-module.py` when validating a **bundle directory**.
 
 ## Key extraction (validator heuristic)
 
-The validator scans `collect.*` for:
+The validator scans `collect.*` for string-literal metric names:
 
-- `lm.emit('key', ...)`
-- `println "key=`
-- PowerShell `Write-Output "key=`
+| Pattern | Example |
+|---------|---------|
+| `emit.dp("key",` | `emit.dp("stat_hp", value)` |
+| `emit.dp(wild, "key",` | BatchScript second argument |
+| `println "key=` | Legacy / no-snippet scripts |
+| `Write-Output "key=` | PowerShell |
+| `lm.emit('key',` | Legacy placeholder only — not production pattern |
 
-Extend scripts to use these patterns when possible so automated checks work.
+**Dynamic keys:** `emit.dp(dpName, value)` where `dpName` is a variable is **not** detected. Use string-literal first arguments for automated validation, or verify datapoints manually.
+
+Keep [scripts/lib.py](../scripts/lib.py) patterns in sync when adding new emit styles.
+
+## Greenfield JSON
+
+Run `validate-module.py --strict-greenfield` on repo bundles to catch export-only fields and AD interval mistakes — see [import-json-overview.md](import-json-overview.md).

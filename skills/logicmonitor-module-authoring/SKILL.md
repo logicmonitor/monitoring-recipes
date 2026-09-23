@@ -11,7 +11,7 @@ license: Apache-2.0
 compatibility: LogicMonitor Collector; references monitoring-recipes repo
 metadata:
   author: logicmonitor
-  version: "0.4.0"
+  version: "0.5.3"
 ---
 
 # LogicMonitor Module Authoring
@@ -33,6 +33,7 @@ Determine:
 - What data is being collected (numeric metrics, logs, config, properties, topology, diagnostics, remediation)
 - Where it comes from (SNMP, SSH, HTTP, WMI, WinRM, file system)
 - Whether it is multi-instance (requires Active Discovery)
+- External/SaaS API (not the device): read [references/external-api-datasource.md](references/external-api-datasource.md)
 
 ### 2. Choose module type
 
@@ -83,7 +84,7 @@ Read [references/output-formats.md](references/output-formats.md) for the chosen
 |-------------|-------------|
 | DataSource | `key=value` or `instance.key=value` |
 | PropertySource | `auto.*=value` or `system.categories=value` only |
-| Active Discovery | `wildvalue##wildalias` |
+| Active Discovery | `emit.instance(...)` per line (optional description + ILPs) — see [active-discovery.md](references/active-discovery.md) |
 | ConfigSource | Raw text (Script) or JSON (BatchScript) |
 | TopologySource | JSON `edges` array |
 | EventSource / LogSource | JSON `events` array |
@@ -97,7 +98,7 @@ For DiagnosticSource/RemediationSource alert context, read [references/alert-pro
 
 Read [references/active-discovery.md](references/active-discovery.md).
 
-Output: `wildvalue##wildalias` per line. Wildvalue must not contain spaces, `:`, `=`, `\`, or `#`.
+`emit.instance(...)` in `ad.groovy` — [active-discovery.md](references/active-discovery.md).
 
 ### 9. Create module bundle
 
@@ -129,9 +130,13 @@ Read [references/script-json-alignment.md](references/script-json-alignment.md).
 python scripts/validate-module.py path/to/Vendor_Product_Monitor/
 ```
 
-Uses Python stdlib only (pack sync, datapoints vs `collect.*`, graphs). Optional JSON Schema pass: `--with-schema` if `jsonschema` is installed.
+Uses Python stdlib only (pack sync, datapoints vs `collect.*`, graphs). Heuristic key extraction matches `emit.dp("literal", ...)` — see [script-json-alignment.md](references/script-json-alignment.md).
 
-Optional: `python scripts/extract-keys-from-script.py path/to/bundle/ --batchscript`
+```bash
+python scripts/validate-module.py --strict-greenfield path/to/bundle/
+```
+
+Optional: `--with-schema` if `jsonschema` is installed; `extract-keys-from-script.py` for key listing.
 
 ### 13. Deliver
 
@@ -148,7 +153,10 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 - [ ] PropertySource: only `auto.*` and `system.categories` — no other `system.*`
 - [ ] JSON modules: use `JsonOutput.toJson()` in Groovy, not manual string building
 - [ ] Diag/Remediation: handle missing `alertProps` on manual execution
-- [ ] Groovy: use `lm.emit` for key=value / AD output; load snippets via loader (not copied source)
+- [ ] Groovy: `modLoader.withBinding(getBinding())` before snippet loads (or `emit.binding = binding` fallback) — [snippet-loader.md](references/snippet-loader.md)
+- [ ] Groovy: `emit.dp()` / `emit.instance()` per [snippet-loader.md](references/snippet-loader.md) and templates
+- [ ] AD: `emit.instance()` only (ILPs via map arg) — [active-discovery.md](references/active-discovery.md)
+- [ ] Test Script exit 0 but empty metrics while parent `println` works → fix snippet binding
 - [ ] Groovy: timeout from Settings with buffer; `proto.snmp` / `lm.remote` over raw APIs
 - [ ] PowerShell: `Write-Output` for data (not `Write-Host`); validate unset `##prop##` tokens
 - [ ] BatchScript: use `Write-Output` not `Write-Host` in PowerShell
@@ -158,6 +166,9 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 - [ ] `validate-module.py` passes on the bundle after `pack-module.py`
 - [ ] DataSource: every `namevalue` datapoint matches a collect script key; graph lines reference defined datapoints
 - [ ] Each datapoint has `originId` before import
+- [ ] Greenfield JSON: no `version` / `registryMetadata` / `integrationMetadata`; category `appliesTo`
+- [ ] AD `discoveryInterval` is one of `0m`, `15m`, `60m`, `1440m` — default **`60m`** for greenfield (avoid `0m` unless AD is intentionally manual-only)
+- [ ] Datapoint/graph `min`/`max`: number or omit — not empty string
 
 ## Reference files
 
@@ -171,6 +182,7 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 | [eventsource-import-json.md](references/eventsource-import-json.md) | Scripted EventSource JSON |
 | [script-json-alignment.md](references/script-json-alignment.md) | Script keys vs datapoints and graphs |
 | [dashboard-handoff.md](references/dashboard-handoff.md) | Dashboard `dataSourceFullName` after import |
+| [external-api-datasource.md](references/external-api-datasource.md) | SaaS/public API DataSources |
 | [script-structure.md](references/script-structure.md) | Arranging any Groovy or PowerShell script |
 | [snippet-loader.md](references/snippet-loader.md) | Bootstrap, version pins, collector resolution |
 | [snippets-catalog.md](references/snippets-catalog.md) | Snippet APIs (proto.snmp, lm.emit, lm.remote, etc.) |

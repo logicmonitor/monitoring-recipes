@@ -81,6 +81,11 @@ def main() -> int:
         action="store_true",
         help="JSON Schema only, skip semantic checks (implies --with-schema)",
     )
+    parser.add_argument(
+        "--strict-greenfield",
+        action="store_true",
+        help="Reject registry metadata, version, 1d AD intervals, empty min/max strings",
+    )
     args = parser.parse_args()
 
     use_schema = args.with_schema or args.schema_only
@@ -95,7 +100,9 @@ def main() -> int:
     if use_schema:
         errors.extend(validate_schema(module))
     if not args.schema_only:
-        errors.extend(semantic_validate(bundle_dir, module))
+        errors.extend(
+            semantic_validate(bundle_dir, module, strict_greenfield=args.strict_greenfield)
+        )
 
     if errors:
         for err in errors:

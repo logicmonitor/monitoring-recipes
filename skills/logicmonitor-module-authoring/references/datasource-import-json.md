@@ -29,11 +29,13 @@ Content comes from `collect.groovy` / `collect.ps1` via `pack-module.py`.
 
 When `batchscript` + multi-instance:
 
+**`discoveryInterval`:** portal accepts only **`0m`**, **`15m`**, **`60m`**, **`1440m`**. **Greenfield default: `60m`** so AD runs on a schedule after import. Use `0m` only when AD should run manually (device update / on-demand), not for typical multi-instance modules. Do **not** use `"1d"` or other minute strings.
+
 ```json
 "activeDiscovery": {
   "discoveryMethod": "ad_script",
   "enabled": true,
-  "discoveryInterval": "0m",
+  "discoveryInterval": "60m",
   "groupMethod": "none",
   "deleteInactiveInstances": false,
   "autoDeleteInstances": true,
@@ -59,8 +61,6 @@ Typical scripted numeric datapoint (`namevalue`):
   "interpretMethod": "namevalue",
   "interpretExpr": "metric_name",
   "useValue": "output",
-  "min": "",
-  "max": "",
   "maxDigits": 4,
   "noData": "Do not trigger an alert",
   "clearInterval": 0,

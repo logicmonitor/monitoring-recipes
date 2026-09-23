@@ -236,7 +236,8 @@
           "type": "boolean"
         },
         "discoveryInterval": {
-          "type": "string"
+          "type": "string",
+          "enum": ["0m", "15m", "60m", "1440m"]
         },
         "groupMethod": {
           "type": "string"
