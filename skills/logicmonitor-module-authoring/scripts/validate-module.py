@@ -84,7 +84,10 @@ def main() -> int:
     parser.add_argument(
         "--strict-greenfield",
         action="store_true",
-        help="Reject registry metadata, version, 1d AD intervals, empty min/max strings",
+        help=(
+            "Reject portal metadata, invalid AD intervals, empty min/max strings, "
+            "and invalid displayedAs hyphens"
+        ),
     )
     args = parser.parse_args()
 

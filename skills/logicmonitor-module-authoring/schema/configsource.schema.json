@@ -22,7 +22,9 @@
       "type": "string"
     },
     "displayedAs": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[^-]*-?$",
+      "description": "Use a readable display name with spaces; '-' is allowed only as the final character."
     },
     "description": {
       "type": "string"

@@ -201,6 +201,12 @@ def extract_collection_keys(script_text: str, batchscript: bool = False) -> set[
 def greenfield_validate(module: dict[str, Any]) -> list[str]:
     """Checks for repo-authored import JSON (not portal exports)."""
     errors: list[str] = []
+    displayed_as = module.get("displayedAs")
+    if isinstance(displayed_as, str) and "-" in displayed_as[:-1]:
+        errors.append(
+            "displayedAs must use spaces for word separation and may only contain "
+            f"'-' as its final character (got '{displayed_as}')"
+        )
     if module.get("registryMetadata") is not None:
         errors.append("greenfield JSON should omit registryMetadata")
     if module.get("integrationMetadata") is not None:

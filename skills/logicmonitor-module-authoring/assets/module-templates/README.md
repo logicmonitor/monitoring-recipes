@@ -24,7 +24,7 @@ Copy a directory as the starting point for a new LogicModule. Each bundle contai
 ## Usage
 
 1. Copy template folder to your module name, e.g. `Vendor_Product_Monitor/`.
-2. Rename JSON to `Vendor_Product_Monitor.json` and set `name`, `displayedAs`, `appliesTo`.
+2. Rename JSON to `Vendor_Product_Monitor.json` and set `name` to `Vendor_Product_Monitor`, `displayedAs` to `Vendor Product Monitor`, and `appliesTo`.
 3. Replace placeholder datapoint names and graph lines to match `collect.*` keys.
 4. From the skill root:
 

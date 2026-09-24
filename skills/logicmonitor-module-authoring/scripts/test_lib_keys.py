@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib import extract_collection_keys, namevalue_script_output_key
+from lib import extract_collection_keys, greenfield_validate, namevalue_script_output_key
 
 
 def main() -> int:
@@ -28,6 +28,9 @@ emit.dp(instance, "example_metric", 0)
         == "example_metric"
     )
     assert namevalue_script_output_key("example_metric", False, False) == "example_metric"
+    assert greenfield_validate({"displayedAs": "Module-Name"})
+    assert not greenfield_validate({"displayedAs": "Module Name"})
+    assert not greenfield_validate({"displayedAs": "Module Name-"})
     print("OK: extract_collection_keys")
     return 0
 
