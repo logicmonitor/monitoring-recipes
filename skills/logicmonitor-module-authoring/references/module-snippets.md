@@ -1,7 +1,5 @@
 # Module Snippets
 
-See also: [docs/concepts/module-snippets.md](../../../docs/concepts/module-snippets.md)
-
 ## What they are
 
 Reusable platform code (functions, classes, data) used by newer LogicModules for common functionality: data formatting, topology generation, API interactions.
@@ -25,7 +23,7 @@ Reusable platform code (functions, classes, data) used by newer LogicModules for
 
 | Platform | Path |
 |----------|------|
-| Linux | `/lib/snippets` |
-| Windows | `\lib\snippets` |
+| Linux | `<collector-install>/lib/snippets` (often `/usr/local/logicmonitor/lib/snippets`) |
+| Windows | `<collector-install>\\lib\\snippets` |
 
 All snippet versions are cached in this directory.

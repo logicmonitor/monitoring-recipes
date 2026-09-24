@@ -1,7 +1,5 @@
 # Script Cache
 
-See also: [docs/concepts/script-cache.md](../../../docs/concepts/script-cache.md)
-
 Collector 29.100+ only. Cache auth tokens between collection intervals using `ScriptCache`.
 
 ## API

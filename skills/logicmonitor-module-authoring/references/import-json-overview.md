@@ -38,7 +38,7 @@ Use `validate-module.py --strict-greenfield` on bundles before commit.
 - [ ] **No** `version`, `registryMetadata`, or `integrationMetadata`
 - [ ] `appliesTo` uses a **category** (e.g. `hasCategory("myapi")`) for in-repo modules; portal exports may use device-specific appliesTo — do not copy export appliesTo back blindly
 - [ ] `activeDiscovery.discoveryInterval` is one of **`0m`**, **`15m`**, **`60m`**, **`1440m`** — **default greenfield to `60m`** (`0m` = AD only when triggered manually on the device, not on a schedule)
-- [ ] Datapoint `min` / `max`: numeric string or omitted — not `""`
+- [ ] Datapoint `min` / `max`: JSON number or omitted — not `""`
 - [ ] Graph `min` / `max`: numbers or omitted
 
 ## Omit on new modules

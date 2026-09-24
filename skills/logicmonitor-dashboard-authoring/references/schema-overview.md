@@ -59,8 +59,14 @@ Every widget config includes:
 From the skill root:
 
 ```bash
-pip install jsonschema
-python scripts/validate-dashboard.py my-dashboard.json
+python3 scripts/validate-dashboard.py my-dashboard.json
 ```
 
-Schema files: `schema/dashboard.schema.json`, `schema/common.defs.json` (bundled with this skill).
+This runs the bundled semantic checks with no pip dependency. To also validate the bundled schema, install the optional package and pass `--with-schema`:
+
+```bash
+pip install jsonschema
+python3 scripts/validate-dashboard.py my-dashboard.json --with-schema
+```
+
+Schema files: `schema/dashboard.schema.json`, `schema/common.defs.json`.

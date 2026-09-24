@@ -43,12 +43,20 @@ def parse_display_name_paren(full_name: str) -> tuple[str | None, str | None]:
     return match.group(1).strip(), match.group(2).strip()
 
 
+def get_datasource_datapoints(data: dict) -> list[dict[str, Any]]:
+    """Return datapoints from a portal export or LogicModule import bundle."""
+    raw_datapoints = data.get("dataPoints", data.get("datapoints", []))
+    if not isinstance(raw_datapoints, list):
+        return []
+    return [datapoint for datapoint in raw_datapoints if isinstance(datapoint, dict)]
+
+
 def index_datasource_export(data: dict) -> dict[str, Any]:
-    name = data.get("name") or data.get("displayName") or ""
-    display_name = data.get("displayName") or name
+    name = data.get("name") or data.get("displayName") or data.get("displayedAs") or ""
+    display_name = data.get("displayName") or data.get("displayedAs") or name
     data_points = []
-    for dp in data.get("dataPoints", []):
-        if isinstance(dp, dict) and dp.get("name"):
+    for dp in get_datasource_datapoints(data):
+        if dp.get("name"):
             data_points.append(dp["name"])
     aliases = build_datasource_aliases(name, display_name)
     entry = {
@@ -75,7 +83,7 @@ def load_datapoint_index_from_exports(paths: list[Path]) -> dict[str, Any]:
                 data = load_json(file_path)
             except (json.JSONDecodeError, OSError):
                 continue
-            if "dataPoints" not in data:
+            if not get_datasource_datapoints(data):
                 continue
             keyed = index_datasource_export(data)
             for alias, entry in keyed.items():

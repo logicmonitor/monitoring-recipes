@@ -1,7 +1,5 @@
 # Collection Modes
 
-See also: [docs/concepts/collection-modes.md](../../../docs/concepts/collection-modes.md)
-
 ## Script mode (SCRIPT)
 
 - Runs **once per instance** per poll

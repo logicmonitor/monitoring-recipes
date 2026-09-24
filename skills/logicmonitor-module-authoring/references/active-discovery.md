@@ -1,6 +1,6 @@
 # Active Discovery
 
-See also: [docs/concepts/active-discovery.md](../../../docs/concepts/active-discovery.md), [snippet-loader.md](snippet-loader.md), template `ad.groovy` in [module-templates](../assets/module-templates/README.md).
+See [snippet-loader.md](snippet-loader.md) and the `ad.groovy` template in [module-templates](../assets/module-templates/README.md).
 
 ## Script AD output
 
@@ -88,7 +88,7 @@ See [script-structure.md](script-structure.md) shared AD/collection pattern.
 ### Portal follow-up
 
 - Document meaningful ILPs in the module **description** or **technical notes** so operators know what filters can target.
-- Configure **Active Discovery filters** and **Group method** when ILPs justify them — see [docs/concepts/active-discovery.md](../../../docs/concepts/active-discovery.md#active-discovery-filters).
+- Configure Active Discovery filters and Group method when ILPs justify them.
 - Greenfield JSON leaves `"filters": []` and `"groupMethod": "none"`; call out in handoff when operators should add filters after import.
 
 ## Limits

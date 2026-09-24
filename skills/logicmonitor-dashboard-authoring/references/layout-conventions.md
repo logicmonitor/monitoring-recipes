@@ -2,7 +2,7 @@
 
 ## Grid
 
-- 12 columns (`sizex` max 12)
+- Use a 12-column layout by convention (`sizex` normally no greater than 12)
 - `col`, `row` are 1-based
 - Typical widget heights: `sizey: 2` (text/header), `3` (graph/KPI), `4-8` (tables, NOC)
 

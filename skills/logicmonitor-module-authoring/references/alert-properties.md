@@ -1,6 +1,6 @@
 # Alert Properties
 
-For DiagnosticSource and RemediationSource scripts triggered by alerts. See also [docs/module-types/diagnosticsource.md](../../../docs/module-types/diagnosticsource.md) and [remediationsource.md](../../../docs/module-types/remediationsource.md).
+For DiagnosticSource and RemediationSource scripts triggered by alerts.
 
 ## When available
 

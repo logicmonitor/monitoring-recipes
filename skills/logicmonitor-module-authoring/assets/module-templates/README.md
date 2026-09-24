@@ -26,8 +26,8 @@ Copy a directory as the starting point for a new LogicModule. Each bundle contai
 4. From the skill root:
 
 ```bash
-python scripts/pack-module.py path/to/Vendor_Product_Monitor/
-python scripts/validate-module.py path/to/Vendor_Product_Monitor/
+python3 scripts/pack-module.py path/to/Vendor_Product_Monitor/
+python3 scripts/validate-module.py path/to/Vendor_Product_Monitor/
 ```
 
 5. Deliver the directory (JSON + script files) to the user.

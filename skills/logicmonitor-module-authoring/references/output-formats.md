@@ -1,7 +1,5 @@
 # Output Formats
 
-See also: [docs/concepts/output-formats.md](../../../docs/concepts/output-formats.md)
-
 ## Quick reference
 
 | Type | Format |
@@ -12,13 +10,15 @@ See also: [docs/concepts/output-formats.md](../../../docs/concepts/output-format
 | PropertySource | `auto.*=value` or `system.categories=value` only via `emit.property()` |
 | ConfigSource Script | Raw config text |
 | ConfigSource BatchScript | JSON `data.<wildvalue>.configuration` |
-| TopologySource | JSON `edges` array with type/from/to ERIs |
+| TopologySource | JSON `edges` array with type/from/to ERIs; use a portal export as the JSON-shell reference |
 | EventSource | JSON `events` array (happenedOn, severity, message required) |
 | LogSource | JSON `events` array (`message` required, exit 0) |
 | DiagnosticSource | JSON `{data, format}` |
 | RemediationSource | JSON `{data, format, remediationStatus}` |
 
 Groovy: bound `modLoader` + `emit` — [snippet-loader.md](snippet-loader.md).
+
+`lm.topo.generateTopology()` produces its own structured topology JSON. Do not hand-edit or substitute that helper output for the `edges` contract without first comparing it to the target portal export.
 
 ## PropertySource rule
 

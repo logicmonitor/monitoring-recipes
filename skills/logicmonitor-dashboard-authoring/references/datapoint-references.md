@@ -1,6 +1,6 @@
 # Datapoint and Datasource References
 
-Datasource identity and resource scoping differ by widget type. Copy patterns from reference dashboards — do not transpose across types.
+Datasource identity and resource scoping differ by widget type. Start from the matching bundled widget template; do not transpose fields across types.
 
 ## Per-widget field matrix
 
@@ -16,16 +16,16 @@ Datasource identity and resource scoping differ by widget type. Copy patterns fr
 
 ## `dataSourceFullName` formats
 
-Build from DataSource export `displayName` and `name`:
+Build from a portal export's `displayName` or an import bundle's `displayedAs`, plus `name`:
 
 | Format | Example | When |
 |--------|---------|------|
 | `DisplayName (name)` | `Lambda (AWS_Lambda)` | Default for cloud/vendor datasources |
-| `prefix-with-dash` | `Nginx-`, `Interfaces- (WinIf-)` | Multi-instance AD datasources |
+| `prefix-with-dash` | `Nginx-` | Multi-instance AD datasources |
 | `plain` | `Ping` | Short name equals reference |
 | glob/pattern | rare | Aggregated widgets |
 
-The datapoint index includes aliases for all formats. Match the format used in reference dashboards for the same datasource family.
+The datapoint index includes aliases for all formats. Prefer the exact identity from the user's source JSON; use the matching bundled template for field placement.
 
 ## Scope field types
 
@@ -71,7 +71,7 @@ Never use `dataSourceFullName` in `noc` items.
 | prefix-with-dash | `Call Manager Cluster-` |
 | star | `*` |
 
-Template: `assets/widget-templates/noc.json`
+Template: [noc.json](../assets/widget-templates/noc.json)
 
 ## `pieChart` dual-array
 
@@ -108,7 +108,7 @@ Add a `virtualDataPoints[]` entry with RPN `*1024*1024*1024`. Hide the underlyin
 }]
 ```
 
-Templates: `cgraph-virtual-datapoint.json`, `dynamicTable.json` (column `rpn`)
+Templates: [cgraph-virtual-datapoint.json](../assets/widget-templates/cgraph-virtual-datapoint.json), [dynamicTable.json](../assets/widget-templates/dynamicTable.json) (column `rpn`)
 
 ### `dynamicTable` — column RPN
 

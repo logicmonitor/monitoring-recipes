@@ -8,7 +8,7 @@ description: >-
   import JSON bundles (datapoints, graphs), SNMP/SSH/HTTP/WinRM/WMI
   integration, or choosing between module types.
 license: Apache-2.0
-compatibility: LogicMonitor Collector; references monitoring-recipes repo
+compatibility: LogicMonitor Collector; self-contained authoring bundle
 metadata:
   author: logicmonitor
   version: "0.5.7"
@@ -56,7 +56,7 @@ For **DataSource** and **ConfigSource**, read [references/collection-modes.md](r
 - Scripted (Groovy/PowerShell) for complex logic or APIs
 - Script mode: runs per instance; BatchScript: runs once per device (multi-instance)
 
-Other module types use their own output models — see import JSON references for Event, Log, Topology, Diag, Remediation.
+Other module types use their own output models. This bundle includes import JSON coverage for Event, Property, Config, Diagnostic, and Remediation modules. For LogSource and TopologySource, start from a portal export and use the output contracts in [references/output-formats.md](references/output-formats.md); this bundle does not include their import schemas or starters.
 
 ### 4. Choose language
 
@@ -70,11 +70,11 @@ Read [references/script-structure.md](references/script-structure.md).
 
 Follow the canonical section order for the chosen language. For Groovy, use the snippet loader bootstrap — see [references/snippet-loader.md](references/snippet-loader.md) — prefer platform snippets over raw APIs — see [references/snippets-catalog.md](references/snippets-catalog.md) — and follow [references/groovy.md](references/groovy.md#script-scoping-locals-vs-helpers) when helpers call `emit` or other loaded snippets.
 
-### 6. Find a recipe
+### 6. Start from a bundled pattern
 
-Check [assets/recipe-index.md](assets/recipe-index.md) for matching patterns in `recipes/<language>/<pattern>/`.
+Copy the closest starter from [assets/module-templates/README.md](assets/module-templates/README.md) or adapt the bundled HTTP example. Use [assets/recipe-index.md](assets/recipe-index.md) only when the full monitoring-recipes repository is available.
 
-Start from the recipe script. Adapt placeholders and **output format** for your module type. Do not write from scratch if a recipe exists.
+Adapt placeholders and the required output format; do not copy a collection pattern across module types without changing its output contract.
 
 ### 7. Format output correctly
 
@@ -84,10 +84,11 @@ Read [references/output-formats.md](references/output-formats.md) for the chosen
 |-------------|-------------|
 | DataSource | `key=value` or `instance.key=value` |
 | PropertySource | `auto.*=value` or `system.categories=value` only |
-| Active Discovery | `emit.instance(...)` per line (optional description + ILPs) — see [active-discovery.md](references/active-discovery.md) |
+| Active Discovery | Groovy: `emit.instance(...)`; PowerShell: `Write-Output "wv##alias..."` — see [active-discovery.md](references/active-discovery.md) |
 | ConfigSource | Raw text (Script) or JSON (BatchScript) |
-| TopologySource | JSON `edges` array |
-| EventSource / LogSource | JSON `events` array |
+| TopologySource | JSON `edges` array; do not assume `lm.topo` helper output matches a hand-authored payload |
+| EventSource | JSON `events` array with `happenedOn`, `severity`, and `message` |
+| LogSource | JSON `events` array with `message`; exit 0 |
 | DiagnosticSource / RemediationSource | JSON `{data, format}` (+ `remediationStatus` for Remediation) |
 
 Getting output format wrong is the most common mistake. Match examples exactly.
@@ -98,7 +99,7 @@ For DiagnosticSource/RemediationSource alert context, read [references/alert-pro
 
 Read [references/active-discovery.md](references/active-discovery.md).
 
-`emit.instance(...)` in `ad.groovy` — [active-discovery.md](references/active-discovery.md). **Prefer ILPs:** when discovery returns stable metadata (version, type, role, feature flags), pass the fourth-argument map so instances carry `auto.*` props for filters, grouping, and operator context — not only wildvalue/alias.
+For Groovy, use `emit.instance(...)`; for PowerShell, write the documented discovery line format. **Prefer ILPs:** when discovery returns stable metadata (version, type, role, feature flags), include `auto.*` properties so instances carry filter and grouping context.
 
 ### 9. Create module bundle
 
@@ -115,7 +116,7 @@ Copy a starter from [assets/module-templates/README.md](assets/module-templates/
 ### 10. Pack for import
 
 ```bash
-python scripts/pack-module.py path/to/Vendor_Product_Monitor/
+python3 scripts/pack-module.py path/to/Vendor_Product_Monitor/
 ```
 
 Inlines script files into JSON `content` fields before portal import. Use `--check` to detect drift without writing.
@@ -127,13 +128,13 @@ Read [references/script-json-alignment.md](references/script-json-alignment.md).
 ### 12. Validate
 
 ```bash
-python scripts/validate-module.py path/to/Vendor_Product_Monitor/
+python3 scripts/validate-module.py path/to/Vendor_Product_Monitor/
 ```
 
 Uses Python stdlib only (pack sync, datapoints vs `collect.*`, graphs). Heuristic key extraction matches `emit.dp("literal", ...)` — see [script-json-alignment.md](references/script-json-alignment.md).
 
 ```bash
-python scripts/validate-module.py --strict-greenfield path/to/bundle/
+python3 scripts/validate-module.py --strict-greenfield path/to/bundle/
 ```
 
 Optional: `--with-schema` if `jsonschema` is installed; `extract-keys-from-script.py` for key listing.
@@ -144,34 +145,18 @@ Hand off the **full bundle directory** (JSON + script files). Run pack before im
 
 For dashboards on a new DataSource, read [references/dashboard-handoff.md](references/dashboard-handoff.md).
 
-### 14. Validate scripts (checklist)
+### 14. Final checklist
 
 - [ ] Script follows [script-structure.md](references/script-structure.md) section order
 - [ ] No hardcoded credentials — use `hostProps` / device properties
 - [ ] Return `0` on success (LogSource discards output on non-zero)
 - [ ] Output format matches module type (see step 7)
-- [ ] PropertySource: only `auto.*` and `system.categories` — no other `system.*`
-- [ ] JSON modules: use `JsonOutput.toJson()` in Groovy, not manual string building
-- [ ] Diag/Remediation: handle missing `alertProps` on manual execution
 - [ ] Groovy: `modLoader.withBinding(getBinding())` before snippet loads (or `emit.binding = binding` fallback) — [snippet-loader.md](references/snippet-loader.md)
-- [ ] Groovy: `emit.dp()` / `emit.instance()` per [snippet-loader.md](references/snippet-loader.md) and templates
 - [ ] Groovy: `emit = modLoader.load(...)` and other snippet handles **without** `def` (like `debug = false`) so `def` helpers can call them — never `def emit = ...` when helpers emit — [groovy.md](references/groovy.md#script-scoping-locals-vs-helpers)
-- [ ] AD: `emit.instance()` only (ILPs via map arg) — [active-discovery.md](references/active-discovery.md)
-- [ ] AD: attach `auto.*` ILPs for static discovery metadata (type, version, features) when available — omit null/empty — [active-discovery.md](references/active-discovery.md#instance-level-properties-ilps--prefer-rich-discovery)
-- [ ] Test Script exit 0 but empty metrics while parent `println` works → fix snippet binding
-- [ ] Groovy: timeout from Settings with buffer; `proto.snmp` / `lm.remote` over raw APIs
+- [ ] AD: use the language-specific format; attach useful, nonempty `auto.*` ILPs when available
 - [ ] PowerShell: `Write-Output` for data (not `Write-Host`); validate unset `##prop##` tokens
-- [ ] BatchScript: use `Write-Output` not `Write-Host` in PowerShell
-- [ ] Placeholders replaced with actual values
-- [ ] API auth tokens: consider `lm.cache` or `ScriptCache` on Collector 29.100+ — see [references/script-cache.md](references/script-cache.md)
-- [ ] Module Snippets referenced (not copied) where applicable — see [references/snippets-catalog.md](references/snippets-catalog.md)
 - [ ] `validate-module.py` passes on the bundle after `pack-module.py`
-- [ ] DataSource: every `namevalue` datapoint matches a collect script key; graph lines reference defined datapoints
-- [ ] DataSource batchscript + multi-instance: each `interpretExpr` is `##WILDVALUE##.<datapoint.name>` — [datasource-import-json.md](references/datasource-import-json.md), [script-json-alignment.md](references/script-json-alignment.md)
-- [ ] Each datapoint has `originId` before import
-- [ ] Greenfield JSON: no `version` / `registryMetadata` / `integrationMetadata`; category `appliesTo`
-- [ ] AD `discoveryInterval` is one of `0m`, `15m`, `60m`, `1440m` — default **`60m`** for greenfield (avoid `0m` unless AD is intentionally manual-only)
-- [ ] Datapoint/graph `min`/`max`: number or omit — not empty string
+- [ ] JSON aligns with [script-json-alignment.md](references/script-json-alignment.md) and the greenfield rules in [import-json-overview.md](references/import-json-overview.md)
 
 ## Reference files
 
@@ -184,7 +169,7 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 | [scripted-module-import-json.md](references/scripted-module-import-json.md) | Property / Diag / Rem JSON |
 | [eventsource-import-json.md](references/eventsource-import-json.md) | Scripted EventSource JSON |
 | [script-json-alignment.md](references/script-json-alignment.md) | Script keys vs datapoints and graphs |
-| [dashboard-handoff.md](references/dashboard-handoff.md) | Dashboard `dataSourceFullName` after import |
+| [dashboard-handoff.md](references/dashboard-handoff.md) | Dashboard handoff data needed after import |
 | [external-api-datasource.md](references/external-api-datasource.md) | SaaS/public API DataSources |
 | [script-structure.md](references/script-structure.md) | Arranging any Groovy or PowerShell script |
 | [snippet-loader.md](references/snippet-loader.md) | Bootstrap, version pins, collector resolution |

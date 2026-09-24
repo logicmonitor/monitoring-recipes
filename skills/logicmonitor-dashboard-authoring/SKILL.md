@@ -1,7 +1,7 @@
 ---
 name: logicmonitor-dashboard-authoring
 description: >-
-  Authors importable LogicMonitor dashboard JSON from exported DataSource
+  Authors importable LogicMonitor dashboard JSON from portal-exported or import-bundle DataSource
   LogicModules. Use when creating dashboards, dashboard widgets, datapoint
   references, dataSourceFullName formatting, or validating dashboard JSON
   against the bundled dashboard schema.
@@ -28,16 +28,15 @@ Copy the whole `logicmonitor-dashboard-authoring/` directory to `~/.cursor/skill
 ### 1. Inputs
 
 - Target scope (`widgetTokens`, usually `defaultResourceGroup`)
-- Exported **DataSource JSON** from LogicMonitor (datapoints + naming)
+- DataSource JSON with datapoints: portal export (`displayName`, `dataPoints`) or LogicModule import bundle (`displayedAs`, `datapoints`)
 
-### 2. Datapoint index (optional)
+### 2. Datapoint index (optional reference artifact)
 
 ```bash
-pip install jsonschema
-python scripts/extract-datapoint-index.py path/to/ds-exports/ -o datapoint-index.json
+python3 scripts/extract-datapoint-index.py path/to/ds-exports/ -o datapoint-index.json
 ```
 
-Field rules: [references/datapoint-references.md](references/datapoint-references.md).
+This produces an inspectable index for authoring; validation reads the original DataSource JSON paths directly. Field rules: [references/datapoint-references.md](references/datapoint-references.md).
 
 ### 3. Widget templates
 
@@ -62,9 +61,11 @@ Defaults: `theme: "newSolidDarkBlue"`, `interval: 3`, `timescale: "day"`, `versi
 ### 5. Validate
 
 ```bash
-python scripts/validate-dashboard.py my-dashboard.json --schema-only
-python scripts/validate-dashboard.py --datapoints path/to/ds-exports/ my-dashboard.json
+python3 scripts/validate-dashboard.py my-dashboard.json
+python3 scripts/validate-dashboard.py my-dashboard.json --datapoints path/to/datasource-json/
 ```
+
+The first command runs bundled semantic widget rules without dependencies. `--with-schema` adds bundled JSON Schema validation when the optional `jsonschema` package is installed. `--schema-only` runs only that optional schema validation; it still performs a `--datapoints` cross-check when supplied.
 
 ### 6. Deliver
 

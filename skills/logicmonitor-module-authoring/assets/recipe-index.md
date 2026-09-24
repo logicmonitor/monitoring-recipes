@@ -1,28 +1,16 @@
-# Recipe Index
+# Bundled Patterns
 
-Pointers to script building blocks in the **monitoring-recipes repository root**. Paths like `recipes/groovy/http-rest/` are **not** inside the portable skill folder — clone the repo or copy recipes when the skill is installed alone.
+Use one of these files as the starting point. Every target is included in this skill.
 
-Portable minimal HTTP example: [examples/http-rest-collect-snippet.groovy](../examples/http-rest-collect-snippet.groovy).
+| Pattern | Starter | Typical module types |
+|---------|---------|----------------------|
+| DataSource Script | [datasource-script-single](module-templates/datasource-script-single/) | Single-instance DataSource |
+| DataSource BatchScript + AD | [datasource-batchscript-ad](module-templates/datasource-batchscript-ad/) | Multi-instance DataSource |
+| ConfigSource + AD | [configsource-script-ad](module-templates/configsource-script-ad/) | ConfigSource |
+| PropertySource | [propertysource-groovy](module-templates/propertysource-groovy/) | PropertySource |
+| EventSource | [eventsource-scriptevent](module-templates/eventsource-scriptevent/) | EventSource |
+| DiagnosticSource | [diagnosticsource-groovy](module-templates/diagnosticsource-groovy/) | DiagnosticSource |
+| RemediationSource | [remediationsource-groovy](module-templates/remediationsource-groovy/) | RemediationSource |
+| HTTP REST | [http-rest-collect-snippet.groovy](examples/http-rest-collect-snippet.groovy) | DataSource, PropertySource |
 
-All Groovy recipes require **LogicMonitor_Collector_Snippets**, bound `modLoader`, and [script-structure.md](../references/script-structure.md).
-
-## Groovy
-
-| Pattern | Path | Snippets | Typical module types | Output adaptation | Status |
-|---------|------|----------|---------------------|-------------------|--------|
-| SNMP walk | `recipes/groovy/snmp-walk/` | proto.snmp, lm.emit | DataSource, PropertySource, AD | DS: `key=value` · PS: `auto.prop=value` · AD: `wild##alias` | Ready |
-| SNMP get | `recipes/groovy/snmp-get/` | proto.snmp, lm.emit | DataSource, PropertySource | DS: `key=value` · PS: `auto.prop=value` | Ready |
-| SSH exec | `recipes/groovy/ssh-exec/` | lm.remote, lm.emit | DataSource, ConfigSource, DiagnosticSource | DS: `key=value` · Config: raw text · Diag: JSON `{data,format}` | Ready |
-| HTTP REST | `recipes/groovy/http-rest/` | proto.http, lm.cache, lm.emit | DataSource, PropertySource | DS: `key=value` · PS: `auto.prop=value` | Ready |
-| JDBC | `recipes/groovy/jdbc/` | lm.sql, lm.emit | DataSource | DS Script: `key=value` · BatchScript: `instance.key=value` | Ready |
-
-## PowerShell
-
-| Pattern | Path | Snippets | Typical module types | Output adaptation | Status |
-|---------|------|----------|---------------------|-------------------|--------|
-| WinRM exec | `recipes/powershell/winrm-exec/` | — | DataSource, DiagnosticSource, RemediationSource | DS: `key=value` · Diag/Rem: JSON via `ConvertTo-Json` | Ready |
-| WMI query | `recipes/powershell/wmi-query/` | — | DataSource, PropertySource | DS: `key=value` · PS: `auto.prop=value` | Ready |
-| WMI discovery | `recipes/powershell/wmi-discovery/` | — | Active Discovery | `wildvalue##wildalias` per line | Ready |
-
-See [references/output-formats.md](../references/output-formats.md) for full format specs.
-See [references/snippets-catalog.md](../references/snippets-catalog.md) for snippet loading details.
+Use [output formats](../references/output-formats.md) for the module-specific contract and [snippet loading](../references/snippets-catalog.md) for Groovy APIs.

@@ -19,9 +19,9 @@ newSimpleGray, newSimpleBlue, newSimpleDarkBlue
 
 ## Graph colors (allowed)
 
-Use `Auto` unless copying a known color from a reference dashboard.
+Use `Auto` unless a deliberate color distinction is needed.
 
-Named colors observed in corpus:
+Named colors allowed by the bundled schema:
 
 ```
 aqua, black, blue, fuchsia, gray, green, lime, maroon, navy,

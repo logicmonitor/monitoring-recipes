@@ -14,20 +14,12 @@ Used by `scripts/validate-module.py --with-schema` (optional `jsonschema` packag
 Validate from the skill root:
 
 ```bash
-python scripts/validate-module.py path/to/ModuleBundle/
-python scripts/pack-module.py path/to/ModuleBundle/
+python3 scripts/validate-module.py path/to/ModuleBundle/
+python3 scripts/pack-module.py path/to/ModuleBundle/
 
 # Optional stricter JSON Schema check (maintainers):
 pip install jsonschema
-python scripts/validate-module.py --with-schema path/to/ModuleBundle/
+python3 scripts/validate-module.py --with-schema path/to/ModuleBundle/
 ```
 
-## Regenerating from local exports
-
-Maintainers with a local [`LogicModules/`](../../../LogicModules/) tree (gitignored) can refresh enums and stats:
-
-```bash
-python scripts/logicmodule-schema/extract-schema.py
-```
-
-Run from the repository root. Output is written here; commit the updated schema files with the skill.
+The schema is bundled for optional validation. It is not a source-code generator and requires no files outside this skill folder to use.

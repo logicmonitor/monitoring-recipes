@@ -23,7 +23,7 @@ Use when the monitored target is **not** the device under `system.hostname` (pub
 
 ## Script pattern
 
-See [assets/examples/http-rest-collect-snippet.groovy](../assets/examples/http-rest-collect-snippet.groovy) and `recipes/groovy/http-rest/` in the monitoring-recipes repo root.
+Start from [assets/examples/http-rest-collect-snippet.groovy](../assets/examples/http-rest-collect-snippet.groovy) or [Bundled Patterns](../assets/recipe-index.md).
 
 - Bound `modLoader.withBinding(getBinding())`
 - `emit.dp("literal_metric_name", value)` with **string-literal** names when using `validate-module.py` (dynamic keys are not extracted)

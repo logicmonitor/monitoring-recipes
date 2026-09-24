@@ -77,7 +77,7 @@ emit.property("system.categories", "MyCategory")
 
 Only `auto.*` and `system.categories` are valid for PropertySource output.
 
-### EventSource / LogSource
+### EventSource
 
 ```groovy
 emit.events([
@@ -85,7 +85,17 @@ emit.events([
 ])
 ```
 
-Uses `JsonOutput` — do not hand-build the `events` JSON when this snippet is available.
+EventSource events require `happenedOn`, `severity`, and `message`.
+
+### LogSource
+
+```groovy
+emit.events([
+    [message: "Example"]
+])
+```
+
+LogSource events require `message` and a zero exit code. `emit.events()` uses `JsonOutput`; do not hand-build the `events` JSON when the snippet is available.
 
 ### Netscan (advanced)
 
@@ -109,7 +119,7 @@ Enhanced JSON netscan: list of maps with keys `hostname`, `displayname`, `hostPr
 def host = hostProps.get("system.hostname")
 Map props = hostProps.toProperties().collectEntries { k, v -> [(k.toLowerCase()): v] }
 
-def snmp = loader.load("proto.snmp", "0").create(host, props, System.currentTimeMillis())
+def snmp = modLoader.load("proto.snmp", "0").create(host, props, System.currentTimeMillis())
     .withRetries(5)
 
 def walkResult = snmp.walk("INSERT_OID")   // Map index → value
@@ -142,7 +152,7 @@ Credential resolution from `hostProps`:
 | `ssh.preferredauthentications` / `auto.ssh.preferredauthentications` | collector SSH auth order |
 
 ```groovy
-def remote = loader.load("lm.remote", "0.6.0")
+def remote = modLoader.load("lm.remote", "0.6.0")
 
 def output = remote.exec(hostProps, "INSERT_COMMAND")
 
@@ -159,7 +169,7 @@ Host key verification uses a promiscuous verifier (platform default for monitori
 ## proto.http — proxy-aware HTTP
 
 ```groovy
-def httpMod = loader.load("proto.http", "0")
+def httpMod = modLoader.load("proto.http", "0")
 def http = httpMod.httpSnippetFactory(hostProps)
 
 def conn = http.rawGet("https://api.example.com/data",
@@ -183,7 +193,7 @@ Proxy: honored when **device** `proxy.enable` (default true if unset) **and** co
 ## lm.sql — JDBC
 
 ```groovy
-def sql = loader.load("lm.sql", "0")
+def sql = modLoader.load("lm.sql", "0")
 
 def conn = sql.attemptConnection(
     hostProps.get("jdbc.user"),
@@ -221,14 +231,14 @@ Requires Collector **29.100+** (`ScriptCache`). See [script-cache.md](script-cac
 The factory expects a **debug helper** with `LMDebugPrint(String)` (used internally). When not debugging, pass a no-op:
 
 ```groovy
-def cacheMod = loader.load("lm.cache", "0")
+def cacheMod = modLoader.load("lm.cache", "0")
 def debugSnip = [LMDebugPrint: { msg -> if (debug) println msg }]
 def cache = cacheMod.cacheSnippetFactory(debugSnip, "myModule")
 
 def token = cache.cacheGet("authToken")
 if (!token) {
     token = authenticate()
-    cache.cacheSet("authToken", token, 3600)   // expiry seconds; default 43200
+    cache.cacheSet("authToken", token, 300000) // expiry milliseconds
 }
 ```
 
@@ -263,7 +273,7 @@ Pair with `lm.cache` via a small `LMDebugPrint` adapter (see above), not by assu
 When full `JsonSlurper` / XML parser is heavy or fragile:
 
 ```groovy
-def parse = loader.load("lm.parse", "0")
+def parse = modLoader.load("lm.parse", "0")
 def node = parse.getJsonStringNode(bigJson, '"items":', false)
 def xmlFrag = parse.getXMLStringNode(bigXml, "<entry>", false)
 ```
@@ -275,7 +285,7 @@ def xmlFrag = parse.getXMLStringNode(bigXml, "<entry>", false)
 ## lm.bitsandbobs — misc collector helpers
 
 ```groovy
-def b = loader.load("lm.bitsandbobs", "0")
+def b = modLoader.load("lm.bitsandbobs", "0")
 
 if (b.probeTcpPort(host, 443)) { … }
 
@@ -293,7 +303,7 @@ def (result, ms) = b.timer({ expensiveCall() })
 Build edges in memory, then render:
 
 ```groovy
-def topo = loader.load("lm.topo", "0")
+def topo = modLoader.load("lm.topo", "0")
 def edges = []
 
 topo.registerEdge(edges, "fromEri", "toEri", "dependsOn")
@@ -311,10 +321,10 @@ return 0
 ## lm.api — LogicMonitor REST from the collector
 
 ```groovy
-def httpMod = loader.load("proto.http", "0")
+def httpMod = modLoader.load("proto.http", "0")
 def http = httpMod.httpSnippetFactory(hostProps)
-def dbg = loader.load("lm.debug", "0").create(hostProps, false, out)
-def apiMod = loader.load("lm.api", "0")
+def dbg = modLoader.load("lm.debug", "0").create(hostProps, false, out)
+def apiMod = modLoader.load("lm.api", "0")
 def api = apiMod.lmApiSnippetFactory(hostProps, http, dbg)
 ```
 

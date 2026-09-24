@@ -1,6 +1,6 @@
 # Groovy Scripting
 
-See also: [script-structure.md](script-structure.md), [snippets-catalog.md](snippets-catalog.md), [docs/concepts/collection-modes.md](../../../docs/concepts/collection-modes.md)
+See [script-structure.md](script-structure.md), [snippets-catalog.md](snippets-catalog.md), and [collection-modes.md](collection-modes.md).
 
 ## Snippet-first approach
 
@@ -113,7 +113,7 @@ walkResult.each { index, value ->
 return 0
 ```
 
-See `recipes/groovy/snmp-walk/` and `recipes/groovy/snmp-get/`.
+For a starting pattern, see [Bundled Patterns](../assets/recipe-index.md).
 
 ## SSH execution (lm.remote)
 
@@ -123,7 +123,7 @@ def output = remote.exec(hostProps, 'INSERT_COMMAND_HERE')
 // Parse output and emit via emit.dp(...)
 ```
 
-See `recipes/groovy/ssh-exec/`.
+See [assets/recipe-index.md](../assets/recipe-index.md) for optional repository recipes.
 
 ## HTTP REST (proto.http)
 
@@ -133,7 +133,7 @@ def http = httpMod.httpSnippetFactory(hostProps)
 def response = http.rawGet('https://api.example.com/endpoint', ['Authorization': 'Bearer token'])
 ```
 
-See `recipes/groovy/http-rest/`.
+For a portable HTTP starting point, see [assets/examples/http-rest-collect-snippet.groovy](../assets/examples/http-rest-collect-snippet.groovy).
 
 ## Output (`emit`)
 
@@ -183,8 +183,9 @@ timeout -= 2500  // cleanup buffer
 | Active Discovery | `emit.instance(wv, alias, desc, ilpMap)` |
 | ConfigSource Script | Print raw config text |
 | ConfigSource BatchScript | JSON `data.<wildvalue>.configuration` |
-| TopologySource | JSON `edges` array |
-| EventSource / LogSource | JSON `events` array |
+| TopologySource | JSON `edges` array; use a portal export as the JSON-shell reference |
+| EventSource | JSON `events` array with `happenedOn`, `severity`, and `message` |
+| LogSource | JSON `events` array with `message`; exit 0 |
 | DiagnosticSource | JSON `{data, format}` |
 | RemediationSource | JSON `{data, format, remediationStatus}` |
 
@@ -197,6 +198,6 @@ Return `0` on success. Non-zero on failure.
 - Active Discovery: non-zero preserves existing instances on transient errors
 - LogSource: non-zero discards all output
 
-## Recipes
+## Patterns
 
-See `recipes/groovy/` in the monitoring-recipes repo.
+Use [module templates](../assets/module-templates/README.md), bundled [examples](../assets/examples/), and [Bundled Patterns](../assets/recipe-index.md).

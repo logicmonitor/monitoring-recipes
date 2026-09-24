@@ -1,7 +1,5 @@
 # Module Types
 
-See also: individual pages in [docs/module-types/](../../../docs/module-types/).
-
 ## DataSource
 
 - **Purpose:** Time-series numeric metrics
@@ -27,7 +25,7 @@ See also: individual pages in [docs/module-types/](../../../docs/module-types/).
 ## TopologySource
 
 - **Purpose:** Define device relationships for topology maps
-- **Output:** JSON `{"edges": [{"type":"...","from":"eri","to":"eri"}]}`
+- **Output:** JSON `{"edges": [{"type":"...","from":"eri","to":"eri"}]}`; use a portal export as the JSON-shell reference
 - **Docs:** https://www.logicmonitor.com/support/topologysources-scripts
 
 ## LogSource

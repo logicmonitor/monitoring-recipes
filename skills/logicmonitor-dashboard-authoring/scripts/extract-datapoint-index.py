@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from lib import index_datasource_export, load_json
+from lib import get_datasource_datapoints, index_datasource_export, load_json
 
 
 def collect_export_files(inputs: list[str]) -> list[Path]:
@@ -54,15 +54,29 @@ def main() -> int:
         except (json.JSONDecodeError, OSError) as exc:
             print(f"Skipping {file_path}: {exc}", file=sys.stderr)
             continue
-        if "dataPoints" not in data:
+        if not get_datasource_datapoints(data):
+            print(
+                f"Skipping {file_path}: expected non-empty dataPoints (portal export) "
+                "or datapoints (LogicModule import bundle).",
+                file=sys.stderr,
+            )
             continue
         keyed = index_datasource_export(data)
-        canonical_key = f"{data.get('displayName', '')} ({data.get('name', '')})"
+        display_name = data.get("displayName") or data.get("displayedAs") or ""
+        canonical_key = f"{display_name} ({data.get('name', '')})"
         if canonical_key.endswith(" ()"):
             canonical_key = data.get("name", file_path.stem)
         entry = next(iter(keyed.values()))
         index[canonical_key] = entry
         sources.append(str(file_path))
+
+    if not index:
+        print(
+            "No usable DataSource JSON found: expected non-empty dataPoints "
+            "(portal export) or datapoints (LogicModule import bundle).",
+            file=sys.stderr,
+        )
+        return 1
 
     output = {
         "sourceFiles": sources,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate LogicMonitor dashboard JSON against schema and optional DataSource exports."""
+"""Validate LogicMonitor dashboard JSON and optional DataSource exports."""
 
 from __future__ import annotations
 
@@ -7,16 +7,12 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-try:
+if TYPE_CHECKING:
     from jsonschema import Draft202012Validator
-    from jsonschema.exceptions import SchemaError
-    from jsonschema.validators import RefResolver
-except ImportError:
-    print("Install jsonschema: pip install jsonschema", file=sys.stderr)
-    raise SystemExit(1)
 
 from lib import (
     SCHEMA_DIR,
@@ -30,7 +26,10 @@ from lib import (
 )
 
 
-def load_validator() -> Draft202012Validator:
+def load_validator() -> "Draft202012Validator":
+    from jsonschema import Draft202012Validator
+    from jsonschema.validators import RefResolver
+
     schema_path = SCHEMA_DIR / "dashboard.schema.json"
     common_path = SCHEMA_DIR / "common.defs.json"
     schema = load_json(schema_path)
@@ -42,6 +41,24 @@ def load_validator() -> Draft202012Validator:
     }
     resolver = RefResolver(base_uri=schema_path.as_uri(), referrer=schema, store=store)
     return Draft202012Validator(schema, resolver=resolver)
+
+
+def validate_schema(dashboard: dict) -> list[str]:
+    try:
+        validator = load_validator()
+    except ImportError:
+        return [
+            "JSON Schema validation requires the optional jsonschema package "
+            "(pip install jsonschema). Default semantic checks do not."
+        ]
+    except Exception as exc:
+        return [f"Invalid bundled schema: {exc}"]
+
+    errors: list[str] = []
+    for error in sorted(validator.iter_errors(dashboard), key=lambda e: list(e.path)):
+        path = ".".join(str(part) for part in error.path) or "(root)"
+        errors.append(f"[schema] {path}: {error.message}")
+    return errors
 
 
 def validate_datapoints(dashboard: dict, index: dict) -> list[str]:
@@ -94,7 +111,12 @@ def main() -> int:
     parser.add_argument(
         "--schema-only",
         action="store_true",
-        help="Skip per-widget datasource rule checks",
+        help="Validate against bundled JSON Schema only (implies --with-schema)",
+    )
+    parser.add_argument(
+        "--with-schema",
+        action="store_true",
+        help="Also validate against bundled JSON Schema (optional jsonschema package)",
     )
     args = parser.parse_args()
 
@@ -105,37 +127,31 @@ def main() -> int:
         print(f"Failed to read dashboard: {exc}", file=sys.stderr)
         return 1
 
-    try:
-        validator = load_validator()
-    except SchemaError as exc:
-        print(f"Invalid schema: {exc}", file=sys.stderr)
-        return 1
-
-    schema_errors = sorted(validator.iter_errors(dashboard), key=lambda e: list(e.path))
-    if schema_errors:
-        print(f"Schema validation failed for {dashboard_path}:")
-        for error in schema_errors[:20]:
-            path = ".".join(str(p) for p in error.path) or "(root)"
-            print(f"  - {path}: {error.message}")
-        if len(schema_errors) > 20:
-            print(f"  ... and {len(schema_errors) - 20} more")
-        return 1
-
-    rule_errors: list[str] = []
+    errors: list[str] = []
+    if args.with_schema or args.schema_only:
+        errors.extend(validate_schema(dashboard))
     if not args.schema_only:
         for widget in dashboard.get("widgets", []):
             cfg = widget.get("config", {})
-            rule_errors.extend(check_widget_datasource_rules(cfg))
-            rule_errors.extend(check_alert_widget_rules(cfg))
+            errors.extend(check_widget_datasource_rules(cfg))
+            errors.extend(check_alert_widget_rules(cfg))
 
     if args.datapoints:
         index = {"lookup": load_datapoint_index_from_exports([Path(p) for p in args.datapoints])}
-        rule_errors.extend(validate_datapoints(dashboard, index))
+        if not index["lookup"]:
+            errors.append(
+                "No usable DataSource JSON found: expected non-empty dataPoints "
+                "(portal export) or datapoints (LogicModule import bundle)."
+            )
+        else:
+            errors.extend(validate_datapoints(dashboard, index))
 
-    if rule_errors:
-        print(f"Datasource rule validation failed for {dashboard_path}:")
-        for error in rule_errors:
+    if errors:
+        print(f"Validation failed for {dashboard_path}:")
+        for error in errors[:20]:
             print(f"  - {error}")
+        if len(errors) > 20:
+            print(f"  ... and {len(errors) - 20} more")
         return 1
 
     print(f"OK: {dashboard_path}")

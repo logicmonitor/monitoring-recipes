@@ -1,6 +1,6 @@
 # Dashboard handoff
 
-When building dashboards for a new DataSource, use the [logicmonitor-dashboard-authoring](../../logicmonitor-dashboard-authoring/SKILL.md) skill.
+When building dashboards for a new DataSource, hand off the imported DataSource identity and datapoint names to the dashboard author.
 
 ## `dataSourceFullName`
 
@@ -20,13 +20,10 @@ Dashboard widgets reference `dataPointName` values that must match `datapoints[]
 
 ## Export for dashboard tooling
 
-Dashboard `extract-datapoint-index.py` expects export field `dataPoints` (camelCase). Portal LogicModule JSON uses `datapoints`. When indexing:
-
-- Map `displayedAs` → `displayName`
-- Map `datapoints` → `dataPoints` for the index script, or pass a normalized copy.
+Dashboard tooling accepts both portal export fields (`displayName`, `dataPoints`) and LogicModule import fields (`displayedAs`, `datapoints`).
 
 ## Validation chain
 
 1. `validate-module.py` on the module bundle
 2. `pack-module.py` then import to portal (or use packed JSON)
-3. `validate-dashboard.py --datapoints <exports>` on dashboard JSON
+3. Validate the dashboard against the DataSource export or import bundle

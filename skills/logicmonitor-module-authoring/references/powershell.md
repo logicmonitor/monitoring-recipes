@@ -1,6 +1,6 @@
 # PowerShell Scripting
 
-See also: [script-structure.md](script-structure.md), [docs/concepts/collection-modes.md](../../../docs/concepts/collection-modes.md)
+See [script-structure.md](script-structure.md) and [collection-modes.md](collection-modes.md).
 
 ## Device properties
 
@@ -131,7 +131,7 @@ Invoke-Command -Session $session -ScriptBlock { INSERT_COMMAND_HERE }
 Remove-PSSession $session
 ```
 
-See `recipes/powershell/winrm-exec/`.
+See [assets/recipe-index.md](../assets/recipe-index.md) for optional repository recipes.
 
 ## WMI queries
 
@@ -149,7 +149,7 @@ foreach ($row in $results) {
 }
 ```
 
-See `recipes/powershell/wmi-query/` and `recipes/powershell/wmi-discovery/`.
+See [assets/recipe-index.md](../assets/recipe-index.md) for optional repository recipes.
 
 ## Output format by module type
 
@@ -190,6 +190,6 @@ Use `Write-Host` only for gated debug logging (`if ($debug) { Write-Host ... }`)
 
 Exit with code `0` on success. Non-zero on failure.
 
-## Recipes
+## Patterns
 
-See `recipes/powershell/` in the monitoring-recipes repo.
+Use [module templates](../assets/module-templates/README.md) and [Bundled Patterns](../assets/recipe-index.md).

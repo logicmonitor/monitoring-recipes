@@ -114,4 +114,4 @@ HTML content in `content` field.
 
 ### `billing`, `cloudRecommendation`, `viz`
 
-See `cloud-widget-stub.json`. These types rely on portal-specific `widgetConfig` JSON. **Export from LogicMonitor** and adjust scope; schema-only stubs are not sufficient for production dashboards.
+See [cloud-widget-stub.json](../assets/widget-templates/cloud-widget-stub.json). These types rely on portal-specific `widgetConfig` JSON. Export from LogicMonitor and adjust scope; schema-only stubs are not sufficient for production dashboards.

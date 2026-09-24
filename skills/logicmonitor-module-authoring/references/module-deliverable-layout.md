@@ -29,7 +29,7 @@ Vendor_Product_Monitor/
 Pack with:
 
 ```bash
-python scripts/pack-module.py path/to/Vendor_Product_Monitor/
+python3 scripts/pack-module.py path/to/Vendor_Product_Monitor/
 ```
 
 Use `--check` to verify JSON `content` matches files without writing.
