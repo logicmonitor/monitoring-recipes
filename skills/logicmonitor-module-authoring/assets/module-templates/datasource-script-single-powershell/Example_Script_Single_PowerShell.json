@@ -1,0 +1,37 @@
+{
+  "name": "Example_Script_Single_PowerShell",
+  "displayedAs": "Example Script Single PowerShell",
+  "description": "Template single-instance PowerShell DataSource.",
+  "appliesTo": "hasCategory(\"example\")",
+  "searchKeywords": "example,template,powershell",
+  "technicalNotes": "",
+  "group": "",
+  "type": 0,
+  "dataSourceType": 1,
+  "collectionMethod": "script",
+  "collectionInterval": "3m",
+  "multiInstance": false,
+  "useWildValueAsUniqueIdentifier": false,
+  "collectionAttrs": {
+    "type": "powershell",
+    "content": "<#\n  Purpose: Single-instance PowerShell DataSource starter.\n  Collector output must contain only numeric name=value data.\n#>\n\n$hostname = '##system.hostname##'.Trim()\nif ([string]::IsNullOrWhiteSpace($hostname) -or $hostname -like '*system.hostname*') {\n    Write-Error 'system.hostname is not configured'\n    exit 1\n}\n\nWrite-Output 'example_metric=0'\nexit 0\n"
+  },
+  "datapoints": [
+    {
+      "name": "example_metric",
+      "description": "Example value.",
+      "dataType": 7,
+      "type": "gauge",
+      "interpretMethod": "namevalue",
+      "interpretExpr": "example_metric",
+      "useValue": "output",
+      "maxDigits": 4,
+      "noData": "Do not trigger an alert",
+      "clearInterval": 0,
+      "triggerInterval": 0,
+      "originId": "template_ps_example_metric",
+      "statusDisplayNames": []
+    }
+  ],
+  "graphs": []
+}

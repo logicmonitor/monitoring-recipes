@@ -4,7 +4,7 @@ import com.logicmonitor.mod.Snippets
 def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
     .withBinding(getBinding())
-emit = modLoader.load("lm.emit", "0")
+def emit = modLoader.load("lm.emit", "0")
 
 emit.instance("instance-a", "Instance A", "", [tier: "standard", role: "primary"])
 emit.instance("instance-b", "Instance B", "Second instance with description")

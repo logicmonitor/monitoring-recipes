@@ -13,45 +13,27 @@ import com.logicmonitor.mod.Snippets
 def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
     .withBinding(getBinding())
-emit = modLoader.load("lm.emit", "0")
+def emit = modLoader.load("lm.emit", "0")
 ```
 
 See [snippet-loader.md](snippet-loader.md) for bootstrap and version pins, and [snippets-catalog.md](snippets-catalog.md) for snippet APIs.
 
 ## Script scoping (locals vs helpers)
 
-Collector Groovy runs as a **Script** subclass. Top-level `def helper(...) { }` blocks are **methods** on that class, not nested functions. They see **binding / script properties** (same as `debug = false`), not other `def` locals from main flow.
-
-| Declaration | Visible in main flow | Visible in `def helper(...) { }` |
-|-------------|---------------------|----------------------------------|
-| `emit = modLoader.load("lm.emit", "0")` (no `def`) | Yes | Yes |
-| `httpMod = modLoader.load("proto.http", "0")` (no `def`) | Yes | Yes |
-| `def host = hostProps.get(...)` | Yes | **No** |
-| `def emit = modLoader.load(...)` | Yes | **No** → `MissingPropertyException` if a helper calls `emit` |
-
-**Convention (use everywhere):**
-
-- **`def`** — helpers, parsed values, loop locals, anything only used in main flow or passed as parameters.
-- **No `def`** — `debug`, `emit`, and every other loaded snippet or factory (`httpMod`, `http`, `snmp`, …) that a helper method might call. Same pattern as `debug = false`.
+Collector Groovy runs as a **Script** subclass. Top-level `def helper(...) { }` blocks are methods on that class, not nested functions. Prefer ordinary local variables and pass snippet handles into helpers explicitly. This keeps dependencies visible and avoids mutable script-level state.
 
 ```groovy
-def modLoader = GSH.getInstance(GroovySystem.version)
-    .getScript("Snippets", Snippets.getLoader())
-    .withBinding(getBinding())
-emit = modLoader.load("lm.emit", "0")
-httpMod = modLoader.load("proto.http", "0")
+def emit = modLoader.load("lm.emit", "0")
+def httpMod = modLoader.load("proto.http", "0")
 
-def emitPokemonMetrics(String wildvalue, int httpStatus, pokemon) {
+def emitPokemonMetrics(emit, String wildvalue, int httpStatus) {
     emit.dp(wildvalue, "http_status", httpStatus)
-    // ...
 }
 ```
 
-`def modLoader` is fine when snippet loads happen only in bootstrap before helpers run. If a helper must call `modLoader.load(...)`, assign `modLoader` without `def` as well.
+Closures defined in the main script can capture local snippet handles, but explicit parameters are clearer for reusable helpers. Use binding-style assignment without `def` only when existing helper code must access a script property directly, or when preserving compatibility with a legacy module. In that case, document the exception locally.
 
-**Symptom:** `groovy.lang.MissingPropertyException: No such property: emit for class: ScriptNN` — change `def emit = ...` to `emit = ...` (and the same for other snippet handles the helper uses).
-
-Closures (`each { emit.dp(...) }`) still capture `def` locals; prefer binding-style `emit` anyway so methods and closures behave the same.
+**Symptom:** `groovy.lang.MissingPropertyException: No such property: emit for class: ScriptNN` inside a top-level method means the method is relying on a local variable. Prefer passing `emit` as an argument; changing it to a binding property (`emit = ...`) is the compatibility fallback, not the default pattern.
 
 | Task | Snippet | Avoid |
 |------|---------|-------|
@@ -140,7 +122,7 @@ For a portable HTTP starting point, see [assets/examples/http-rest-collect-snipp
 After bootstrap in [snippet-loader.md](snippet-loader.md):
 
 ```groovy
-emit = modLoader.load("lm.emit", "0")
+def emit = modLoader.load("lm.emit", "0")
 
 emit.dp("cpuUsage", 42)                              // DataSource Script
 emit.dp("instanceId", "cpuUsage", 42)                // BatchScript
@@ -183,7 +165,7 @@ timeout -= 2500  // cleanup buffer
 | Active Discovery | `emit.instance(wv, alias, desc, ilpMap)` |
 | ConfigSource Script | Print raw config text |
 | ConfigSource BatchScript | JSON `data.<wildvalue>.configuration` |
-| TopologySource | JSON `edges` array; use a portal export as the JSON-shell reference |
+| TopologySource | JSON `edges` array; start with the bundled TopologySource starter and validate ERI/ERT semantics |
 | EventSource | JSON `events` array with `happenedOn`, `severity`, and `message` |
 | LogSource | JSON `events` array with `message`; exit 0 |
 | DiagnosticSource | JSON `{data, format}` |

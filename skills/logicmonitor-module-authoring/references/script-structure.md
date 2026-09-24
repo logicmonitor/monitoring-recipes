@@ -13,15 +13,15 @@ See also: [snippet-loader.md](snippet-loader.md), [snippets-catalog.md](snippets
 2. Imports
 3. Snippet bootstrap     — modLoader.withBinding(getBinding()); load snippets from modLoader
 4. Configuration
-5. Helper defs           — before main flow (easier to debug than helpers after return)
-6. Main flow
-7. Output emission       — emit.dp / JsonOutput.toJson
-8. Return code           — return 0 / return 1
+5. Main flow
+6. Output emission       — emit.dp / JsonOutput.toJson
+7. Return code           — return 0 / return 1
+8. Helper methods        — after the main flow
 ```
 
 ### Section order — Active Discovery (ad.groovy)
 
-Same as collection, except helper `def` blocks **after** `return 0` are idiomatic in Groovy AD scripts.
+Same as collection, with helper `def` blocks after `return 0` to keep the main flow easy to scan.
 
 ### Template (collection)
 
@@ -41,10 +41,12 @@ import groovy.json.JsonOutput
 def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
     .withBinding(getBinding())
-emit = modLoader.load("lm.emit", "0")
+def emit = modLoader.load("lm.emit", "0")
+def lmDebugMod = modLoader.load("lm.debug", "2.0.0")
 
 // --- Configuration ---
-debug = false
+def debug = false
+def lmDebug = lmDebugMod.create(hostProps, debug, out)
 def host = hostProps.get("system.hostname")
 Map props = hostProps.toProperties().collectEntries { k, v -> [(k.toLowerCase()): v] }
 def startTime = System.currentTimeMillis()
@@ -52,11 +54,7 @@ def timeout = Settings.getSettingInt("collector.batchscript.timeout",
     Settings.getSettingInt("collector.script.timeout", 120)) * 1000
 timeout -= 2500
 
-def debugPrint(message) {
-    if (debug) println "[DEBUG] ${message}"
-}
-
-// emit has no def — binding-style, like debug — so def helpers can call emit.dp
+// Use lmDebug.debug/info/warn/error for diagnostic messages.
 
 // --- Main flow ---
 // ... collection logic ...
@@ -81,8 +79,9 @@ Use bound `modLoader` and `emit.instance(...)` in main flow; helpers may appear 
 |------|-----|
 | `modLoader.withBinding(getBinding())` before any `load()` | Snippet output reaches collector stdout |
 | Use `def` for module-local helpers | Matches production module style |
-| Load `emit` and other snippet handles **without** `def` (`emit = modLoader.load(...)`) | `def emit = ...` is invisible inside `def helper() { }` — see [groovy.md](groovy.md#script-scoping-locals-vs-helpers) |
-| Collection: helpers before `return 0` | Avoids “unreachable helper” confusion when debugging |
+| Keep snippet handles local with `def` and pass them to helper methods | Makes helper dependencies explicit; binding-style globals are a legacy compatibility fallback |
+| Use `lm.debug` for diagnostic messages | Keeps debug output collector-aware and out of metric/event data |
+| Collection: helpers after `return 0` | Matches the repository Groovy standard and keeps the main flow together |
 | Normalize props to lowercase map | SNMP property keys are case-insensitive |
 | Timeout from Settings with ~2500ms buffer | Collector needs cleanup window before kill |
 | `emit.dp()` / `emit.instance()` after `modLoader.load("lm.emit", "0")` | Sanitized collector output |
@@ -98,7 +97,7 @@ Use bound `modLoader` and `emit.instance(...)` in main flow; helpers may appear 
 - Do **not** build JSON with string concatenation
 - Prefer `emit.dp` for production metrics; `println "key=value"` is OK for minimal/debug scripts or when snippets are unavailable (parent `println` always hits stdout)
 - Do **not** wrap everything in a `main()` function — collector runs top-level script
-- Do **not** use `def emit = ...` (or `def httpMod = ...`) when helper methods call those handles — assign without `def` — see [groovy.md](groovy.md#script-scoping-locals-vs-helpers)
+- Prefer passing `emit`, `http`, `snmp`, and other snippet handles into helper methods; use binding-style assignment without `def` only when compatibility requires it — see [groovy.md](groovy.md#script-scoping-locals-vs-helpers)
 
 ---
 

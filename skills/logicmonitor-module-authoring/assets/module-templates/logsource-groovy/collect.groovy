@@ -6,6 +6,5 @@ def modLoader = GSH.getInstance(GroovySystem.version)
     .withBinding(getBinding())
 def emit = modLoader.load("lm.emit", "0")
 
-emit.instance("running-config", "Running configuration")
-emit.instance("startup-config", "Startup configuration")
+emit.events([[message: "Example log event"]])
 return 0

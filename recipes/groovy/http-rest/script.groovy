@@ -16,9 +16,11 @@ def modLoader = GSH.getInstance(GroovySystem.version)
 def httpMod = modLoader.load("proto.http", "0")
 def emit = modLoader.load("lm.emit", "0")
 def cacheMod = modLoader.load("lm.cache", "0")
+def lmDebugMod = modLoader.load("lm.debug", "2.0.0")
 
 // --- Configuration ---
-debug = false
+def debug = false
+def lmDebug = lmDebugMod.create(hostProps, debug, out)
 def endpoint = hostProps.get("api.url", "INSERT_API_ENDPOINT_HERE")
 def tokenProperty = hostProps.get("api.token.property", "api.token")
 def cacheKey = "authToken"
@@ -26,10 +28,6 @@ def cache = cacheMod.cacheSnippetFactory(null, "http-rest-recipe")
 def startTime = System.currentTimeMillis()
 def connectTimeout = 30000
 def readTimeout = Settings.getSettingInt("collector.script.timeout", 120) * 1000 - 2500
-
-def debugPrint(message) {
-    if (debug) println "[DEBUG] ${message}"
-}
 
 // --- Main flow ---
 def token = cache.cacheGet(cacheKey)
@@ -50,7 +48,7 @@ def http = httpMod.httpSnippetFactory(hostProps)
 def response = http.rawGet(endpoint, headers, connectTimeout, readTimeout)
 
 if (response.responseCode >= 400) {
-    debugPrint("HTTP ${response.responseCode} from ${endpoint}")
+    lmDebug.error("HTTP ${response.responseCode} from ${endpoint}")
     return 1
 }
 

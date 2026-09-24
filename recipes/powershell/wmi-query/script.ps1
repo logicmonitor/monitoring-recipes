@@ -71,7 +71,7 @@ if ($creds) {
 try {
     $results = Get-CimInstance @params -ErrorAction Stop
 } catch {
-    Write-Output "error=$(Sanitize-Output $_.Exception.Message)"
+    Write-DebugMessage "WMI query failed: $($_.Exception.Message)"
     exit 1
 }
 

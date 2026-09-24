@@ -9,7 +9,7 @@ license: Apache-2.0
 compatibility: LogicMonitor portal dashboard import; self-contained skill (schema + scripts bundled)
 metadata:
   author: logicmonitor
-  version: "0.2.2"
+  version: "0.3.0"
 ---
 
 # LogicMonitor Dashboard Authoring
@@ -28,7 +28,8 @@ Copy the whole `logicmonitor-dashboard-authoring/` directory to `~/.cursor/skill
 ### 1. Inputs
 
 - Target scope (`widgetTokens`, usually `defaultResourceGroup`)
-- DataSource JSON with datapoints: portal export (`displayName`, `dataPoints`) or LogicModule import bundle (`displayedAs`, `datapoints`)
+- DataSource JSON with datapoints: portal export (`displayName`, `dataPoints`) or LogicModule import bundle (`displayedAs`, `datapoints`). A complete input example is included at [assets/examples/datasource.json](assets/examples/datasource.json).
+- If no DataSource JSON is available, author the layout and widget structure first, then validate datasource references after the user supplies the export or import bundle.
 
 ### 2. Datapoint index (optional reference artifact)
 
@@ -80,7 +81,8 @@ One import-ready `.json` file.
 - `dynamicTable` rows: `groupFullPath` — never `deviceGroupFullPath`
 - `cgraph` scope fields: glob objects `{ "isGlob": true, "value": "..." }` — never plain strings
 - `alert`: clone [assets/widget-templates/alert.json](assets/widget-templates/alert.json); `sort` is string `"-startEpoch"`; `playSound` is an object
-- Cloud widgets (`billing`, `cloudRecommendation`, `viz`): export from portal — do not hand-author `widgetConfig`
+- Cloud widgets (`billing`, `cloudRecommendation`, `viz`) are portal-only: start from an exported widget and change only documented scope fields. The bundled stubs are structural placeholders, not import-ready configurations.
+- Never require a portal export for ordinary metric, status, content, map, or SLA widgets when the bundled templates provide the shape.
 
 ## References (read when needed)
 
@@ -91,3 +93,7 @@ One import-ready `.json` file.
 | [schema-overview.md](references/schema-overview.md) | Top-level document, grid |
 | [themes-and-colors.md](references/themes-and-colors.md) | Allowed themes and colors |
 | [layout-conventions.md](references/layout-conventions.md) | Grid layouts |
+
+## Standalone boundary
+
+The skill does not depend on the monitoring-recipes repository or the module-authoring skill. It accepts either supported DataSource JSON shape directly. Portal exports are required only when LogicMonitor supplies opaque widget configuration, currently the cloud widget family.

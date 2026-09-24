@@ -13,6 +13,6 @@
   "doMapping": false,
   "collectionAttrs": {
     "type": "groovy",
-    "content": "import groovy.json.JsonOutput\n\nprint JsonOutput.toJson([\n    events: [[\n        happenedOn: new Date().format(\"yyyy-MM-dd'T'HH:mm:ssZ\"),\n        severity: 'warn',\n        message: 'Example script event'\n    ]]\n])\nreturn 0\n"
+    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\nemit.events([[\n    happenedOn: System.currentTimeMillis(),\n    severity: \"warn\",\n    message: \"Example script event\"\n]])\nreturn 0\n"
   }
 }

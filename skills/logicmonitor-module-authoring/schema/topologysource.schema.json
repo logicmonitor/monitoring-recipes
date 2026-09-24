@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "topologysource.schema.json",
+  "title": "LogicMonitor TopologySource authoring shape",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["name", "description", "appliesTo", "type", "collectionMethod", "collectionIntervalSec"],
+  "properties": {
+    "name": {"type": "string", "minLength": 1},
+    "description": {"type": "string"},
+    "appliesTo": {"type": "string", "minLength": 1},
+    "type": {"const": 9},
+    "group": {"type": "string"},
+    "tags": {"type": "array", "items": {"type": "string"}},
+    "technology": {"type": "string"},
+    "collectionMethod": {"type": "string", "minLength": 1},
+    "collectionIntervalSec": {"type": "integer", "minimum": 0},
+    "collectionAttrs": {"type": "string"}
+  }
+}

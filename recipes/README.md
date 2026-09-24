@@ -34,7 +34,7 @@ recipes/<language>/<pattern>/
 4. Adapt output format for your module type (see the adaptation table in the README)
 5. Paste into the appropriate script field in the LM portal
 
-For code organization rules, see [script-structure.md](../skills/logicmonitor-module-authoring/references/script-structure.md).
+For code organization rules, see [script-structure.md](../skills/logicmonitor-module-authoring/references/script-structure.md). Groovy recipes keep snippet handles local, use `lm.debug` for diagnostics, and pass handles explicitly to helper methods; PowerShell recipes define functions before the main flow and emit collector data with `Write-Output` only.
 
 ## Adding a recipe
 

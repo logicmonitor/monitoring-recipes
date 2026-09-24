@@ -1,10 +1,14 @@
-import groovy.json.JsonOutput
+import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH
+import com.logicmonitor.mod.Snippets
 
-print JsonOutput.toJson([
-    events: [[
-        happenedOn: new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-        severity: 'warn',
-        message: 'Example script event'
-    ]]
-])
+def modLoader = GSH.getInstance(GroovySystem.version)
+    .getScript("Snippets", Snippets.getLoader())
+    .withBinding(getBinding())
+def emit = modLoader.load("lm.emit", "0")
+
+emit.events([[
+    happenedOn: System.currentTimeMillis(),
+    severity: "warn",
+    message: "Example script event"
+]])
 return 0

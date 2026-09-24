@@ -59,7 +59,7 @@ ILPs are stored on the instance in the portal. They support:
 ### Groovy pattern (HTTP / API discovery)
 
 ```groovy
-emit = modLoader.load("lm.emit", "0")
+def emit = modLoader.load("lm.emit", "0")
 
 items.each { item ->
     def wv = sanitizeWildvalue(item.id)   // slug or id — must stay stable for collection

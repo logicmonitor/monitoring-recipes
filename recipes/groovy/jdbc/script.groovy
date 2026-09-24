@@ -10,11 +10,14 @@ import com.logicmonitor.mod.Snippets
 // --- Snippet bootstrap ---
 def loader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
+    .withBinding(getBinding())
 def sql = loader.load("lm.sql", "0")
 def emit = loader.load("lm.emit", "0")
+def lmDebugMod = loader.load("lm.debug", "2.0.0")
 
 // --- Configuration ---
-debug = false
+def debug = false
+def lmDebug = lmDebugMod.create(hostProps, debug, out)
 def user = hostProps.get("jdbc.user")
 def pass = hostProps.get("jdbc.pass")
 def jdbcUrl = hostProps.get("jdbc.url", "INSERT_JDBC_URL_HERE")
@@ -40,7 +43,7 @@ try {
             }
         }
     } else if (result.status == "no data") {
-        debugPrint("Query returned no rows")
+        lmDebug.info("Query returned no rows")
     } else {
         emit.dp("error", result.error)
         return 1
@@ -50,8 +53,3 @@ try {
 }
 
 return 0
-
-// --- Helpers ---
-def debugPrint(message) {
-    if (debug) println "[DEBUG] ${message}"
-}

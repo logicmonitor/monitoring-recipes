@@ -25,13 +25,15 @@
 ## TopologySource
 
 - **Purpose:** Define device relationships for topology maps
-- **Output:** JSON `{"edges": [{"type":"...","from":"eri","to":"eri"}]}`; use a portal export as the JSON-shell reference
+- **Import shape:** `type: 9`, `collectionIntervalSec`, and serialized `collectionAttrs`; see the bundled TopologySource starter
+- **Output:** JSON `{"edges": [{"type":"...","from":"eri","to":"eri"}]}`; validate ERI/ERT semantics against the target portal behavior
 - **Docs:** https://www.logicmonitor.com/support/topologysources-scripts
 
 ## LogSource
 
 - **Purpose:** Ingest logs into LM Logs (preferred over EventSource)
 - **Output (Script Logs):** JSON `{"events": [{"message":"..."}]}` — message required, exit 0
+- **Import shape:** `type: 10`, integer `collectionInterval`, `logFields`, `resourceMapping`, and method-specific `collectionAttrs`
 - **Docs:** https://www.logicmonitor.com/support/script-logs-logsource-configuration
 
 ## EventSource

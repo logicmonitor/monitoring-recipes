@@ -11,14 +11,14 @@ license: Apache-2.0
 compatibility: LogicMonitor Collector; self-contained authoring bundle
 metadata:
   author: logicmonitor
-  version: "0.5.7"
+  version: "0.6.0"
 ---
 
 # LogicMonitor Module Authoring
 
 | Path | Purpose |
 |------|---------|
-| `schema/` | JSON Schema for import validation |
+| `schema/` | JSON Schema for supported import validation |
 | `scripts/` | `pack-module.py`, `validate-module.py`, `extract-keys-from-script.py` |
 | `assets/module-templates/` | Example bundles (JSON + `collect.*` / `ad.*`) |
 | `references/` | Import JSON, script structure, output formats |
@@ -56,7 +56,7 @@ For **DataSource** and **ConfigSource**, read [references/collection-modes.md](r
 - Scripted (Groovy/PowerShell) for complex logic or APIs
 - Script mode: runs per instance; BatchScript: runs once per device (multi-instance)
 
-Other module types use their own output models. This bundle includes import JSON coverage for Event, Property, Config, Diagnostic, and Remediation modules. For LogSource and TopologySource, start from a portal export and use the output contracts in [references/output-formats.md](references/output-formats.md); this bundle does not include their import schemas or starters.
+Other module types use their own output models. This bundle includes public-facing field references and starters for Event, Property, Config, Diagnostic, Remediation, Log, and Topology modules. The packer and full semantic validator currently target the import-bundle types listed in [schema/README.md](schema/README.md); LogSource and TopologySource require platform-specific payload handling. Portal exports are useful for confirming account-specific optional fields, but are not required to determine the basic JSON shape. Do not copy portal bookkeeping fields such as `version`, `registryMetadata`, or internal tooling markers into a greenfield bundle.
 
 ### 4. Choose language
 
@@ -72,7 +72,7 @@ Follow the canonical section order for the chosen language. For Groovy, use the 
 
 ### 6. Start from a bundled pattern
 
-Copy the closest starter from [assets/module-templates/README.md](assets/module-templates/README.md) or adapt the bundled HTTP example. Use [assets/recipe-index.md](assets/recipe-index.md) only when the full monitoring-recipes repository is available.
+Copy the closest starter from [assets/module-templates/README.md](assets/module-templates/README.md) or adapt the bundled HTTP example. The bundled assets are sufficient for standalone use. Use [assets/recipe-index.md](assets/recipe-index.md) only as an optional index when the full monitoring-recipes repository is available.
 
 Adapt placeholders and the required output format; do not copy a collection pattern across module types without changing its output contract.
 
@@ -152,11 +152,17 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 - [ ] Return `0` on success (LogSource discards output on non-zero)
 - [ ] Output format matches module type (see step 7)
 - [ ] Groovy: `modLoader.withBinding(getBinding())` before snippet loads (or `emit.binding = binding` fallback) — [snippet-loader.md](references/snippet-loader.md)
-- [ ] Groovy: `emit = modLoader.load(...)` and other snippet handles **without** `def` (like `debug = false`) so `def` helpers can call them — never `def emit = ...` when helpers emit — [groovy.md](references/groovy.md#script-scoping-locals-vs-helpers)
+- [ ] Groovy: keep snippet handles local with `def` and pass them explicitly to helper methods; use binding-style assignment only for legacy compatibility — [groovy.md](references/groovy.md#script-scoping-locals-vs-helpers)
+- [ ] Groovy: use `lm.debug` for debug, info, warning, and error messages; never add ad hoc `debugPrint` helpers
 - [ ] AD: use the language-specific format; attach useful, nonempty `auto.*` ILPs when available
 - [ ] PowerShell: `Write-Output` for data (not `Write-Host`); validate unset `##prop##` tokens
 - [ ] `validate-module.py` passes on the bundle after `pack-module.py`
 - [ ] JSON aligns with [script-json-alignment.md](references/script-json-alignment.md) and the greenfield rules in [import-json-overview.md](references/import-json-overview.md)
+- [ ] AppliesTo is specific enough to avoid running on unrelated resources
+- [ ] Datapoints have useful descriptions, units, and a graph, alert, or overview use
+- [ ] Queries are bounded and efficient; pagination, retries, and timeouts are intentional
+- [ ] No credentials, tokens, or sensitive device data are emitted or logged
+- [ ] LogSources include resource mapping; ConfigSources define meaningful checks
 
 ## Reference files
 
@@ -183,6 +189,7 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 | [powershell.md](references/powershell.md) | PowerShell, WinRM, WMI, output |
 | [module-snippets.md](references/module-snippets.md) | Platform snippet rules and requirements |
 | [script-cache.md](references/script-cache.md) | Caching auth tokens between polls (Collector 29.100+) |
+| [portable-guidance.md](references/portable-guidance.md) | Standalone security, performance, naming, and quality guidance |
 
 ## Official documentation
 

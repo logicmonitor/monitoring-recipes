@@ -20,7 +20,7 @@ After `def modLoader = ...withBinding(getBinding())`, load snippets from **`modL
 | `proto.http` | Module object | `.httpSnippetFactory(hostProps)` → HTTP client |
 | `proto.snmp` | Module object | `.create(host, props, startTime).withRetries(n)` |
 | `lm.remote` | Module object | `.exec(hostProps, cmd)` or `.create(props)` |
-| `lm.debug` | Module object | `.debugSnippetFactory(out, debug, log, logCacheContext)` |
+| `lm.debug` | Module object | `.create(hostProps, debug, out)` → debug object |
 | `lm.cache` | Module object | `.cacheSnippetFactory(lmDebug, logCacheContext)` |
 | `lm.parse` | Module object | `.getJsonStringNode()` / `.getXMLStringNode()` |
 
@@ -48,7 +48,7 @@ Factories are **not** interchangeable with the `emit` snippet object — each pl
 
 ## `lm.emit` — collector-parseable output
 
-Load with `emit = modLoader.load("lm.emit", "0")` (no `def`) after [snippet-loader.md](snippet-loader.md) bootstrap. Call `emit.dp`, `emit.instance`, `emit.property`, or `emit.events` — not hand-built `println` lines. Same binding-style rule as `debug = false` so `def` helpers can call `emit`. See [groovy.md](groovy.md#script-scoping-locals-vs-helpers).
+Load with `def emit = modLoader.load("lm.emit", "0")` after [snippet-loader.md](snippet-loader.md) bootstrap. Call `emit.dp`, `emit.instance`, `emit.property`, or `emit.events` — not hand-built `println` lines. Pass `emit` explicitly to top-level helper methods; use a binding property only for legacy helpers. See [groovy.md](groovy.md#script-scoping-locals-vs-helpers).
 
 ### DataSource
 
@@ -56,7 +56,7 @@ Load with `emit = modLoader.load("lm.emit", "0")` (no `def`) after [snippet-load
 def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
     .withBinding(getBinding())
-emit = modLoader.load("lm.emit", "0")
+def emit = modLoader.load("lm.emit", "0")
 
 emit.dp("cpuUsage", 42)                        // Script: key=value
 emit.dp("eth0", "ifInOctets", 12345)           // BatchScript: instance.field=value
@@ -253,7 +253,7 @@ if (!token) {
 ## lm.debug — structured debug logging
 
 ```groovy
-def dbgMod = loader.load("lm.debug", "0")
+def dbgMod = loader.load("lm.debug", "2.0.0")
 def dbg = dbgMod.create(hostProps, debug, out)
 
 dbg.debug("detail")
@@ -314,7 +314,7 @@ print json
 return 0
 ```
 
-`generateTopology` returns pretty-printed JSON with `vertices` and `edges` maps. Namespace prefixes ERIs and applies blacklist prefixes. Additional helpers (`eriPreProcessor`, `propsToErt`, LLDP/CDP processors) support LM-style topology modules — copy patterns from an official TopologySource when possible.
+`generateTopology` returns pretty-printed JSON with `vertices` and `edges` maps. Namespace prefixes ERIs and applies blacklist prefixes. Additional helpers (`eriPreProcessor`, `propsToErt`, LLDP/CDP processors) support LM-style topology modules — copy patterns from an official TopologySource when possible. Keep the `lm.topo` handle local and pass it into helper methods that build edges.
 
 ---
 
@@ -323,7 +323,7 @@ return 0
 ```groovy
 def httpMod = modLoader.load("proto.http", "0")
 def http = httpMod.httpSnippetFactory(hostProps)
-def dbg = modLoader.load("lm.debug", "0").create(hostProps, false, out)
+def dbg = modLoader.load("lm.debug", "2.0.0").create(hostProps, false, out)
 def apiMod = modLoader.load("lm.api", "0")
 def api = apiMod.lmApiSnippetFactory(hostProps, http, dbg)
 ```

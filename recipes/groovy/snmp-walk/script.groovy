@@ -11,11 +11,14 @@ import com.santaba.agent.util.Settings
 // --- Snippet bootstrap ---
 def loader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
+    .withBinding(getBinding())
 def snmpMod = loader.load("proto.snmp", "0")
 def emit = loader.load("lm.emit", "0")
+def lmDebugMod = loader.load("lm.debug", "2.0.0")
 
 // --- Configuration ---
-debug = false
+def debug = false
+def lmDebug = lmDebugMod.create(hostProps, debug, out)
 def host = hostProps.get("system.hostname")
 Map props = hostProps.toProperties().collectEntries { k, v -> [(k.toLowerCase()): v] }
 def snmpOid = "INSERT_OID_HERE"
@@ -29,7 +32,7 @@ def snmp = snmpMod.create(host, props, startTime).withRetries(5)
 def walkResult = snmp.walk(snmpOid)
 
 if (!walkResult || walkResult.isEmpty()) {
-    debugPrint("SNMP walk returned no results for OID ${snmpOid}")
+    lmDebug.warn("SNMP walk returned no results for OID ${snmpOid}")
     return 1
 }
 
@@ -42,8 +45,3 @@ walkResult.each { index, value ->
 }
 
 return 0
-
-// --- Helpers ---
-def debugPrint(message) {
-    if (debug) println "[DEBUG] ${message}"
-}

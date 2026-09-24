@@ -26,7 +26,7 @@ Loaded snippets run as separate script objects. Without the parent binding, `emi
 | **`modLoader.withBinding(getBinding())`** (preferred) | Any script that loads one or more snippets |
 | **`emit.binding = binding`** after `load("lm.emit")` | Minimal scripts with only `lm.emit` on an unbound loader |
 
-Load `lm.emit` into `emit` and call `emit.dp(...)` / `emit.instance(...)` — see templates and [snippets-catalog.md](snippets-catalog.md).
+Load `lm.emit` into a local `def emit` and call `emit.dp(...)` / `emit.instance(...)`. Pass it explicitly to top-level helper methods. Use a binding property only for compatibility with legacy helpers that cannot accept the dependency as an argument.
 
 ### Troubleshooting
 
@@ -35,7 +35,7 @@ Load `lm.emit` into `emit` and call `emit.dp(...)` / `emit.instance(...)` — se
 | Exit 0, empty metric output; `println` in the **parent** collect script works | Snippets loaded without shared binding |
 | Exit 0, empty output; snippet load throws | Snippets module missing or not updated on collector |
 | `Unable to load Snippet - <name>` | Install **LogicMonitor_Collector_Snippets**; monitor collector host |
-| `MissingPropertyException: No such property: emit` (or `httpMod`, `http`, …) inside a **helper method** | Use `emit = modLoader.load(...)` without `def` (same as `debug = false`) — see [groovy.md](groovy.md#script-scoping-locals-vs-helpers) |
+| `MissingPropertyException: No such property: emit` (or `httpMod`, `http`, …) inside a **helper method** | Pass the snippet handle into the helper; use a binding property only for legacy code — see [groovy.md](groovy.md#script-scoping-locals-vs-helpers) |
 
 ## Version pins
 
@@ -84,8 +84,8 @@ Agents authoring modules should **not** call `clearCacheForUpdate()` from collec
 ## Loading pattern in scripts
 
 ```groovy
-emit = modLoader.load("lm.emit", "0")
-snmp = modLoader.load("proto.snmp", "0")
+def emit = modLoader.load("lm.emit", "0")
+def snmp = modLoader.load("proto.snmp", "0")
 ```
 
 Heavy modules may load optional snippets only on code paths that need them (HTTP, JDBC, topology).

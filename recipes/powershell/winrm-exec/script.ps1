@@ -91,12 +91,12 @@ if ($isCollector) {
     }
 
     if (-not $session) {
-        Write-Output "error=connection_failed"
+        Write-DebugMessage "Unable to establish WinRM session"
         exit 1
     }
 
     try {
-        Invoke-Command -Session $session -ScriptBlock $command
+        Invoke-Command -Session $session -ScriptBlock $command -ErrorAction Stop
     } finally {
         Remove-PSSession $session -ErrorAction SilentlyContinue
     }
