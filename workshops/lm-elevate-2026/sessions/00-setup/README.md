@@ -6,18 +6,18 @@ Prepare one LogicMonitor resource and Collector for the workshop exercises.
 
 ## Steps
 
-1. Add a resource in expert mode with hostname `lm-elevate-api-indol.vercel.app`.
-2. Assign it to the workshop device group and a working Collector.
-3. Add these resource properties:
+1. Create a resource group with the name `LMElevate` 
+2. Add a resource in expert mode with hostname `lm-elevate-api-indol.vercel.app`.
+3. Assign it to the `LMElevate` resource group and a working Collector.
+4. Add these resource properties:
 
    ```text
-   fabric.api.user=YOUR_WORKSHOP_USER
-   fabric.api.pass=YOUR_WORKSHOP_PASSWORD
+   fabric.api.user=INSTRUCTOR_PROVIDED_USER
+   fabric.api.pass=INSTRUCTOR_PROVIDED_PASS
    ```
 
-   Use the shared values supplied by the instructor and protect the password property when available.
-4. Confirm the Collector has `LogicMonitor_Collector_Snippets` installed.
-5. Confirm the resource can reach `https://lm-elevate-api-indol.vercel.app/api/v1/auth/token`.
+   Use the shared values supplied by the instructor
+5. Confirm the collector can reach `https://lm-elevate-api-indol.vercel.app/` by performing a `Poll Now` collection of the `Ping-` datasource attached to the newly created resource.
 
 ## Validate
 
