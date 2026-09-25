@@ -226,6 +226,10 @@ def greenfield_validate(module: dict[str, Any]) -> list[str]:
     for dp in module.get("datapoints") or []:
         if not isinstance(dp, dict):
             continue
+        if dp.get("originId") is not None:
+            errors.append(
+                f"datapoint '{dp.get('name')}' should omit originId; the portal assigns it"
+            )
         for bound in ("min", "max"):
             if dp.get(bound) == "":
                 errors.append(
@@ -340,10 +344,6 @@ def semantic_validate(
             errors.append("batchscript multiInstance requires ad.groovy or ad.ps1")
         if not module.get("activeDiscovery"):
             errors.append("batchscript multiInstance requires activeDiscovery in JSON")
-
-    for dp in module.get("datapoints") or []:
-        if isinstance(dp, dict) and not dp.get("originId"):
-            errors.append(f"datapoint '{dp.get('name')}' missing originId")
 
     return errors
 

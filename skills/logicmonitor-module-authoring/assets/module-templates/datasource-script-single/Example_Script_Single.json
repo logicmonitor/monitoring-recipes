@@ -29,7 +29,6 @@
       "noData": "Do not trigger an alert",
       "clearInterval": 0,
       "triggerInterval": 0,
-      "originId": "template_dp_example_metric",
       "statusDisplayNames": []
     }
   ],

@@ -11,7 +11,7 @@ Use when the monitored target is **not** the device under `system.hostname` (pub
 ## Collector and network
 
 - HTTPS calls run from the **collector** (egress). Ensure firewall/proxy allows outbound access.
-- Use `proto.http` via bound `modLoader` — see [snippets-catalog.md](snippets-catalog.md) `httpSnippetFactory(hostProps)` for proxy-related device properties.
+- Use `proto.http` version `1.0.0` via bound `modLoader`: load it, call `.create(hostProps)`, then use `.withHeaders(...)` and `.GET(...)`/`.POST(...)`. See [snippets-catalog.md](snippets-catalog.md) for proxy-related device properties.
 
 ## Device properties
 

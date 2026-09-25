@@ -29,8 +29,7 @@
         "dataType",
         "type",
         "interpretMethod",
-        "noData",
-        "originId"
+        "noData"
       ],
       "additionalProperties": true,
       "properties": {

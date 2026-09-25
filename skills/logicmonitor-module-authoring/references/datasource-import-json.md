@@ -67,7 +67,6 @@ Typical scripted numeric datapoint (`namevalue`). Script prints `metric_name=val
   "noData": "Do not trigger an alert",
   "clearInterval": 0,
   "triggerInterval": 0,
-  "originId": "REPLACE_WITH_UNIQUE_ID",
   "statusDisplayNames": []
 }
 ```
@@ -101,7 +100,7 @@ JSON/BSON BatchScript output uses path-style keys instead, e.g. `data.##WILDVALU
 | `type` | `gauge`, `counter`, or `derive` |
 | `dataType` | `7` for numeric (corpus default) |
 | `threshold` | Alert expression string on datapoint, e.g. `"= 1"` |
-| `originId` | Required in exports; generate unique ID per datapoint |
+| `originId` | Omit for new modules; the portal assigns this internal origin-tracking ID on import |
 
 ## Graphs
 

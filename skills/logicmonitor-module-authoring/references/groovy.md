@@ -24,7 +24,7 @@ Collector Groovy runs as a **Script** subclass. Top-level `def helper(...) { }` 
 
 ```groovy
 def emit = modLoader.load("lm.emit", "0")
-def httpMod = modLoader.load("proto.http", "0")
+def httpMod = modLoader.load("proto.http", "1.0.0")
 
 def emitPokemonMetrics(emit, String wildvalue, int httpStatus) {
     emit.dp(wildvalue, "http_status", httpStatus)
@@ -110,9 +110,10 @@ See [assets/recipe-index.md](../assets/recipe-index.md) for optional repository 
 ## HTTP REST (proto.http)
 
 ```groovy
-def httpMod = modLoader.load("proto.http", "0")
-def http = httpMod.httpSnippetFactory(hostProps)
-def response = http.rawGet('https://api.example.com/endpoint', ['Authorization': 'Bearer token'])
+def httpMod = modLoader.load("proto.http", "1.0.0")
+def http = httpMod.create(hostProps)
+def response = http.withHeaders(['Authorization': 'Bearer token'])
+    .GET('https://api.example.com/endpoint', 30000, 60000)
 ```
 
 For a portable HTTP starting point, see [assets/examples/http-rest-collect-snippet.groovy](../assets/examples/http-rest-collect-snippet.groovy).

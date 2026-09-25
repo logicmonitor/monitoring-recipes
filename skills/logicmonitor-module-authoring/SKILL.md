@@ -158,6 +158,7 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 - [ ] PowerShell: `Write-Output` for data (not `Write-Host`); validate unset `##prop##` tokens
 - [ ] `validate-module.py` passes on the bundle after `pack-module.py`
 - [ ] JSON aligns with [script-json-alignment.md](references/script-json-alignment.md) and the greenfield rules in [import-json-overview.md](references/import-json-overview.md)
+- [ ] New datapoints omit `originId`; the portal assigns the internal origin-tracking ID
 - [ ] LogicModule `name` uses underscores; `displayedAs` uses spaces and contains no internal `-`
 - [ ] AppliesTo is specific enough to avoid running on unrelated resources
 - [ ] Datapoints have useful descriptions, units, and a graph, alert, or overview use

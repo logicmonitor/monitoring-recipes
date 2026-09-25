@@ -17,7 +17,7 @@ After `def modLoader = ...withBinding(getBinding())`, load snippets from **`modL
 | Snippet | After `modLoader.load(...)` | Typical next step |
 |---------|----------------------------|-------------------|
 | `lm.emit` | Script object | `emit.dp()` / `.instance()` / `.property()` / `.events()` |
-| `proto.http` | Module object | `.httpSnippetFactory(hostProps)` → HTTP client |
+| `proto.http` | Module object | `.create(hostProps)` → HTTP client |
 | `proto.snmp` | Module object | `.create(host, props, startTime).withRetries(n)` |
 | `lm.remote` | Module object | `.exec(hostProps, cmd)` or `.create(props)` |
 | `lm.debug` | Module object | `.create(hostProps, debug, out)` → debug object |
@@ -33,7 +33,7 @@ Factories are **not** interchangeable with the `emit` snippet object — each pl
 | `lm.emit` | `"1.3.0"` | `modLoader.load("lm.emit", "1.3.0")` | `.dp()`, `.instance()`, `.property()`, `.events()` | DataSource, AD, PropertySource, Event/Log |
 | `proto.snmp` | `"0.2.0"` | `loader.load("proto.snmp", "0.2.0")` | `.create(host, props?, startTime?).withRetries(n).walk/get` | DataSource |
 | `lm.remote` | `"0.7.1"` | `loader.load("lm.remote", "0.7.1")` | `.exec()`, `.create(props).exec()`, `.sftp()`, `.scp()`, `.shell()` | DataSource, ConfigSource |
-| `proto.http` | `"1.0.0"` | `loader.load("proto.http", "1.0.0")` | `.httpSnippetFactory(hostProps)` → `rawGet/rawPost/rawDelete` | DataSource, PropertySource |
+| `proto.http` | `"1.0.0"` | `loader.load("proto.http", "1.0.0")` | `.create(props)`, `.withHeaders(...)`, `.GET/.POST/.DELETE(...)` | DataSource, PropertySource |
 | `lm.sql` | `"0.1.0"` | `loader.load("lm.sql", "0.1.0")` | `.attemptConnection()`, `.runQuery()`, `.validatePorts()` | DataSource |
 | `lm.cache` | `"0.3.1"` | `loader.load("lm.cache", "0.3.1")` | `.cacheSnippetFactory(debugSnip, keySuffix)` | HTTP auth caching |
 | `lm.debug` | `"2.0.0"` | `loader.load("lm.debug", "2.0.0")` | `.create(hostProps, debug, out)` → `.debug/.info/.warn/.error` | All scripted |
@@ -169,12 +169,11 @@ Host key verification uses a promiscuous verifier (platform default for monitori
 ## proto.http — proxy-aware HTTP
 
 ```groovy
-def httpMod = modLoader.load("proto.http", "0")
-def http = httpMod.httpSnippetFactory(hostProps)
+def httpMod = modLoader.load("proto.http", "1.0.0")
+def http = httpMod.create(hostProps)
 
-def conn = http.rawGet("https://api.example.com/data",
-    ["Authorization": "Bearer ${token}"],
-    60000, 60000, false)
+def conn = http.withHeaders(["Authorization": "Bearer ${token}"])
+    .GET("https://api.example.com/data", 60000, 60000)
 
 def body = conn.inputStream.text
 def status = conn.responseCode
@@ -182,11 +181,12 @@ def status = conn.responseCode
 
 | Method | Notes |
 |--------|--------|
-| `rawGet(endpoint, headers, …)` | Optional query map overload |
-| `rawPost(endpoint, headers, body, …)` | UTF-8 body |
-| `rawDelete(endpoint, headers, body?, …)` | Optional body |
+| `withHeaders(map)` | Sets headers used by subsequent requests |
+| `GET(endpoint, …)` | Optional query map overload |
+| `POST(endpoint, body, …)` | UTF-8 body |
+| `DELETE(endpoint, body, …)` | Optional body |
 
-Proxy: honored when **device** `proxy.enable` (default true if unset) **and** collector `proxy.enable` are true. `proxy.exclude` on device or collector supports `|`/`glob *` host patterns. Pass `ignoreProxy: true` to bypass.
+Proxy: honored when **device** `proxy.enable` (default true if unset) **and** collector `proxy.enable` are true. `proxy.exclude` on device or collector supports `|`/`glob *` host patterns. Use `.withProxy(false)` or `.withProxyExclude(...)` when a module needs to adjust proxy behavior.
 
 ---
 
@@ -321,8 +321,8 @@ return 0
 ## lm.api — LogicMonitor REST from the collector
 
 ```groovy
-def httpMod = modLoader.load("proto.http", "0")
-def http = httpMod.httpSnippetFactory(hostProps)
+def httpMod = modLoader.load("proto.http", "1.0.0")
+def http = httpMod.create(hostProps)
 def dbg = modLoader.load("lm.debug", "2.0.0").create(hostProps, false, out)
 def apiMod = modLoader.load("lm.api", "0")
 def api = apiMod.lmApiSnippetFactory(hostProps, http, dbg)
