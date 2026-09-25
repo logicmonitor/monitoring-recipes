@@ -1,5 +1,7 @@
 # Session 01 — Build the PropertySource
 
+Starter script: [`scripts/collect.groovy`](scripts/collect.groovy)
+
 ## Goal
 
 Build `addCategory_Training_Fabric` to identify the API resource and add metadata that later DataSources can use for targeting.

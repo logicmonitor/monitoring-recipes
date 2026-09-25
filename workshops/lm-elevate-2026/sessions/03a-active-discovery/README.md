@@ -1,5 +1,7 @@
 # Session 03A — Build Active Discovery
 
+Starter script: [`scripts/ad.groovy`](scripts/ad.groovy)
+
 ## Goal
 
 Discover the repeating Training Fabric nodes and create one LogicMonitor instance for each node.

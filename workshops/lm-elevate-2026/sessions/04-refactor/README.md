@@ -1,5 +1,12 @@
 # Session 04 — Refactor with Collector Snippets and Cache
 
+Scripts used in this session:
+
+- [`scripts/propertysource.groovy`](scripts/propertysource.groovy)
+- [`scripts/controller.groovy`](scripts/controller.groovy)
+- [`scripts/node-ad.groovy`](scripts/node-ad.groovy)
+- [`scripts/node-collect.groovy`](scripts/node-collect.groovy)
+
 ## Goal
 
 Refactor the working scripts after the behavior is proven, reducing platform boilerplate and repeated authentication calls.

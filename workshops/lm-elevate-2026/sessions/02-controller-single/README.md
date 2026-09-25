@@ -1,5 +1,7 @@
 # Session 02 — Build the Single-Instance DataSource
 
+Starter script: [`scripts/collect.groovy`](scripts/collect.groovy)
+
 ## Goal
 
 Collect controller-level metrics from one API response without Active Discovery.

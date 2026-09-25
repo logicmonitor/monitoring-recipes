@@ -1,5 +1,7 @@
 # Session 03B — Collect Metrics from Discovered Instances
 
+Starter script: [`scripts/collect.groovy`](scripts/collect.groovy)
+
 ## Goal
 
 Use each discovered node instance to collect node-level metrics.

@@ -7,6 +7,7 @@ Groovy.iml
 
 # Local-only project notes (not published)
 PROJECT.md
+workshops/.internal/
 
 # Reference trees (local exports; not part of the published repo)
 example-code/**

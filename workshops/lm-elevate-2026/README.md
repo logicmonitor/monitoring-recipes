@@ -14,7 +14,7 @@ The API is not intended to model a particular vendor. Its controller/node shape 
 
 ## Prerequisites
 
-- A LogicMonitor resource with hostname `lm-elevate-api-indol.vercel.app`, a Collector assigned, and the workshop credential properties configured; see the [student setup steps](student-lab.md#setup).
+- A LogicMonitor resource with hostname `lm-elevate-api-indol.vercel.app`, a Collector assigned, and the workshop credential properties configured; see the [student setup session](sessions/00-setup/README.md).
 - The `LogicMonitor_Collector_Snippets` module installed on the Collector host.
 - Collector 29.100 or newer for the cache exercise.
 - A workshop API URL and seeded username/password from the instructor.
@@ -22,11 +22,7 @@ The API is not intended to model a particular vendor. Its controller/node shape 
 
 ## Materials
 
-- [Facilitator guide](facilitator-guide.md)
-- [Student lab overview](student-lab.md)
-- [Student session guides](student-sessions/)
-- [API contract](api-contract.md)
-- [Checkpoint map](checkpoint-map.md)
+- [Student sessions](sessions/)
 - [Solutions](solutions/README.md)
 
 The module-authoring skill remains the reusable follow-up tool. These workshop files provide the deliberate teaching sequence and the known-good answer bundles.
