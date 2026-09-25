@@ -11,7 +11,7 @@ By the end of the hands-on portion, attendees can:
 - Align emitted metrics with datapoints and graph lines.
 - Refactor raw HTTP code to platform snippets.
 - Cache a short-lived API token safely on the Collector.
-- Validate, pack, and smoke-test a complete module bundle.
+- Import and smoke-test a complete module bundle.
 
 ## Timing
 
@@ -21,9 +21,10 @@ The session has 75 minutes total: approximately 15 minutes of slides and 60 minu
 |---:|---|---|
 | 0–8 | PropertySource targeting and metadata | Category appears on the resource |
 | 8–20 | Controller DataSource, single instance | Three controller metrics collect |
-| 20–35 | Active Discovery and node collection | Three node instances appear |
-| 35–50 | Snippet, debug, and token-cache refactor | Second run uses cached token |
-| 50–58 | Datapoints, graphs, alert, pack, validate | Import JSON is complete |
+| 20–28 | Active Discovery | Three node instances appear |
+| 28–38 | Node collection | Three node instances receive metrics |
+| 38–50 | Snippet, debug, and token-cache refactor | Second run uses cached token |
+| 50–58 | Import finished modules and validate | Complete module works in the portal |
 | 58–60 | Review and handoff to the skill | Attendees know the repeatable workflow |
 
 ## Teaching emphasis

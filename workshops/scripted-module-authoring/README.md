@@ -23,7 +23,8 @@ The API is not intended to model a particular vendor. Its controller/node shape 
 ## Materials
 
 - [Facilitator guide](facilitator-guide.md)
-- [Student lab](student-lab.md)
+- [Student lab overview](student-lab.md)
+- [Student session guides](student-sessions/)
 - [API contract](api-contract.md)
 - [Checkpoint map](checkpoint-map.md)
 - [Solutions](solutions/README.md)

@@ -1,10 +1,20 @@
 # Student lab
 
+Work through the sessions in order. Detailed student instructions are split into individual checkpoints so each concept can be tested before the next one is introduced.
+
+- [Session 00 — Workshop setup](student-sessions/00-setup.md)
+- [Session 01 — PropertySource](student-sessions/01-propertysource.md)
+- [Session 02 — Single-instance DataSource](student-sessions/02-controller-single.md)
+- [Session 03A — Active Discovery](student-sessions/03a-active-discovery.md)
+- [Session 03B — Node collection](student-sessions/03b-node-collection.md)
+- [Session 04 — Refactor](student-sessions/04-refactor.md)
+- [Session 05 — Import and validate](student-sessions/05-import-and-validate.md)
+
 ## Setup
 
 ### 1. Add a LogicMonitor resource
 
-In the LogicMonitor portal, add a new resource(expert mode) using the supplied information. Set the resource hostname to `lm-elevate-api-indol.vercel.app`; the labs use `system.hostname` to build the HTTPS API URL.
+In the LogicMonitor portal, add a new resource (expert mode) using the supplied information. Set the resource hostname to `lm-elevate-api-indol.vercel.app`; the labs use `system.hostname` to build the HTTPS API URL.
 
 - Add the resource under the workshop device group.
 - Assign the resource to the Collector you will use for testing.
@@ -78,13 +88,12 @@ Replace the direct HTTP implementation with:
 
 **Checkpoint:** enable debug, run twice, and show that the second run uses the cached token.
 
-## Exercise 5 — Deliver
+## Exercise 5 — Import and validate
 
-Run from the module-authoring skill directory:
+Import the finished PropertySource and DataSource JSON in this order:
 
-```bash
-python3 scripts/pack-module.py path/to/bundle/
-python3 scripts/validate-module.py --strict-greenfield path/to/bundle/
-```
+1. `addCategory_Training_Fabric`
+2. `Training_Fabric_Controller`
+3. `Training_Fabric_Node`
 
-Review the final checklist in the module-authoring skill before importing the JSON.
+Confirm the PropertySource adds the category and metadata, the controller DataSource collects its three metrics, Active Discovery creates three nodes, and node collection populates metrics for every instance.

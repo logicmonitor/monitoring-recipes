@@ -238,7 +238,7 @@ def cache = cacheMod.cacheSnippetFactory(debugSnip, "myModule")
 def token = cache.cacheGet("authToken")
 if (!token) {
     token = authenticate()
-    cache.cacheSet("authToken", token, 300000) // expiry milliseconds
+    cache.cacheSet("authToken", token, 3600) // expiry seconds; prefer expires_in minus a safety margin
 }
 ```
 
@@ -247,6 +247,8 @@ if (!token) {
 | `cacheGet` / `cacheSet` / `cacheRemove` | String values; keys prefixed with `keySuffix` |
 | `cacheGetJson` | Parse JSON or return raw string |
 | `filterData` / `filterJsonToString` | Shrink large objects before caching |
+
+If a protected request returns `401`, remove the cached token, acquire a new token, and retry the request at most once. Do not repeatedly retry an authentication failure.
 
 ---
 

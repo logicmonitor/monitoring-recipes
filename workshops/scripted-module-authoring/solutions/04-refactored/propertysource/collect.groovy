@@ -28,6 +28,15 @@ if (!token)
 def response = http.withHeaders(
     [Authorization: "Bearer ${token}", Accept: "application/json"]
 ).GET("${baseUrl}/controller", 10000, 20000)
+if (response.responseCode == 401) {
+    lmDebug.warn("Cached token was rejected; refreshing token")
+    token = getToken(cache, http, baseUrl, user, pass, lmDebug, true)
+    if (!token)
+        return 1
+    response = http.withHeaders(
+        [Authorization: "Bearer ${token}", Accept: "application/json"]
+    ).GET("${baseUrl}/controller", 10000, 20000)
+}
 if (response.responseCode >= 400) {
     lmDebug.error("HTTP ${response.responseCode} from controller endpoint")
     return 1
@@ -39,7 +48,9 @@ emit.property("auto.fabric_site", controller.site)
 emit.property("auto.fabric_version", controller.version)
 return 0
 
-def getToken(cache, http, String baseUrl, String user, String pass, lmDebug) {
+def getToken(cache, http, String baseUrl, String user, String pass, lmDebug, Boolean forceRefresh = false) {
+    if (forceRefresh)
+        cache.cacheRemove("accessToken")
     def token = cache.cacheGet("accessToken")
     if (token)
         return token
@@ -52,8 +63,11 @@ def getToken(cache, http, String baseUrl, String user, String pass, lmDebug) {
         lmDebug.error("Authentication failed with HTTP ${response.responseCode}")
         return null
     }
-    token = new JsonSlurper().parseText(response.inputStream.text).access_token
-    cache.cacheSet("accessToken", token, 300000)
-    lmDebug.debug("Fetched and cached a new training API token")
+    def tokenResponse = new JsonSlurper().parseText(response.inputStream.text)
+    token = tokenResponse.access_token
+    def expiresIn = (tokenResponse.expires_in ?: 300) as Integer
+    def cacheTtl = Math.max(1, expiresIn - 60) as Integer
+    cache.cacheSet("accessToken", token, cacheTtl)
+    lmDebug.debug("Fetched and cached a new training API token for ${cacheTtl}s")
     return token
 }

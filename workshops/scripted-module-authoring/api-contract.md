@@ -16,7 +16,7 @@ Every request uses the workshop credentials:
 | `fabric.api.user` | `SEE_INSTRUCTOR_NOTES` | Basic Auth username |
 | `fabric.api.pass` | `SEE_INSTRUCTOR_NOTES` | Basic Auth password |
 
-`GET /auth/token` accepts Basic Auth and returns a short-lived bearer token. All other endpoints accept that bearer token. The scripts construct the base URL as `https://${system.hostname}/api/v1`.
+`GET /auth/token` accepts Basic Auth and returns a short-lived bearer token. The `expires_in` value is expressed in seconds and should drive the Collector cache lifetime, with a small safety margin. All other endpoints accept that bearer token. The scripts construct the base URL as `https://${system.hostname}/api/v1`.
 
 ```json
 {
