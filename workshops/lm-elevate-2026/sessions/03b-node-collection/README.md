@@ -1,46 +1,32 @@
-# Session 03B — Collect Metrics from Discovered Instances
+# Session 03B — Instance Collection
 
-Starter script: [`scripts/collect.groovy`](scripts/collect.groovy)
+## Teaching point
 
-## Goal
+Collection must preserve the identity established by Active Discovery when it requests and emits instance metrics.
 
-Use each discovered node instance to collect node-level metrics.
+## Starting artifact
 
-## Build
+Import [`module-scaffold.json`](module-scaffold.json); it carries forward the completed targeting and Active Discovery configuration from Session 03A and includes the working collection script. Review the collection [`scripts/student.groovy`](scripts/student.groovy) alongside it. The complete implementation is [`scripts/reference.groovy`](scripts/reference.groovy).
 
-1. Add the collection script to `Training_Fabric_Node`.
-2. Iterate through `datasourceinstanceProps`.
-3. Read the current instance wildvalue.
-4. Call `https://<system.hostname>/api/v1/nodes/{wildvalue}`.
-5. Parse the node response and emit metrics for the current wildvalue.
-6. Add matching datapoints and a graph to the DataSource.
+## Complete
 
-## Datapoints
-
-| Datapoint | Description | Unit |
-|---|---|---|
-| `health` | Node health status | none |
-| `cpu_percent` | CPU utilization | `%` |
-| `memory_percent` | Memory utilization | `%` |
-| `interface_count` | Number of interfaces | count |
-| `error_rate_percent` | Node error rate | `%` |
+1. Review the supplied `datasourceinstanceProps` loop and the wildvalue-qualified requests.
+2. Trace each emitted metric back to its matching datapoint.
+3. Define matching datapoints and a node health graph.
 
 ## Validate
 
-Run collection and confirm:
-
 - Every discovered node receives metrics.
 - Metrics remain associated with the correct wildvalue.
-- Poll Now returns values for all datapoints.
-- The node graph contains CPU, memory, and error-rate data.
 - No values are emitted under an empty or incorrect instance key.
+- The graph contains CPU, memory, and error-rate data.
 
-## Discuss
+## Talk through
 
-- How does the collection script know which node to request?
-- What would happen if the API returned a node not present in Active Discovery?
-- Why should discovery and collection be tested separately?
+- How does collection know which node to request?
+- What breaks when the wildvalue is omitted from the output key?
+- Why are discovery and collection separate contracts?
 
-## Checkpoint
+## Takeaway
 
-Collection answers: **What is each discovered component doing?**
+Active Discovery creates the instances; collection must consistently use those instance identities.

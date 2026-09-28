@@ -4,13 +4,19 @@
 
 Import the completed modules and verify the full LogicMonitor behavior in the portal.
 
-This is an integration exercise. Do not rebuild the modules from scratch; use the finished JSON bundles from the workshop solutions or the instructor-provided answer package.
+This is an integration exercise. Do not rebuild the modules from scratch; use the completed JSON files in [`../../solutions/`](../../solutions/) or the instructor-provided answer package.
 
 ## Import order
 
 1. `addCategory_Training_Fabric`
 2. `Training_Fabric_Controller`
 3. `Training_Fabric_Node`
+
+Use the refactored JSON files for the final import:
+
+- [`addCategory_Training_Fabric.json`](../../solutions/04-refactored/addCategory_Training_Fabric.json)
+- [`Training_Fabric_Controller.json`](../../solutions/04-refactored/Training_Fabric_Controller.json)
+- [`Training_Fabric_Node.json`](../../solutions/04-refactored/Training_Fabric_Node.json)
 
 The PropertySource must run before the DataSources can target the resource by category.
 

@@ -6,7 +6,7 @@ Prepare one LogicMonitor resource and Collector for the workshop exercises.
 
 ## Steps
 
-1. Create a resource group with the name `LMElevate` 
+1. Create a resource group with the name `LMElevate`
 2. Add a resource in expert mode with hostname `lm-elevate-api-indol.vercel.app`.
 3. Assign it to the `LMElevate` resource group and a working Collector.
 4. Add these resource properties:

@@ -9,4 +9,4 @@ These are completed LogicModule JSON files for facilitator recovery and post-wor
 | `03-node-multi/` | Multi-instance node DataSource with AD JSON |
 | `04-refactored/` | Snippet and token-cache JSON for the completed modules |
 
-Student-facing scripts are kept with their corresponding session instructions. The JSON files in this directory are the completed import artifacts.
+Student-facing scaffolds and reference scripts are kept with their corresponding session instructions. The JSON files in this directory are the completed import artifacts.

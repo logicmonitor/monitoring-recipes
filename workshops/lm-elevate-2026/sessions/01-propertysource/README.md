@@ -1,43 +1,40 @@
-# Session 01 — Build the PropertySource
+# Session 01 — Resource Enrichment
 
-Starter script: [`scripts/collect.groovy`](scripts/collect.groovy)
+## Teaching point
 
-## Goal
+A PropertySource should discover reusable resource metadata once so later modules can target and describe the resource consistently.
 
-Build `addCategory_Training_Fabric` to identify the API resource and add metadata that later DataSources can use for targeting.
+## Starting artifact
 
-## Build
+Import [`module-scaffold.json`](module-scaffold.json). It already contains the guided student script and is disabled with `appliesTo: false()` until the targeting rule is reviewed.
 
-1. Create a PropertySource named `addCategory_Training_Fabric`.
-2. Use this AppliesTo:
+Use [`scripts/student.groovy`](scripts/student.groovy) for the guided exercise. The complete implementation is [`scripts/reference.groovy`](scripts/reference.groovy).
+
+## Complete
+
+1. Review the supplied request flow before changing code.
+2. Fill the marked `system.hostname` lookup.
+3. Uncomment the three output lines and identify which values are targeting metadata versus informational metadata.
+4. Change the module’s AppliesTo from `false()` to:
 
    ```text
    fabric.api.user && fabric.api.pass && !hasCategory("Training_Fabric")
    ```
 
-3. In the script:
-   - Build the API URL from `system.hostname` using HTTPS.
-   - Request a bearer token from `/auth/token`.
-   - Request `/controller`.
-   - Emit `system.categories=Training_Fabric`.
-   - Emit `auto.fabric_site` and `auto.fabric_version`.
-   - Return a nonzero status for authentication or API errors.
+5. Run the PropertySource once against the workshop resource.
 
 ## Validate
 
-Run the script against the workshop resource and confirm:
+- `Training_Fabric` is added as a category.
+- `auto.fabric_site` and `auto.fabric_version` are present.
+- A second run no longer targets the resource because the category is already present.
 
-- The script exits successfully.
-- `system.categories` contains `Training_Fabric`.
-- `auto.fabric_site` is `training-east`.
-- `auto.fabric_version` is `7.4.2`.
+## Talk through
 
-## Discuss
+- Why is category assignment a better targeting mechanism than repeating API-specific logic in every DataSource?
+- Why should a PropertySource be idempotent?
+- What should happen when credentials or the API response are unavailable?
 
-- Why should the PropertySource add metadata instead of hard-coding it into every DataSource?
-- Why should it stop targeting a resource after the category is present?
-- Which properties are used for targeting, and which are informational?
+## Takeaway
 
-## Checkpoint
-
-The resource is enriched and ready to become the target of the workshop DataSources.
+The script performs enrichment; the module metadata controls where and when that enrichment runs.

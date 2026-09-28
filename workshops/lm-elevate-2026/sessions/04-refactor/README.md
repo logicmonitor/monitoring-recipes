@@ -1,51 +1,48 @@
-# Session 04 — Refactor with Collector Snippets and Cache
+# Session 04 — Refactoring for Platform Practices
 
-Scripts used in this session:
+## Teaching point
 
-- [`scripts/propertysource.groovy`](scripts/propertysource.groovy)
-- [`scripts/controller.groovy`](scripts/controller.groovy)
-- [`scripts/node-ad.groovy`](scripts/node-ad.groovy)
-- [`scripts/node-collect.groovy`](scripts/node-collect.groovy)
+Refactoring should improve consistency, diagnostics, and lifecycle behavior without changing the monitoring contract.
 
-## Goal
+## Starting artifact
 
-Refactor the working scripts after the behavior is proven, reducing platform boilerplate and repeated authentication calls.
+Import the applicable refactor scaffold for the module you are reviewing:
 
-## Refactor
+- [`propertysource-scaffold.json`](propertysource-scaffold.json)
+- [`controller-scaffold.json`](controller-scaffold.json)
+- [`node-scaffold.json`](node-scaffold.json)
 
-Update the PropertySource and both DataSources to use:
+Each scaffold preserves the established AppliesTo rule so the module remains applicable to the workshop resource. Use the baseline scripts from Sessions 01–03 as the “before” implementation. Review the guided scripts, then compare the complete versions:
 
-- `proto.http` `1.0.0` with `create(hostProps)`, `withHeaders(...)`, and `GET(...)`.
-- `lm.emit` `1.3.0` for datapoint, property, and instance output.
-- `lm.debug` `2.0.0` for controlled diagnostics.
-- `lm.cache` `0.3.1` for the short-lived bearer token.
+- PropertySource: [`scripts/student-propertysource.groovy`](scripts/student-propertysource.groovy) → [`scripts/reference-propertysource.groovy`](scripts/reference-propertysource.groovy)
+- Controller collection: [`scripts/student-controller.groovy`](scripts/student-controller.groovy) → [`scripts/reference-controller.groovy`](scripts/reference-controller.groovy)
+- Node Active Discovery: [`scripts/student-node-ad.groovy`](scripts/student-node-ad.groovy) → [`scripts/reference-node-ad.groovy`](scripts/reference-node-ad.groovy)
+- Node collection: [`scripts/student-node-collect.groovy`](scripts/student-node-collect.groovy) → [`scripts/reference-node-collect.groovy`](scripts/reference-node-collect.groovy)
 
-Pass snippet handles into helper functions instead of relying on helper methods to resolve script-local variables.
+## Complete
 
-## Build
-
-1. Load the snippets near the top of each script.
-2. Create the HTTP client from `hostProps`.
-3. Replace hand-written output with `emit` methods.
-4. Add debug messages around authentication and failed requests.
-5. Cache the bearer token with a module-specific key and an expiration derived from the API `expires_in` value, minus a small safety margin.
-6. Leave mutable controller and node responses uncached unless there is a deliberate freshness policy.
+1. Identify the shared platform plumbing in all four scripts: HTTP, output, debug, and cache.
+2. Trace how the PropertySource, controller collection, Active Discovery, and node collection each use that plumbing.
+3. Review the cache key and TTL decisions in the guided scripts.
+4. Compare the before/after output contract; confirm property, datapoint, and instance keys did not change.
+5. Import the completed refactored JSON and run the modules twice with debug enabled.
 
 ## Validate
 
-- Enable debug for a test run and confirm useful messages appear.
-- Run the script a second time and confirm the cached token is reused.
-- Confirm an expired or missing token causes a new token request.
-- Confirm a protected request returning `401` removes the cached token, fetches a replacement, and retries once.
-- Confirm collection output is unchanged after refactoring.
-- Confirm the scripts load the intended snippet versions.
+- The intended snippet versions load.
+- The second run reuses the bearer token.
+- A rejected token is removed and refreshed once.
+- PropertySource output remains unchanged.
+- Active Discovery output remains unchanged.
+- Controller and node responses remain fresh.
+- Monitoring output is unchanged after the refactor.
 
-## Discuss
+## Talk through
 
-- Which code is reusable platform plumbing?
-- Which data must remain fresh on every poll?
-- Why is caching the token safer than caching node metrics?
+- What is reusable platform plumbing versus module-specific behavior?
+- Why cache credentials/tokens but not mutable monitoring data?
+- Why should a refactor preserve the existing output contract?
 
-## Checkpoint
+## Takeaway
 
-The scripts now follow the reusable patterns taught by the module-authoring skill without changing monitoring behavior.
+Use platform primitives to make scripts safer and easier to operate, while treating emitted monitoring data as a compatibility contract.

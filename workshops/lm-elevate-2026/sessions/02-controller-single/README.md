@@ -1,44 +1,40 @@
-# Session 02 — Build the Single-Instance DataSource
+# Session 02 — Single-Instance DataSource
 
-Starter script: [`scripts/collect.groovy`](scripts/collect.groovy)
+## Teaching point
 
-## Goal
+Separate the collection contract from the implementation: the script emits keys, while datapoints and graphs describe and present those keys.
 
-Collect controller-level metrics from one API response without Active Discovery.
+## Starting artifact
 
-## Build
+Import [`module-scaffold.json`](module-scaffold.json); it already contains the guided student script. Review [`scripts/student.groovy`](scripts/student.groovy) alongside it. The complete implementation is [`scripts/reference.groovy`](scripts/reference.groovy).
 
-1. Create a DataSource named `Training_Fabric_Controller`.
-2. Use this AppliesTo:
+## Complete
+
+1. Review the supplied `/controller` request and response fields.
+2. Complete the three marked datapoint emissions.
+3. Set AppliesTo to:
 
    ```text
    hasCategory("Training_Fabric") && fabric.api.user && fabric.api.pass
    ```
 
-3. In the collection script:
-   - Request a bearer token.
-   - Call `/controller`.
-   - Parse the JSON response.
-   - Emit `controller_health`, `node_count`, and `api_latency_ms`.
-4. Define matching datapoints in the DataSource JSON.
-5. Add descriptions, units, sensible ranges, and an overview graph.
+4. Define datapoints with matching names, descriptions, units, and sensible ranges.
+5. Add an overview graph for the controller metrics.
 
 ## Validate
 
-Run collection with Poll Now and confirm:
+- Collection succeeds without Active Discovery.
+- All three datapoints populate.
+- `node_count` matches the API response.
+- `api_latency_ms` changes between polls.
+- The graph reflects the same output contract.
 
-- No Active Discovery script is required.
-- The three datapoints populate.
-- `node_count` matches the controller response.
-- `api_latency_ms` is numeric and changes over time.
-- The overview graph contains the controller metrics.
+## Talk through
 
-## Discuss
+- Why is this a single-instance DataSource?
+- Why is there no wildvalue in the output?
+- Which decisions belong in JSON and which belong in the script?
 
-- What makes this DataSource single-instance?
-- Why does it not need a wildvalue?
-- Which parts are script behavior, and which parts are JSON metadata?
+## Takeaway
 
-## Checkpoint
-
-The controller is monitored as one logical object. Active Discovery is introduced only for the repeating node components.
+Good module design keeps emitted keys, datapoint definitions, and graphs aligned.

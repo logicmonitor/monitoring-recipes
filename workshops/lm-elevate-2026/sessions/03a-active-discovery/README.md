@@ -1,39 +1,35 @@
-# Session 03A — Build Active Discovery
+# Session 03A — Active Discovery
 
-Starter script: [`scripts/ad.groovy`](scripts/ad.groovy)
+## Teaching point
 
-## Goal
+Active Discovery defines identity and topology; it does not collect performance metrics.
 
-Discover the repeating Training Fabric nodes and create one LogicMonitor instance for each node.
+## Starting artifact
 
-## Build
+Import [`module-scaffold.json`](module-scaffold.json); it already contains the guided Active Discovery script and a no-op collection entry. Review the Active Discovery [`scripts/student.groovy`](scripts/student.groovy) alongside it. The complete implementation is [`scripts/reference.groovy`](scripts/reference.groovy).
 
-1. Create or extend the `Training_Fabric_Node` DataSource.
-2. Keep the same category and credential targeting used by the controller DataSource.
-3. In the Active Discovery script:
-   - Request a bearer token.
-   - Call `/nodes`.
-   - Parse the JSON response.
-   - Emit one instance for each node.
-   - Use the node ID as the stable wildvalue.
-   - Use the node name as the display name.
-   - Add `auto.role` and `auto.site` as instance properties.
+## Complete
+
+1. Review the `/nodes` response and identify the stable ID, display name, and useful instance properties.
+2. Complete the marked `emit.instance` call.
+3. Use the node ID as the wildvalue, the node name as the alias, and `auto.role` plus `auto.site` as ILPs.
+4. Run Active Discovery.
+
+The collection script remains a basic `return 0` placeholder. Collection is completed in Session 03B after the instances exist.
 
 ## Validate
 
-Run Active Discovery and confirm:
-
 - Three instances are created.
-- Instance names are readable, such as `edge-01`, `edge-02`, and `core-01`.
-- Wildvalues match the API node IDs and remain stable.
-- `auto.role` and `auto.site` are present on each instance.
+- Wildvalues remain stable across repeated discovery runs.
+- Aliases are readable.
+- `auto.role` and `auto.site` appear on each instance.
 
-## Discuss
+## Talk through
 
-- Why must the wildvalue be stable?
-- Why can the display name change without changing instance identity?
-- What information belongs on the instance as an ILP?
+- Why is a stable wildvalue more important than a pretty display name?
+- What belongs on an instance as an ILP?
+- Why should discovery and collection be tested separately?
 
-## Checkpoint
+## Takeaway
 
-Active Discovery answers: **What repeating components exist?** It does not collect their metrics.
+Discovery answers “what exists?” and establishes the identity used by collection.
