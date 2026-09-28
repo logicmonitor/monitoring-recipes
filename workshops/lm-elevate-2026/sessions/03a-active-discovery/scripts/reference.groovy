@@ -1,38 +1,36 @@
-import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH
-import com.logicmonitor.mod.Snippets
 import groovy.json.JsonSlurper
 
-def modLoader = GSH.getInstance(GroovySystem.version)
-    .getScript("Snippets", Snippets.getLoader())
-    .withBinding(getBinding())
-def emit = modLoader.load("lm.emit", "1.3.0")
-def hostname = hostProps.get("system.hostname", "").replaceAll('/$', '')
-def baseUrl = "https://${hostname}/api/v1"
-def user = hostProps.get("fabric.api.user", "")
-def pass = hostProps.get("fabric.api.pass", "")
+// Read connection details from the resource instead of hard-coding them.
+def apiHostname = hostProps.get("system.hostname", "").replaceAll('/$', '')
+def apiBaseUrl = "https://${apiHostname}/api/v1"
+def apiUser = hostProps.get("fabric.api.user", "")
+def apiPassword = hostProps.get("fabric.api.pass", "")
 
-if (!hostname || !user || !pass)
+if (!apiHostname || !apiUser || !apiPassword)
     return 1
 
-def token = readJson("${baseUrl}/auth/token", [Authorization: "Basic ${basicAuth(user, pass)}"])
-def nodes = readJson(
-    "${baseUrl}/nodes",
+// Authenticate once, then ask the API which node instances exist.
+def token = requestJson(
+    "${apiBaseUrl}/auth/token",
+    [Authorization: "Basic ${basicAuthHeader(apiUser, apiPassword)}"]
+)
+def nodes = requestJson(
+    "${apiBaseUrl}/nodes",
     [Authorization: "Bearer ${token.access_token}"]
 )
 
 nodes.each { node ->
-    emit.instance(node.id, node.name, "${node.role} at ${node.site}", [
-        "auto.role": node.role,
-        "auto.site": node.site
-    ])
+    // The ID is identity; the name is presentation; role and site are context.
+    println "${node.id}##${node.name}##${node.role} at ${node.site}####auto.role=${node.role}&auto.site=${node.site}"
 }
 return 0
 
-def basicAuth(String user, String pass) {
-    return "${user}:${pass}".bytes.encodeBase64().toString()
+// Helper methods keep the discovery flow easy to follow.
+def basicAuthHeader(String user, String password) {
+    return "${user}:${password}".bytes.encodeBase64().toString()
 }
 
-def readJson(String endpoint, Map headers) {
+def requestJson(String endpoint, Map headers) {
     def connection = new URL(endpoint).openConnection()
     headers.each { key, value -> connection.setRequestProperty(key, value.toString()) }
     connection.setRequestProperty("Accept", "application/json")

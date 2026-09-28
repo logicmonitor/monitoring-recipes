@@ -14,6 +14,8 @@ Import the applicable refactor scaffold for the module you are reviewing using t
 
 Each scaffold preserves the established AppliesTo rule so the module remains applicable to the workshop resource. Use the baseline scripts from Sessions 01–03 as the “before” implementation. Review the guided scripts, then compare the complete versions:
 
+This is the first session that uses the shared LogicMonitor helpers: `proto.http` for requests, `lm.emit` for output, `lm.debug` for diagnostics, and `lm.cache` for short-lived token caching.
+
 - PropertySource: [`scripts/student-propertysource.groovy`](scripts/student-propertysource.groovy) → [`scripts/reference-propertysource.groovy`](scripts/reference-propertysource.groovy)
 - Controller collection: [`scripts/student-controller.groovy`](scripts/student-controller.groovy) → [`scripts/reference-controller.groovy`](scripts/reference-controller.groovy)
 - Node Active Discovery: [`scripts/student-node-ad.groovy`](scripts/student-node-ad.groovy) → [`scripts/reference-node-ad.groovy`](scripts/reference-node-ad.groovy)

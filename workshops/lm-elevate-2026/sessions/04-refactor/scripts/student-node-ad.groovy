@@ -1,10 +1,11 @@
-// REFACTOR LAB: Node Active Discovery: trace shared authentication and unchanged instance identity.
-// Keep the monitoring output contract unchanged while identifying the reusable platform plumbing.
+// REFACTOR LAB: Node Active Discovery: trace token reuse and unchanged instance identity.
+// Keep the monitoring output names and values unchanged while identifying reusable LogicMonitor helpers.
 
 import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH
 import com.logicmonitor.mod.Snippets
 import groovy.json.JsonSlurper
 
+// Load versioned LogicMonitor helpers for HTTP, output, diagnostics, and caching.
 def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
     .withBinding(getBinding())
@@ -17,6 +18,8 @@ def lmDebug = debugMod.create(hostProps, debug, out)
 def cacheDebug = [LMDebugPrint: { message -> lmDebug.debug(message) }]
 def cache = cacheMod.cacheSnippetFactory(cacheDebug, "training-fabric")
 def http = httpMod.create(hostProps)
+
+// Read connection details from the resource instead of hard-coding them.
 def hostname = hostProps.get("system.hostname", "").replaceAll('/$', '')
 def baseUrl = "https://${hostname}/api/v1"
 def user = hostProps.get("fabric.api.user", "")
@@ -25,6 +28,7 @@ def pass = hostProps.get("fabric.api.pass", "")
 if (!hostname || !user || !pass)
     return 1
 
+// Main flow: obtain the token, discover nodes, and preserve instance identity.
 def token = getToken(cache, http, baseUrl, user, pass, lmDebug)
 if (!token)
     return 1
@@ -46,6 +50,7 @@ if (response.responseCode >= 400)
 
 def nodes = new JsonSlurper().parseText(response.inputStream.text)
 nodes.each { node ->
+    // The ID is identity; the name is presentation; role and site are context.
     emit.instance(node.id, node.name, "${node.role} at ${node.site}", [
         "auto.role": node.role,
         "auto.site": node.site
@@ -53,6 +58,7 @@ nodes.each { node ->
 }
 return 0
 
+// Cache helper: cache the short-lived token, never the changing node list.
 def getToken(cache, http, String baseUrl, String user, String pass, lmDebug, Boolean forceRefresh = false) {
     if (forceRefresh)
         cache.cacheRemove("accessToken")
@@ -60,6 +66,7 @@ def getToken(cache, http, String baseUrl, String user, String pass, lmDebug, Boo
     if (token)
         return token
 
+    // The password is used only to request a new token and is never logged.
     def basic = "${user}:${pass}".bytes.encodeBase64().toString()
     def response = http.withHeaders(
         [Authorization: "Basic ${basic}", Accept: "application/json"]
@@ -69,6 +76,7 @@ def getToken(cache, http, String baseUrl, String user, String pass, lmDebug, Boo
     def tokenResponse = new JsonSlurper().parseText(response.inputStream.text)
     token = tokenResponse.access_token
     def expiresIn = (tokenResponse.expires_in ?: 300) as Integer
+    // Leave a safety margin so the token does not expire during discovery.
     def cacheTtl = Math.max(1, expiresIn - 60) as Integer
     cache.cacheSet("accessToken", token, cacheTtl)
     lmDebug.debug("Fetched and cached a new training API token for ${cacheTtl}s")

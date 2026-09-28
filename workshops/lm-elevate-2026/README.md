@@ -24,5 +24,6 @@ The API is not intended to model a particular vendor. Its controller/node shape 
 
 - [Student sessions](sessions/)
 - [Solutions](solutions/README.md)
+- [Script maintenance](scripts/README.md)
 
 The module-authoring skill remains the reusable follow-up tool. These workshop files provide the deliberate teaching sequence and the known-good answer bundles.

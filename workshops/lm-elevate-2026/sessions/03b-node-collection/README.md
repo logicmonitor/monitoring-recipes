@@ -8,6 +8,8 @@ Collection must preserve the identity established by Active Discovery when it re
 
 Import [`module-scaffold.json`](module-scaffold.json) using the [shared import steps](../README.md#importing-a-module). It carries forward the completed targeting and Active Discovery configuration from Session 03A and includes the working collection script. Review the collection [`scripts/student.groovy`](scripts/student.groovy) alongside it. The complete implementation is [`scripts/reference.groovy`](scripts/reference.groovy).
 
+This session prints each instance datapoint directly as `wildvalue.field=value`. The reusable LogicMonitor output helper is intentionally saved for Session 04.
+
 ## What to do
 
 1. Review the supplied instance loop and the wildvalue-qualified requests. The loop visits each discovered instance, and the wildvalue tells the API which node to request.

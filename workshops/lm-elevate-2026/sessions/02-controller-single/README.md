@@ -8,6 +8,8 @@ Separate the collection contract from the implementation: the script emits keys,
 
 Import [`module-scaffold.json`](module-scaffold.json) using the [shared import steps](../README.md#importing-a-module). It already contains the guided student script. Review [`scripts/student.groovy`](scripts/student.groovy) alongside it. The complete implementation is [`scripts/reference.groovy`](scripts/reference.groovy).
 
+The script uses plain `println` output in this session. Focus on keeping the output names aligned with the datapoints; reusable LogicMonitor output helpers come later.
+
 ## What to do
 
 1. Review the supplied `/controller` request and response fields.

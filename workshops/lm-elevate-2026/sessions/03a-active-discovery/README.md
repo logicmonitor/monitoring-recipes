@@ -8,10 +8,12 @@ Active Discovery defines identity and topology; it does not collect performance 
 
 Import [`module-scaffold.json`](module-scaffold.json) using the [shared import steps](../README.md#importing-a-module). It already contains the guided Active Discovery script and a no-op collection entry. Review the Active Discovery [`scripts/student.groovy`](scripts/student.groovy) alongside it. The complete implementation is [`scripts/reference.groovy`](scripts/reference.groovy).
 
+The discovery script prints the instance line directly so you can see how identity, display name, and instance properties are assembled. The reusable `lm.emit` helper is introduced during the refactor session.
+
 ## What to do
 
 1. Review the `/nodes` response and identify the stable ID, display name, and useful instance properties.
-2. Complete the marked `emit.instance` call.
+2. Complete the marked discovery output line.
 3. Use the node ID as the wildvalue, the node name as the alias, and `auto.role` plus `auto.site` as instance properties (ILPs).
 4. Run Active Discovery.
 
