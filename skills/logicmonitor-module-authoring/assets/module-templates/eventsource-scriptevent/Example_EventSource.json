@@ -1,0 +1,18 @@
+{
+  "name": "Example_EventSource",
+  "description": "Template scripted EventSource.",
+  "appliesTo": "hasCategory(\"example\")",
+  "searchKeywords": "example,event,template",
+  "technicalNotes": "",
+  "group": "",
+  "type": 1,
+  "collectionMethod": "scriptevent",
+  "severity": "warn",
+  "clearAfterAck": true,
+  "clearAfterMin": 0,
+  "doMapping": false,
+  "collectionAttrs": {
+    "type": "groovy",
+    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\nemit.events([[\n    happenedOn: System.currentTimeMillis(),\n    severity: \"warn\",\n    message: \"Example script event\"\n]])\nreturn 0\n"
+  }
+}

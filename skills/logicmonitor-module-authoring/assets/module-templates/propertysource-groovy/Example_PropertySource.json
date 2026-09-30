@@ -1,0 +1,13 @@
+{
+  "name": "Example_PropertySource",
+  "description": "Template PropertySource.",
+  "appliesTo": "hasCategory(\"example\")",
+  "searchKeywords": "example,property,template",
+  "technicalNotes": "",
+  "group": "",
+  "type": 5,
+  "script": {
+    "type": "groovy",
+    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\nemit.property(\"auto.example.property\", \"template\")\nreturn 0\n"
+  }
+}

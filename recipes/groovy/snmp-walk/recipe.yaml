@@ -1,0 +1,16 @@
+name: snmp-walk
+language: groovy
+pattern: snmp
+applicable_module_types:
+  - datasource
+  - propertysource
+tags: [building-block, snmp]
+status: implemented
+requires_snippets: true
+snippets_used:
+  - name: proto.snmp
+    min_version: "0"
+  - name: lm.emit
+    min_version: "0"
+official_docs:
+  - https://www.logicmonitor.com/support/logicmodules/datasources/data-collection-methods/scripted-data-collection-overview

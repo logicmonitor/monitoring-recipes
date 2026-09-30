@@ -1,0 +1,46 @@
+{
+  "_comment": "Cloud widget types (billing, cloudRecommendation, viz) are portal-specific. Export an existing widget from LogicMonitor and replace metric scope — do not hand-author widgetConfig from scratch.",
+  "billing": {
+    "position": { "col": 1, "row": 1, "sizex": 6, "sizey": 4 },
+    "config": {
+      "type": "billing",
+      "name": "Cloud Billing (export from portal)",
+      "description": "",
+      "theme": "newSolidDarkBlue",
+      "interval": 3,
+      "timescale": "day",
+      "version": 2,
+      "displaySettings": {},
+      "billingInfo": {},
+      "widgetConfig": "{}"
+    }
+  },
+  "cloudRecommendation": {
+    "position": { "col": 1, "row": 1, "sizex": 6, "sizey": 4 },
+    "config": {
+      "type": "cloudRecommendation",
+      "name": "Cloud Recommendations (export from portal)",
+      "description": "",
+      "theme": "newSolidDarkBlue",
+      "interval": 3,
+      "timescale": "day",
+      "version": 2,
+      "displaySettings": {},
+      "widgetConfig": "{}"
+    }
+  },
+  "viz": {
+    "position": { "col": 1, "row": 1, "sizex": 6, "sizey": 4 },
+    "config": {
+      "type": "viz",
+      "name": "Viz Widget (export from portal)",
+      "description": "",
+      "theme": "newSolidDarkBlue",
+      "interval": 3,
+      "timescale": "day",
+      "version": 2,
+      "displaySettings": {},
+      "widgetConfig": "{}"
+    }
+  }
+}

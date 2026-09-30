@@ -1,0 +1,13 @@
+{
+  "name": "Example_DiagnosticSource",
+  "description": "Template DiagnosticSource.",
+  "appliesTo": "hasCategory(\"example\")",
+  "searchKeywords": "example,diagnostic,template",
+  "technicalNotes": "",
+  "group": "",
+  "type": 11,
+  "script": {
+    "type": "groovy",
+    "content": "import groovy.json.JsonOutput\n\nprint JsonOutput.toJson([data: 'Diagnostic output', format: 'markdown'])\nreturn 0\n"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "position": { "col": 1, "row": 1, "sizex": 4, "sizey": 2 },
+  "config": {
+    "type": "text",
+    "name": "Section Header",
+    "description": "",
+    "theme": "newBorderDarkBlue",
+    "interval": 15,
+    "timescale": "day",
+    "version": 2,
+    "displaySettings": {},
+    "content": "<p><span style=\"font-size:16px;\">Description text here.</span></p>"
+  }
+}

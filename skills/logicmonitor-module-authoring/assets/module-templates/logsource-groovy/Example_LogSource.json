@@ -1,0 +1,37 @@
+{
+  "name": "Example_LogSource",
+  "description": "Template scripted LogSource.",
+  "appliesTo": "hasCategory(\"example\")",
+  "group": "",
+  "tags": [
+    "example",
+    "log"
+  ],
+  "technicalNotes": "",
+  "collectionMethod": "script",
+  "type": 10,
+  "collectionInterval": 60,
+  "filters": [],
+  "logFields": [
+    {
+      "key": "message",
+      "method": "literal",
+      "value": "message",
+      "comment": "Log message"
+    }
+  ],
+  "resourceMapping": [
+    {
+      "key": "system.deviceId",
+      "method": "literal",
+      "value": "##system.deviceId##",
+      "comment": "Monitored device"
+    }
+  ],
+  "collectionAttrs": {
+    "resourceMappingOp": "AND",
+    "filterOp": "AND",
+    "type": "groovy",
+    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\nemit.events([[message: \"Example log event\"]])\nreturn 0\n"
+  }
+}

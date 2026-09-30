@@ -1,0 +1,24 @@
+{
+  "position": { "col": 1, "row": 1, "sizex": 6, "sizey": 6 },
+  "config": {
+    "type": "gmap",
+    "name": "Resource Map",
+    "description": "",
+    "theme": "newSolidDarkBlue",
+    "interval": 3,
+    "timescale": "day",
+    "version": 2,
+    "displaySettings": {},
+    "ackChecked": true,
+    "sdtChecked": true,
+    "displayWarnAlert": true,
+    "displayErrorAlert": true,
+    "displayCriticalAlert": true,
+    "mapPoints": [
+      {
+        "deviceDisplayName": "*",
+        "deviceGroupFullPath": "##defaultResourceGroup##"
+      }
+    ]
+  }
+}

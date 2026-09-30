@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logicmonitor.com/schemas/dashboard/dashboard.schema.json",
+  "title": "LogicMonitor Dashboard",
+  "type": "object",
+  "required": ["name", "widgets", "widgetsConfigVersion"],
+  "properties": {
+    "name": { "type": "string" },
+    "description": { "type": "string" },
+    "widgets": {
+      "type": "array",
+      "items": { "$ref": "common.defs.json#/$defs/widget" }
+    },
+    "widgetsConfigVersion": { "const": 2 },
+    "version": { "const": 2 },
+    "type": { "const": "dashboard" },
+    "santabaRelease": { "type": "integer" },
+    "overwriteGroupFields": { "type": "boolean" },
+    "widgetTokens": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "value"],
+        "properties": {
+          "name": { "type": "string" },
+          "value": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "group": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "fullPath": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "defaultDashboardFilters": { "type": "object" }
+  },
+  "additionalProperties": true
+}

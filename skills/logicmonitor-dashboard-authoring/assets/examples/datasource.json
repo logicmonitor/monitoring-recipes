@@ -1,0 +1,7 @@
+{
+  "name": "Example_DataSource",
+  "displayName": "Example DataSource",
+  "dataPoints": [
+    {"name": "example_metric", "description": "Example value."}
+  ]
+}

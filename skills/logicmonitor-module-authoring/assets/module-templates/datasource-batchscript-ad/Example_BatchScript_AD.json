@@ -1,0 +1,79 @@
+{
+  "name": "Example_BatchScript_AD",
+  "displayedAs": "Example BatchScript AD",
+  "description": "Template batchscript DataSource with active discovery.",
+  "appliesTo": "hasCategory(\"example\")",
+  "searchKeywords": "example,template,batchscript",
+  "technicalNotes": "",
+  "group": "",
+  "type": 0,
+  "dataSourceType": 1,
+  "collectionMethod": "batchscript",
+  "collectionInterval": "3m",
+  "multiInstance": true,
+  "useWildValueAsUniqueIdentifier": false,
+  "collectionAttrs": {
+    "type": "groovy",
+    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\ndatasourceinstanceProps.each { instance, props ->\n    def wild = props.wildvalue\n    emit.dp(wild, \"example_metric\", 0)\n}\nreturn 0\n"
+  },
+  "activeDiscovery": {
+    "discoveryMethod": "ad_script",
+    "enabled": true,
+    "discoveryInterval": "60m",
+    "groupMethod": "none",
+    "deleteInactiveInstances": false,
+    "autoDeleteInstances": true,
+    "disableDiscoveredInstances": false,
+    "showDeletedInstanceDays": 0,
+    "filters": [],
+    "params": {
+      "type": "groovy",
+      "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\nemit.instance(\"instance-a\", \"Instance A\", \"\", [tier: \"standard\", role: \"primary\"])\nemit.instance(\"instance-b\", \"Instance B\", \"Second instance with description\")\nemit.instance(\n    \"instance-c\",\n    \"Instance C\",\n    \"Instance with ILPs for filters/grouping\",\n    [role: \"replica\", \"auto.env\": \"prod\", feature_x: \"enabled\"]\n)\nreturn 0\n"
+    }
+  },
+  "datapoints": [
+    {
+      "name": "example_metric",
+      "description": "",
+      "dataType": 7,
+      "type": "gauge",
+      "interpretMethod": "namevalue",
+      "interpretExpr": "##WILDVALUE##.example_metric",
+      "useValue": "output",
+      "maxDigits": 4,
+      "noData": "Do not trigger an alert",
+      "clearInterval": 0,
+      "triggerInterval": 0,
+      "statusDisplayNames": []
+    }
+  ],
+  "graphs": [
+    {
+      "name": "Example Metric",
+      "title": "Example Metric",
+      "verticalLabel": "",
+      "min": 0,
+      "max": 100,
+      "timeScale": "1day",
+      "displayPriority": 1,
+      "scale1024": false,
+      "rigid": false,
+      "lines": [
+        {
+          "datapointName": "example_metric",
+          "legend": "Example",
+          "color": "green",
+          "type": "line",
+          "isVirtual": false
+        }
+      ],
+      "datapoints": [
+        {
+          "name": "example_metric",
+          "datapointName": "example_metric",
+          "consolidationFn": "average"
+        }
+      ]
+    }
+  ]
+}

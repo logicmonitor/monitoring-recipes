@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eventsource.schema.json",
+  "title": "LogicMonitor scripted EventSource",
+  "type": "object",
+  "required": [
+    "name",
+    "type",
+    "description",
+    "appliesTo",
+    "collectionMethod",
+    "collectionAttrs",
+    "severity"
+  ],
+  "additionalProperties": true,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "appliesTo": {
+      "type": "string"
+    },
+    "type": {
+      "const": 1
+    },
+    "collectionMethod": {
+      "type": "string",
+      "enum": [
+        "scriptevent"
+      ]
+    },
+    "collectionAttrs": {
+      "$ref": "logicmodule.common.defs.json#/$defs/scriptBlob"
+    },
+    "severity": {
+      "type": "string"
+    },
+    "clearAfterAck": {
+      "type": "boolean"
+    },
+    "clearAfterMin": {
+      "type": "integer"
+    },
+    "doMapping": {
+      "type": "boolean"
+    }
+  }
+}

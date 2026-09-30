@@ -1,0 +1,12 @@
+name: winrm-exec
+language: powershell
+pattern: winrm
+applicable_module_types:
+  - datasource
+  - diagnosticsource
+  - remediationsource
+tags: [building-block, winrm, windows]
+status: implemented
+requires_snippets: false
+official_docs:
+  - https://www.logicmonitor.com/support/logicmodules/datasources/data-collection-methods/scripted-data-collection-overview

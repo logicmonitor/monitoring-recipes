@@ -1,0 +1,12 @@
+{
+  "name": "Example_TopologySource",
+  "description": "Template scripted TopologySource.",
+  "appliesTo": "hasCategory(\"example\")",
+  "group": "",
+  "tags": ["example", "topology"],
+  "technology": "",
+  "type": 9,
+  "collectionMethod": "script",
+  "collectionIntervalSec": 3600,
+  "collectionAttrs": "{\"scriptgroovy\":\"collect.groovy\",\"linuxscript\":\"\",\"linuxcmdline\":\"\",\"scripttype\":\"embed\",\"windowscmdline\":\"\",\"windowsscript\":\"\",\"properties\":\"\"}"
+}

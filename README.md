@@ -1,35 +1,37 @@
-# LogicModule Recipes <img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/Tools/Images/LM_Logo.png" width="4%">
+# Monitoring Recipes
 
-This repository contains various scripts and code snippets that can be useful to anyone writing a LogicModule.
+Best-practice script snippets, documentation, and Agent Skills for building [LogicMonitor LogicModules](https://www.logicmonitor.com/support/).
 
-## Help & Documentation
-One stop shop for all things LogicMonitor related.
-#### [LogicMonitor Support & Documentation](https://www.logicmonitor.com/support/)
+## What's in this repo
 
-## Release Notes
-Check out the latest release notes for new and updated LogicModules. 
+| Directory | What it is | Who it's for |
+|-----------|------------|----------------|
+| [`recipes/`](recipes/) | Copy-paste Groovy and PowerShell script building blocks | Engineers writing module scripts |
+| [`docs/`](docs/) | Module-type guides, concepts, and decision trees | Engineers learning LM module authoring |
+| [`skills/`](skills/) | Installable [Agent Skills](https://agentskills.io/specification), including dashboard JSON schema and validation in [`logicmonitor-dashboard-authoring`](skills/logicmonitor-dashboard-authoring/) | Engineers using Cursor, Claude Code, or other Agent Skills-compatible tools |
+| [`workshops/`](workshops/) | Guided live-training labs and completed LogicModule checkpoints | Instructors and engineers learning scripted module authoring |
 
-Register with your email and get them sent to you as soon as they are released.
+## Quick start
 
-#### [Release Notes](https://www.logicmonitor.com/releasenotes/)
+1. **Pick a pattern** — browse [`recipes/`](recipes/) by language (Groovy or PowerShell), then by protocol (SNMP, SSH, WinRM, etc.)
+2. **Copy the script** — adapt placeholders and output format for your module type (see the recipe README)
+3. **Read the docs** — not sure which module type to use? Start with [`docs/choosing-a-module-type.md`](docs/choosing-a-module-type.md)
 
-## Check the LogicMonitor Repository
-The Monitoring Engineering team is constantly hard at work delivering the latest and greatest, so make sure you check out the __LogicMonitor Repository__ inside your portal to see if there is already existing monitoring integrations for your various technologies.
+### Using the Agent Skill
 
-<img src="https://github.com/logicmonitor/monitoring-recipes/blob/master/Tools/Images/LogicMonitor_Repository.png" width="80%">
+Install the `logicmonitor-module-authoring` skill for AI-assisted module development, or `logicmonitor-dashboard-authoring` for dashboard JSON. See [`skills/README.md`](skills/README.md).
 
-## Share
-Want to share your cool LogicModules with others ? Hop onto the communities and share your locator codes!!!
+## Project status
 
-Ask questions, answer others, and see what others are working on.
+**Last updated:** 2026-07-18  
+**Branch:** `doc-overhaul` (uncommitted)  
+**Status:** Phase 1 complete — recipes implemented; Phase 2 expansion next
 
-#### [LogicMonitor Communities](https://communities.logicmonitor.com/)
-#### [LM Exchange Guidelines](https://communities.logicmonitor.com/topic/964-lm-exchange-guidelines/)
+## Help & documentation
 
-## Want to contribute ?
+- [LogicMonitor Support](https://www.logicmonitor.com/support/)
+- [LogicMonitor Communities](https://communities.logicmonitor.com/)
 
- * Submit a Pull Request and we'll review it.
- * Submit an issue (enhancement / bug)
+## Contributing
 
-
-*New & updated content will be added periodically.*
+Pull requests welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).

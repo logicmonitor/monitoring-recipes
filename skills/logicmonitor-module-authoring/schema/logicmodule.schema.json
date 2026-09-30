@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "logicmodule.schema.json",
+  "title": "LogicMonitor LogicModule import JSON",
+  "oneOf": [
+    {
+      "$ref": "datasource.schema.json"
+    },
+    {
+      "$ref": "configsource.schema.json"
+    },
+    {
+      "$ref": "script-module.schema.json"
+    },
+    {
+      "$ref": "eventsource.schema.json"
+    }
+  ]
+}
