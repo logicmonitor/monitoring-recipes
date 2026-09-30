@@ -10,8 +10,6 @@ Import [`module-scaffold.json`](module-scaffold.json) using the [shared import s
 
 Use [`scripts/student.groovy`](scripts/student.groovy) for the guided exercise. The complete implementation is [`scripts/reference.groovy`](scripts/reference.groovy).
 
-This first version uses plain `println` output so the monitoring contract is visible. Reusable LogicMonitor output helpers are introduced in Session 04.
-
 ## What to do
 
 1. Review the supplied request flow before changing code.

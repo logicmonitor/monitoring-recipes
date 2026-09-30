@@ -21,7 +21,8 @@ def nodes = requestJson(
 
 nodes.each { node ->
     // The ID is identity; the name is presentation; role and site are context.
-    println "${node.id}##${node.name}##${node.role} at ${node.site}####auto.role=${node.role}&auto.site=${node.site}"
+    // Status is emitted as an instance property so the module can filter offline nodes.
+    println "${node.id}##${node.name}##${node.role} at ${node.site}####auto.role=${node.role}&auto.site=${node.site}&auto.status=${node.status}"
 }
 return 0
 

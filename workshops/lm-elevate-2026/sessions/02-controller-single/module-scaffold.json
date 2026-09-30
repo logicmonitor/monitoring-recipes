@@ -58,57 +58,5 @@
       "triggerInterval": 0,
       "statusDisplayNames": []
     }
-  ],
-  "graphs": [
-    {
-      "name": "Controller Overview",
-      "title": "Controller Overview",
-      "verticalLabel": "Value",
-      "min": 0,
-      "timeScale": "1day",
-      "displayPriority": 1,
-      "scale1024": false,
-      "rigid": false,
-      "lines": [
-        {
-          "datapointName": "controller_health",
-          "legend": "Health",
-          "color": "green",
-          "type": "line",
-          "isVirtual": false
-        },
-        {
-          "datapointName": "node_count",
-          "legend": "Nodes",
-          "color": "blue",
-          "type": "line",
-          "isVirtual": false
-        },
-        {
-          "datapointName": "api_latency_ms",
-          "legend": "API latency",
-          "color": "orange",
-          "type": "line",
-          "isVirtual": false
-        }
-      ],
-      "datapoints": [
-        {
-          "name": "controller_health",
-          "datapointName": "controller_health",
-          "consolidationFn": "average"
-        },
-        {
-          "name": "node_count",
-          "datapointName": "node_count",
-          "consolidationFn": "average"
-        },
-        {
-          "name": "api_latency_ms",
-          "datapointName": "api_latency_ms",
-          "consolidationFn": "average"
-        }
-      ]
-    }
   ]
 }

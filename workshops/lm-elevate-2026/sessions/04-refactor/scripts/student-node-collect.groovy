@@ -5,7 +5,7 @@ import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH
 import com.logicmonitor.mod.Snippets
 import groovy.json.JsonSlurper
 
-// Load versioned LogicMonitor helpers for HTTP, output, diagnostics, and caching.
+// REVIEW 1: Snippets replace repeated platform boilerplate with versioned helpers.
 def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
     .withBinding(getBinding())
@@ -19,7 +19,7 @@ def cacheDebug = [LMDebugPrint: { message -> lmDebug.debug(message) }]
 def cache = cacheMod.cacheSnippetFactory(cacheDebug, "training-fabric")
 def http = httpMod.create(hostProps)
 
-// Read connection details from the resource instead of hard-coding them.
+// REVIEW 2: Resource inputs stay separate from the request and collection flow.
 def hostname = hostProps.get("system.hostname", "").replaceAll('/$', '')
 def baseUrl = "https://${hostname}/api/v1"
 def user = hostProps.get("fabric.api.user", "")
@@ -28,7 +28,7 @@ def pass = hostProps.get("fabric.api.pass", "")
 if (!hostname || !user || !pass)
     return 1
 
-// Main flow: obtain one token, then collect each discovered instance.
+// REVIEW 3: One token supports the collection loop; the wildvalue preserves instance identity.
 def token = getToken(cache, http, baseUrl, user, pass, lmDebug)
 if (!token)
     return 1
@@ -57,7 +57,7 @@ datasourceinstanceProps.each { instance, props ->
         return
     }
     def node = new JsonSlurper().parseText(response.inputStream.text)
-    // These names must remain aligned with the module datapoints and graph lines.
+    // REVIEW 5: These names must remain aligned with datapoints and final graph lines.
     emit.dp(wild, "health", node.health)
     emit.dp(wild, "cpu_percent", node.cpu_percent)
     emit.dp(wild, "memory_percent", node.memory_percent)
@@ -66,7 +66,7 @@ datasourceinstanceProps.each { instance, props ->
 }
 return collectionFailed ? 1 : 0
 
-// Cache helper: cache the short-lived token, never the changing node metrics.
+// REVIEW 4: Cache the short-lived token, never the changing node metrics.
 def getToken(cache, http, String baseUrl, String user, String pass, lmDebug, Boolean forceRefresh = false) {
     if (forceRefresh)
         cache.cacheRemove("accessToken")
@@ -92,4 +92,3 @@ def getToken(cache, http, String baseUrl, String user, String pass, lmDebug, Boo
     lmDebug.debug("Fetched and cached a new training API token for ${cacheTtl}s")
     return token
 }
-

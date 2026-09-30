@@ -2,7 +2,7 @@ import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH
 import com.logicmonitor.mod.Snippets
 import groovy.json.JsonSlurper
 
-// Load versioned LogicMonitor helpers for HTTP, output, diagnostics, and caching.
+// REVIEW 1: Snippets replace repeated platform boilerplate with versioned helpers.
 def modLoader = GSH.getInstance(GroovySystem.version)
     .getScript("Snippets", Snippets.getLoader())
     .withBinding(getBinding())
@@ -16,7 +16,7 @@ def cacheDebug = [LMDebugPrint: { message -> lmDebug.debug(message) }]
 def cache = cacheMod.cacheSnippetFactory(cacheDebug, "training-fabric")
 def http = httpMod.create(hostProps)
 
-// Read connection details from the resource instead of hard-coding them.
+// REVIEW 2: Resource inputs stay separate from the request and output flow.
 def hostname = hostProps.get("system.hostname", "").replaceAll('/$', '')
 def baseUrl = "https://${hostname}/api/v1"
 def user = hostProps.get("fabric.api.user", "")
@@ -25,7 +25,7 @@ def pass = hostProps.get("fabric.api.pass", "")
 if (!hostname || !user || !pass)
     return 1
 
-// Main flow: obtain the token, request controller metadata, and enrich the resource.
+// REVIEW 3: The main flow stays focused on the module contract.
 def token = getToken(cache, http, baseUrl, user, pass, lmDebug)
 if (!token)
     return 1
@@ -52,7 +52,7 @@ emit.property("auto.fabric_site", controller.site)
 emit.property("auto.fabric_version", controller.version)
 return 0
 
-// Cache helper: cache the short-lived token, never the changing controller data.
+// REVIEW 4: Cache the short-lived token, never the changing controller data.
 def getToken(cache, http, String baseUrl, String user, String pass, lmDebug, Boolean forceRefresh = false) {
     if (forceRefresh)
         cache.cacheRemove("accessToken")

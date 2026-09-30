@@ -11,6 +11,29 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+NODE_FILTER = [{"attribute": "auto.status", "operation": "Equal", "value": "online"}]
+NODE_OVERVIEW_GRAPH = {
+    "name": "Node Resource Overview",
+    "title": "Node Resource Overview",
+    "verticalLabel": "Percent",
+    "min": 0,
+    "max": 100,
+    "timeScale": "1day",
+    "displayPriority": 2,
+    "scale1024": False,
+    "rigid": False,
+    "lines": [
+        {"datapointName": "cpu_percent", "legend": "##INSTANCE## CPU", "type": "line", "isVirtual": False},
+        {"datapointName": "memory_percent", "legend": "##INSTANCE## Memory", "type": "line", "isVirtual": False},
+        {"datapointName": "error_rate_percent", "legend": "##INSTANCE## Errors", "type": "line", "isVirtual": False},
+    ],
+    "datapoints": [
+        {"name": "cpu_percent", "datapointName": "cpu_percent", "consolidationFn": "average"},
+        {"name": "memory_percent", "datapointName": "memory_percent", "consolidationFn": "average"},
+        {"name": "error_rate_percent", "datapointName": "error_rate_percent", "consolidationFn": "average"},
+    ],
+}
+
 
 ARTIFACTS = (
     {
@@ -31,6 +54,7 @@ ARTIFACTS = (
             "collectionAttrs.content": "sessions/03b-node-collection/scripts/student.groovy",
             "activeDiscovery.params.content": "sessions/03a-active-discovery/scripts/reference.groovy",
         },
+        "overrides": {"activeDiscovery.filters": NODE_FILTER},
     },
     {
         "json": "sessions/04-refactor/propertysource-scaffold.json",
@@ -46,6 +70,7 @@ ARTIFACTS = (
             "collectionAttrs.content": "sessions/04-refactor/scripts/student-node-collect.groovy",
             "activeDiscovery.params.content": "sessions/04-refactor/scripts/student-node-ad.groovy",
         },
+        "overrides": {"activeDiscovery.filters": NODE_FILTER},
     },
     {
         "json": "solutions/01-propertysource/addCategory_Training_Fabric.json",
@@ -61,6 +86,7 @@ ARTIFACTS = (
             "collectionAttrs.content": "sessions/03b-node-collection/scripts/reference.groovy",
             "activeDiscovery.params.content": "sessions/03a-active-discovery/scripts/reference.groovy",
         },
+        "overrides": {"activeDiscovery.filters": NODE_FILTER},
     },
     {
         "json": "solutions/04-refactored/addCategory_Training_Fabric.json",
@@ -76,14 +102,17 @@ ARTIFACTS = (
             "collectionAttrs.content": "sessions/04-refactor/scripts/reference-node-collect.groovy",
             "activeDiscovery.params.content": "sessions/04-refactor/scripts/reference-node-ad.groovy",
         },
+        "overrides": {"activeDiscovery.filters": NODE_FILTER},
     },
     {
         "json": "sessions/05-import-and-validate/addCategory_Training_Fabric.json",
         "fields": {"script.content": "sessions/04-refactor/scripts/reference-propertysource.groovy"},
+        "graph_free": False,
     },
     {
         "json": "sessions/05-import-and-validate/Training_Fabric_Controller.json",
         "fields": {"collectionAttrs.content": "sessions/04-refactor/scripts/reference-controller.groovy"},
+        "graph_free": False,
     },
     {
         "json": "sessions/05-import-and-validate/Training_Fabric_Node.json",
@@ -91,11 +120,16 @@ ARTIFACTS = (
             "collectionAttrs.content": "sessions/04-refactor/scripts/reference-node-collect.groovy",
             "activeDiscovery.params.content": "sessions/04-refactor/scripts/reference-node-ad.groovy",
         },
+        "overrides": {
+            "activeDiscovery.filters": NODE_FILTER,
+            "overviewGraphs": [NODE_OVERVIEW_GRAPH],
+        },
+        "graph_free": False,
     },
 )
 
 
-def set_field(document: dict, path: str, value: str) -> None:
+def set_field(document: dict, path: str, value) -> None:
     parts = path.split(".")
     target = document
     for part in parts[:-1]:
@@ -108,6 +142,11 @@ def expected_document(item: dict) -> tuple[Path, dict]:
     document = json.loads(json_path.read_text(encoding="utf-8"))
     for field, source in item["fields"].items():
         set_field(document, field, (ROOT / source).read_text(encoding="utf-8"))
+    if item.get("graph_free", True):
+        document.pop("graphs", None)
+        document.pop("overviewGraphs", None)
+    for field, value in item.get("overrides", {}).items():
+        set_field(document, field, value)
     return json_path, document
 
 

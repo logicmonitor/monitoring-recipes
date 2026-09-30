@@ -24,11 +24,12 @@ datasourceinstanceProps.each { instance, props ->
     def wild = props.wildvalue
     try {
         def node = requestJson("${apiBaseUrl}/nodes/${wild}", bearer)
-        println "${wild}.health=${node.health}"
-        println "${wild}.cpu_percent=${node.cpu_percent}"
-        println "${wild}.memory_percent=${node.memory_percent}"
-        println "${wild}.interface_count=${node.interface_count}"
-        println "${wild}.error_rate_percent=${node.error_rate_percent}"
+        // LAB STEP 1: Uncomment the five output lines and keep the wildvalue on every key.
+        // println "${wild}.health=${node.health}"
+        // println "${wild}.cpu_percent=${node.cpu_percent}"
+        // println "${wild}.memory_percent=${node.memory_percent}"
+        // println "${wild}.interface_count=${node.interface_count}"
+        // println "${wild}.error_rate_percent=${node.error_rate_percent}"
     } catch (Exception ignored) {
         // Do not emit partial metrics when one instance request fails.
         collectionFailed = true

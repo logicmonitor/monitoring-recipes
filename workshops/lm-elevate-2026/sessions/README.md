@@ -35,3 +35,6 @@ The workshop intentionally reuses module names as the design develops. Re-import
 - **Wildvalue:** the stable ID LogicMonitor uses to identify one instance.
 - **Instance property:** extra information stored with one discovered instance, such as its role or site.
 - **Datapoint:** one measurement reported by a module.
+- **Instance-level property:** metadata attached to one discovered instance, such as its role, site, or online/offline status.
+- **Active Discovery filter:** a rule that decides which discovered records become monitored instances.
+- **Overview graph:** a multi-instance graph that compares data across the highest-value instances.

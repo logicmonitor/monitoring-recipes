@@ -2,7 +2,7 @@
 
 ## Why this matters
 
-Import the completed modules and verify the full LogicMonitor behavior in the portal.
+Import the completed modules and verify the full LogicMonitor behavior in the portal, including datapoints, instance properties, targeting, and graphs.
 
 This is an integration exercise. Do not rebuild the modules from scratch; use the completed JSON files in this session.
 
@@ -28,11 +28,13 @@ The PropertySource must run before the DataSources can target the resource by ca
 
 1. Confirm the resource has `Training_Fabric` and the `auto.fabric_*` properties.
 2. Confirm `Training_Fabric_Controller` applies to the resource.
-3. Run controller collection and verify its three datapoints and graph.
-4. Run node Active Discovery and verify the three node instances.
-5. Run node collection and verify metrics for every node.
-6. Review instance properties, datapoint descriptions, units, and graphs.
-7. Enable debug only for testing, then return normal runtime behavior.
+3. Run controller collection and verify its three datapoints and standard graph.
+4. Run node Active Discovery and verify that three online node instances are created while the offline node is filtered out.
+5. Review `auto.role`, `auto.site`, and `auto.status` on each discovered instance.
+6. Run node collection and verify every metric maps to the correct wildvalue and instance.
+7. Review datapoint descriptions, units, standard graphs, and the node overview graph.
+8. Poll again and confirm values update, graphs render, and cached authentication continues to work.
+9. Enable debug only for testing, then return normal runtime behavior.
 
 ## Final checklist
 
@@ -40,10 +42,12 @@ The PropertySource must run before the DataSources can target the resource by ca
 - The targeting rule does not target unrelated resources.
 - Controller metrics collect without Active Discovery.
 - Node instances have stable wildvalues.
+- Offline instances are excluded by the Active Discovery filter.
 - Node metrics are associated with the correct instances.
+- Standard and overview graphs render from the collected datapoints.
 - Shared authentication work is cached.
 - Finished JSON imports cleanly and matches the tested scripts.
 
 ## Key idea
 
-Use the module-authoring skill for future modules. Start with the monitoring contract, prove the raw data flow, then add snippets, caching, graphs, alerts, and validation.
+Validate the complete module suite by checking targeting, output, instance identity, properties, datapoints, and graphs together.

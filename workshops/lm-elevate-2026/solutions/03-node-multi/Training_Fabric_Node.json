@@ -25,10 +25,16 @@
     "autoDeleteInstances": true,
     "disableDiscoveredInstances": false,
     "showDeletedInstanceDays": 0,
-    "filters": [],
+    "filters": [
+      {
+        "attribute": "auto.status",
+        "operation": "Equal",
+        "value": "online"
+      }
+    ],
     "params": {
       "type": "groovy",
-      "content": "import groovy.json.JsonSlurper\n\n// Read connection details from the resource instead of hard-coding them.\ndef apiHostname = hostProps.get(\"system.hostname\", \"\").replaceAll('/$', '')\ndef apiBaseUrl = \"https://${apiHostname}/api/v1\"\ndef apiUser = hostProps.get(\"fabric.api.user\", \"\")\ndef apiPassword = hostProps.get(\"fabric.api.pass\", \"\")\n\nif (!apiHostname || !apiUser || !apiPassword)\n    return 1\n\n// Authenticate once, then ask the API which node instances exist.\ndef token = requestJson(\n    \"${apiBaseUrl}/auth/token\",\n    [Authorization: \"Basic ${basicAuthHeader(apiUser, apiPassword)}\"]\n)\ndef nodes = requestJson(\n    \"${apiBaseUrl}/nodes\",\n    [Authorization: \"Bearer ${token.access_token}\"]\n)\n\nnodes.each { node ->\n    // The ID is identity; the name is presentation; role and site are context.\n    println \"${node.id}##${node.name}##${node.role} at ${node.site}####auto.role=${node.role}&auto.site=${node.site}\"\n}\nreturn 0\n\n// Helper methods keep the discovery flow easy to follow.\ndef basicAuthHeader(String user, String password) {\n    return \"${user}:${password}\".bytes.encodeBase64().toString()\n}\n\ndef requestJson(String endpoint, Map headers) {\n    def connection = new URL(endpoint).openConnection()\n    headers.each { key, value -> connection.setRequestProperty(key, value.toString()) }\n    connection.setRequestProperty(\"Accept\", \"application/json\")\n    connection.connectTimeout = 10000\n    connection.readTimeout = 20000\n    if (connection.responseCode >= 400)\n        throw new IllegalStateException(\"HTTP ${connection.responseCode} from ${endpoint}\")\n    return new JsonSlurper().parseText(connection.inputStream.text)\n}\n"
+      "content": "import groovy.json.JsonSlurper\n\n// Read connection details from the resource instead of hard-coding them.\ndef apiHostname = hostProps.get(\"system.hostname\", \"\").replaceAll('/$', '')\ndef apiBaseUrl = \"https://${apiHostname}/api/v1\"\ndef apiUser = hostProps.get(\"fabric.api.user\", \"\")\ndef apiPassword = hostProps.get(\"fabric.api.pass\", \"\")\n\nif (!apiHostname || !apiUser || !apiPassword)\n    return 1\n\n// Authenticate once, then ask the API which node instances exist.\ndef token = requestJson(\n    \"${apiBaseUrl}/auth/token\",\n    [Authorization: \"Basic ${basicAuthHeader(apiUser, apiPassword)}\"]\n)\ndef nodes = requestJson(\n    \"${apiBaseUrl}/nodes\",\n    [Authorization: \"Bearer ${token.access_token}\"]\n)\n\nnodes.each { node ->\n    // The ID is identity; the name is presentation; role and site are context.\n    // Status is emitted as an instance property so the module can filter offline nodes.\n    println \"${node.id}##${node.name}##${node.role} at ${node.site}####auto.role=${node.role}&auto.site=${node.site}&auto.status=${node.status}\"\n}\nreturn 0\n\n// Helper methods keep the discovery flow easy to follow.\ndef basicAuthHeader(String user, String password) {\n    return \"${user}:${password}\".bytes.encodeBase64().toString()\n}\n\ndef requestJson(String endpoint, Map headers) {\n    def connection = new URL(endpoint).openConnection()\n    headers.each { key, value -> connection.setRequestProperty(key, value.toString()) }\n    connection.setRequestProperty(\"Accept\", \"application/json\")\n    connection.connectTimeout = 10000\n    connection.readTimeout = 20000\n    if (connection.responseCode >= 400)\n        throw new IllegalStateException(\"HTTP ${connection.responseCode} from ${endpoint}\")\n    return new JsonSlurper().parseText(connection.inputStream.text)\n}\n"
     }
   },
   "datapoints": [
@@ -101,59 +107,6 @@
       "clearInterval": 0,
       "triggerInterval": 0,
       "statusDisplayNames": []
-    }
-  ],
-  "graphs": [
-    {
-      "name": "Node Resource Health",
-      "title": "Node Resource Health",
-      "verticalLabel": "Percent",
-      "min": 0,
-      "max": 100,
-      "timeScale": "1day",
-      "displayPriority": 1,
-      "scale1024": false,
-      "rigid": false,
-      "lines": [
-        {
-          "datapointName": "cpu_percent",
-          "legend": "CPU",
-          "color": "blue",
-          "type": "line",
-          "isVirtual": false
-        },
-        {
-          "datapointName": "memory_percent",
-          "legend": "Memory",
-          "color": "orange",
-          "type": "line",
-          "isVirtual": false
-        },
-        {
-          "datapointName": "error_rate_percent",
-          "legend": "Errors",
-          "color": "red",
-          "type": "line",
-          "isVirtual": false
-        }
-      ],
-      "datapoints": [
-        {
-          "name": "cpu_percent",
-          "datapointName": "cpu_percent",
-          "consolidationFn": "average"
-        },
-        {
-          "name": "memory_percent",
-          "datapointName": "memory_percent",
-          "consolidationFn": "average"
-        },
-        {
-          "name": "error_rate_percent",
-          "datapointName": "error_rate_percent",
-          "consolidationFn": "average"
-        }
-      ]
     }
   ]
 }

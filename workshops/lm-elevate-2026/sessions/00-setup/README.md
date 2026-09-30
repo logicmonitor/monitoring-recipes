@@ -1,5 +1,7 @@
 # Session 00 — Workshop Setup
 
+[Download the complete workshop files](/downloads/lm-elevate-2026-workshop-files.zip) before starting. The bundle contains the student guides, module scaffolds, completed Session 05 JSON files, and the supporting Groovy scripts.
+
 ## Why this matters
 
 Prepare one LogicMonitor resource and Collector for the workshop exercises.

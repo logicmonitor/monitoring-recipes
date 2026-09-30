@@ -19,8 +19,9 @@ def nodes = requestJson(
 )
 
 nodes.each { node ->
-    // LAB STEP 1: ID is identity, name is presentation, and role/site are ILPs.
-    // println "${node.id}##${node.name}##${node.role} at ${node.site}####auto.role=${node.role}&auto.site=${node.site}"
+    // LAB STEP 1: ID is identity, name is presentation, and role/site/status are ILPs.
+    // Include auto.status so Active Discovery can later keep only online nodes.
+    // println "${node.id}##${node.name}##${node.role} at ${node.site}####auto.role=${node.role}&auto.site=${node.site}&auto.status=${node.status}"
 }
 return 0
 

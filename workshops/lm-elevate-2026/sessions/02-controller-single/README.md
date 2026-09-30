@@ -2,13 +2,11 @@
 
 ## Why this matters
 
-Separate the collection contract from the implementation: the script emits keys, while datapoints and graphs describe and present those keys.
+Separate the collection contract from the implementation: the script emits keys, while datapoints describe and present those keys. Graphs are added in Session 05.
 
 ## Import this first
 
 Import [`module-scaffold.json`](module-scaffold.json) using the [shared import steps](../README.md#importing-a-module). It already contains the guided student script. Review [`scripts/student.groovy`](scripts/student.groovy) alongside it. The complete implementation is [`scripts/reference.groovy`](scripts/reference.groovy).
-
-The script uses plain `println` output in this session. Focus on keeping the output names aligned with the datapoints; reusable LogicMonitor output helpers come later.
 
 ## What to do
 
@@ -21,7 +19,6 @@ The script uses plain `println` output in this session. Focus on keeping the out
    ```
 
 4. Define datapoints with matching names, descriptions, units, and sensible ranges.
-5. Add an overview graph for the controller metrics.
 
 ## Check your result
 
@@ -29,7 +26,7 @@ The script uses plain `println` output in this session. Focus on keeping the out
 - All three datapoints populate.
 - `node_count` matches the API response.
 - `api_latency_ms` changes between polls.
-- The graph reflects the same reported values.
+- The module contains matching datapoints for each reported value.
 
 ## Discuss
 
@@ -39,7 +36,7 @@ The script uses plain `println` output in this session. Focus on keeping the out
 
 ## Key idea
 
-Good module design keeps emitted keys, datapoint definitions, and graphs aligned.
+Good module design keeps emitted keys and datapoint definitions aligned.
 
 ## If you get stuck
 

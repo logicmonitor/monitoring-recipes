@@ -12,7 +12,7 @@ Import the applicable refactor scaffold for the module you are reviewing using t
 - [`controller-scaffold.json`](controller-scaffold.json)
 - [`node-scaffold.json`](node-scaffold.json)
 
-Each scaffold preserves the established AppliesTo rule so the module remains applicable to the workshop resource. Use the baseline scripts from Sessions 01–03 as the “before” implementation. Review the guided scripts, then compare the complete versions:
+Each scaffold preserves the established AppliesTo rule so the module remains applicable to the workshop resource; the node scaffold also preserves the online-instance filter. These scaffolds intentionally do not contain graph definitions. Use the baseline scripts from Sessions 01–03 as the “before” implementation. Review the guided scripts, then compare the complete versions:
 
 This is the first session that uses the shared LogicMonitor helpers: `proto.http` for requests, `lm.emit` for output, `lm.debug` for diagnostics, and `lm.cache` for short-lived token caching.
 
@@ -23,11 +23,11 @@ This is the first session that uses the shared LogicMonitor helpers: `proto.http
 
 ## What to do
 
-1. Identify the shared LogicMonitor helpers in all four scripts: HTTP requests, output, debug messages, and token caching.
-2. Trace how the PropertySource, controller collection, Active Discovery, and node collection each use that plumbing.
-3. Review the cache key and TTL decisions in the guided scripts.
-4. Compare the before and after reported values; confirm property, datapoint, and instance keys did not change.
-5. Import the completed refactored JSON and run the modules twice with debug enabled.
+1. Start with the `REVIEW 1` comments and identify the versioned snippet helpers.
+2. Follow `REVIEW 2` through the resource inputs and request construction.
+3. Compare the token lifecycle and cache key/TTL decisions at `REVIEW 3` and `REVIEW 4`.
+4. Review `REVIEW 5` in the node scripts and confirm property, datapoint, wildvalue, and instance-property names remain compatible.
+5. Import the refactored JSON and run the modules twice with debug enabled.
 
 ## Check your result
 
@@ -36,6 +36,7 @@ This is the first session that uses the shared LogicMonitor helpers: `proto.http
 - A rejected token is removed and refreshed once.
 - PropertySource output remains unchanged.
 - Active Discovery output remains unchanged.
+- The online-instance filter continues to exclude the offline node.
 - Controller and node responses remain fresh.
 - Monitoring output is unchanged after the refactor.
 
