@@ -13,6 +13,10 @@ Used by `scripts/validate-module.py --with-schema` (optional `jsonschema` packag
 | `topologysource.schema.json` | Standalone TopologySource field reference |
 | `logicmodule.common.defs.json` | Shared `$defs` and corpus enum stats (`x-corpusStats`) |
 
+DataSource `graphs` describe per-instance graphs. DataSource `overviewGraphs`
+describe cross-instance graphs and require `aggregateMethod` on each referenced
+datapoint.
+
 Validate from the skill root:
 
 ```bash
@@ -26,4 +30,4 @@ python3 scripts/validate-module.py --with-schema path/to/ModuleBundle/
 
 The schema is bundled for optional validation. It is not a source-code generator and requires no files outside this skill folder to use.
 
-The LogSource and TopologySource schemas document the public authoring fields and intentionally omit local CoreTools metadata. Their portal payloads vary by account and product release, so keep the bundled field shape as the portable baseline and use a portal export only to confirm optional account-specific fields.
+The LogSource and TopologySource schemas document the public authoring fields and intentionally omit local CoreTools metadata. Their portal payloads vary by account and product release, so keep the bundled field shape as the portable baseline and use a portal export only to confirm optional account-specific fields. The validator routes module types `9` and `10` to these schemas, and topology packing preserves the JSON-encoded `collectionAttrs` envelope while embedding the source script.

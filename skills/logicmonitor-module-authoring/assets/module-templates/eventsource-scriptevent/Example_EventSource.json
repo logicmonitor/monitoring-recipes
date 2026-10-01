@@ -11,6 +11,8 @@
   "clearAfterAck": true,
   "clearAfterMin": 0,
   "doMapping": false,
+  "alertSubject": "Example event on ##HOST##",
+  "alertBody": "Example event reported by ##HOST##: ##MESSAGE##",
   "collectionAttrs": {
     "type": "groovy",
     "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\nemit.events([[\n    happenedOn: System.currentTimeMillis(),\n    severity: \"warn\",\n    message: \"Example script event\"\n]])\nreturn 0\n"

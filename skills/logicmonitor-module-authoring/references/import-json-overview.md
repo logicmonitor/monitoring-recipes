@@ -42,6 +42,8 @@ Use `validate-module.py --strict-greenfield` on bundles before commit.
 - [ ] Datapoint `min` / `max`: JSON number or omitted — not `""`
 - [ ] Graph `min` / `max`: numbers or omitted
 - [ ] `name` uses underscores and `displayedAs` uses spaces; `displayedAs` has no internal hyphens
+- [ ] `overviewGraphs` are included when multi-instance metrics benefit from cross-instance comparison
+- [ ] Status/enum datapoints populate object-based `statusDisplayNames` entries with `statusDisplayName`, `metricValue`, and `operator`; alert bodies use `##ALERTVALUEDISPLAYSTATUSNAME## (##VALUE##)` when configured
 
 ## Omit on new modules
 

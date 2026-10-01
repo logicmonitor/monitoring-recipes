@@ -33,4 +33,4 @@ python3 scripts/pack-module.py path/to/Vendor_Product_Monitor/
 python3 scripts/validate-module.py path/to/Vendor_Product_Monitor/
 ```
 
-5. Deliver the directory (JSON + script files) to the user. The packer and semantic validator cover the import-bundle types listed in `schema/README.md`; LogSource and TopologySource use platform-specific payload shapes, so validate their field JSON against the standalone reference schema and confirm any account-specific optional fields in the portal before import.
+5. Deliver the directory (JSON + script files) to the user. The packer and semantic validator cover the import-bundle types listed in `schema/README.md`; TopologySource scripts are embedded into the JSON-encoded `collectionAttrs` envelope during packing. Confirm any account-specific optional fields in the portal before import.

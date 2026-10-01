@@ -3,10 +3,13 @@
   "description": "Template scripted TopologySource.",
   "appliesTo": "hasCategory(\"example\")",
   "group": "",
-  "tags": ["example", "topology"],
+  "tags": [
+    "example",
+    "topology"
+  ],
   "technology": "",
   "type": 9,
   "collectionMethod": "script",
   "collectionIntervalSec": 3600,
-  "collectionAttrs": "{\"scriptgroovy\":\"collect.groovy\",\"linuxscript\":\"\",\"linuxcmdline\":\"\",\"scripttype\":\"embed\",\"windowscmdline\":\"\",\"windowsscript\":\"\",\"properties\":\"\"}"
+  "collectionAttrs": "{\"scriptgroovy\":\"import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\\nimport com.logicmonitor.mod.Snippets\\n\\ndef modLoader = GSH.getInstance(GroovySystem.version)\\n    .getScript(\\\"Snippets\\\", Snippets.getLoader())\\n    .withBinding(getBinding())\\ndef lmTopo = modLoader.load(\\\"lm.topo\\\", \\\"0\\\")\\ndef debug = false\\ndef lmDebugMod = modLoader.load(\\\"lm.debug\\\", \\\"2.0.0\\\")\\ndef lmDebug = lmDebugMod.create(hostProps, debug, out)\\ndef keyNamespace = hostProps.get(hostProps.get(\\\"topo.namespace\\\", \\\"\\\"), \\\"\\\")\\ndef keyBlacklist = hostProps.get(\\\"topo.blacklist\\\", \\\"\\\").tokenize(\\\",\\\")\\ndef edges = []\\n\\n// Add one edge per discovered relationship; use stable ERIs and a meaningful type.\\nlmTopo.registerEdge(\\\"Example\\\", \\\"device:source\\\", \\\"device:target\\\", edges)\\nlmDebug.debug(\\\"Generated ${edges.size()} synthetic topology edge(s)\\\")\\nprint lmTopo.generateTopology(edges, keyNamespace, keyBlacklist, debug)\\nreturn 0\\n\",\"linuxscript\":\"\",\"linuxcmdline\":\"\",\"scripttype\":\"embed\",\"windowscmdline\":\"\",\"windowsscript\":\"\",\"properties\":\"\"}"
 }

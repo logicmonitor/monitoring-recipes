@@ -9,5 +9,6 @@ def emit = modLoader.load("lm.emit", "0")
 datasourceinstanceProps.each { instance, props ->
     def wild = props.wildvalue
     emit.dp(wild, "example_metric", 0)
+    emit.dp(wild, "example_status", 0)
 }
 return 0
