@@ -14,6 +14,12 @@
     },
     {
       "$ref": "eventsource.schema.json"
+    },
+    {
+      "$ref": "logsource.schema.json"
+    },
+    {
+      "$ref": "topologysource.schema.json"
     }
   ]
 }

@@ -85,6 +85,12 @@
         "$ref": "logicmodule.common.defs.json#/$defs/graph"
       }
     },
+    "overviewGraphs": {
+      "type": "array",
+      "items": {
+        "$ref": "logicmodule.common.defs.json#/$defs/overviewGraph"
+      }
+    },
     "activeDiscovery": {
       "$ref": "logicmodule.common.defs.json#/$defs/activeDiscovery"
     }

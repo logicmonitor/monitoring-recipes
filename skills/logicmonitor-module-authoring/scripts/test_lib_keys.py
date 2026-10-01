@@ -21,8 +21,10 @@ emit.dp(instance, "example_metric", 0)
 '''
     keys = extract_collection_keys(script, batchscript=False)
     batch_keys = extract_collection_keys(batch, batchscript=True)
+    powershell_keys = extract_collection_keys("Write-Output 'example_metric=0'")
     assert keys == {"stat_hp", "stat_attack"}, keys
     assert batch_keys == {"example_metric"}, batch_keys
+    assert powershell_keys == {"example_metric"}, powershell_keys
     assert (
         namevalue_script_output_key("##WILDVALUE##.example_metric", True, True)
         == "example_metric"

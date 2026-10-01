@@ -102,7 +102,32 @@
         "statusDisplayNames": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "object",
+            "required": [
+              "statusDisplayName",
+              "metricValue",
+              "operator"
+            ],
+            "additionalProperties": true,
+            "properties": {
+              "statusDisplayName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "metricValue": {
+                "type": "string"
+              },
+              "operator": {
+                "type": "string",
+                "minLength": 1
+              },
+              "id": {
+                "type": "integer"
+              },
+              "datapointId": {
+                "type": "integer"
+              }
+            }
           }
         },
         "threshold": {
@@ -212,6 +237,60 @@
               }
             }
           }
+        }
+      }
+    },
+    "overviewGraph": {
+      "type": "object",
+      "required": ["name", "title", "lines", "datapoints"],
+      "additionalProperties": true,
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1},
+        "verticalLabel": {"type": "string"},
+        "min": {"type": "number"},
+        "max": {"type": "number"},
+        "timeScale": {"type": "string"},
+        "displayPriority": {"type": "integer"},
+        "aggregated": {"type": "boolean"},
+        "scale1024": {"type": "boolean"},
+        "rigid": {"type": "boolean"},
+        "lines": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/graphLine"}
+        },
+        "datapoints": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/overviewGraphDatapoint"}
+        }
+      }
+    },
+    "graphLine": {
+      "type": "object",
+      "required": ["datapointName", "type"],
+      "additionalProperties": true,
+      "properties": {
+        "datapointName": {"type": "string", "minLength": 1},
+        "legend": {"type": "string"},
+        "color": {"type": "string"},
+        "type": {"type": "string", "enum": ["area", "line", "stack"]},
+        "isVirtual": {"type": "boolean"}
+      }
+    },
+    "overviewGraphDatapoint": {
+      "type": "object",
+      "required": ["name", "datapointName", "aggregateMethod", "consolidationFn"],
+      "additionalProperties": true,
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "datapointName": {"type": "string", "minLength": 1},
+        "aggregateMethod": {
+          "type": "string",
+          "enum": ["average", "min", "max", "sum"]
+        },
+        "consolidationFn": {
+          "type": "string",
+          "enum": ["average", "max", "min"]
         }
       }
     },

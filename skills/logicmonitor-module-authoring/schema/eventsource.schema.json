@@ -46,6 +46,18 @@
     },
     "doMapping": {
       "type": "boolean"
+    },
+    "alertSubject": {
+      "type": "string"
+    },
+    "alertBody": {
+      "type": "string"
+    },
+    "filters": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
     }
   }
 }

@@ -22,6 +22,8 @@ Vendor_Product_Monitor/
 | DataSource (`type: 0`) | `collectionAttrs` | `activeDiscovery.params` |
 | ConfigSource (`type: 6`) | `collectionAttrs` | `activeDiscovery.params` |
 | EventSource `scriptevent` (`type: 1`) | `collectionAttrs` | — |
+| LogSource script (`type: 10`) | `collectionAttrs.content` | — |
+| TopologySource (`type: 9`) | JSON-encoded `collectionAttrs.scriptgroovy` or `collectionAttrs.windowsscript` | — |
 | PropertySource (`type: 5`) | `script` | — |
 | DiagnosticSource (`type: 11`) | `script` | — |
 | RemediationSource (`type: 12`) | `script` | — |

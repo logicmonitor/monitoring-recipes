@@ -102,6 +102,33 @@ JSON/BSON BatchScript output uses path-style keys instead, e.g. `data.##WILDVALU
 | `threshold` | Alert expression string on datapoint, e.g. `"= 1"` |
 | `originId` | Omit for new modules; the portal assigns this internal origin-tracking ID on import |
 
+### Status display names and alert messages
+
+For numeric or enumerated status datapoints, use object entries rather than
+plain strings. `metricValue` is compared with the datapoint value using the
+specified `operator`:
+
+```json
+"statusDisplayNames": [
+  {
+    "statusDisplayName": "Degraded",
+    "metricValue": "0",
+    "operator": "EQ"
+  },
+  {
+    "statusDisplayName": "Healthy",
+    "metricValue": "1",
+    "operator": "EQ"
+  }
+],
+"alertBody": "Node ##INSTANCE## on ##HOST## is reporting an unhealthy status of ##ALERTVALUEDISPLAYSTATUSNAME## (##VALUE##). Review the node and its supporting services. This started at ##START##, or ##DURATION## ago."
+```
+
+Use `##ALERTVALUEDISPLAYSTATUSNAME## (##VALUE##)` in custom alert bodies when
+`statusDisplayNames` is configured. Include the status code mapping in the
+description only when the mapping is absent, incomplete, or needs additional
+context.
+
 ## Graphs
 
 ```json
@@ -135,6 +162,47 @@ JSON/BSON BatchScript output uses path-style keys instead, e.g. `data.##WILDVALU
 ```
 
 Line `type`: `line`, `stack`, or `area`. Use corpus color names (`blue`, `green`, `orange`, …).
+
+## Overview graphs
+
+`overviewGraphs` are optional DataSource-level graphs for comparing a metric
+across multiple discovered instances. They use the same line structure as
+`graphs`, but each datapoint entry also declares how values are aggregated:
+
+```json
+{
+  "name": "Example Metric by Instance",
+  "title": "Example Metric by Instance",
+  "verticalLabel": "value",
+  "min": 0,
+  "timeScale": "1day",
+  "displayPriority": 1,
+  "aggregated": false,
+  "scale1024": false,
+  "rigid": false,
+  "lines": [
+    {
+      "datapointName": "metric_name",
+      "legend": "##INSTANCE##",
+      "color": "blue",
+      "type": "line",
+      "isVirtual": false
+    }
+  ],
+  "datapoints": [
+    {
+      "name": "metric_name",
+      "datapointName": "metric_name",
+      "aggregateMethod": "average",
+      "consolidationFn": "average"
+    }
+  ]
+}
+```
+
+Use `sum` for counts, `average` for comparable measurements, and `min`/`max`
+when fleet bounds are the useful signal. Keep overview graph references aligned
+with the short datapoint names, just like normal graph references.
 
 ## Intervals
 

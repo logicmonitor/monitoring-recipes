@@ -56,7 +56,7 @@ For **DataSource** and **ConfigSource**, read [references/collection-modes.md](r
 - Scripted (Groovy/PowerShell) for complex logic or APIs
 - Script mode: runs per instance; BatchScript: runs once per device (multi-instance)
 
-Other module types use their own output models. This bundle includes public-facing field references and starters for Event, Property, Config, Diagnostic, Remediation, Log, and Topology modules. The packer and full semantic validator currently target the import-bundle types listed in [schema/README.md](schema/README.md); LogSource and TopologySource require platform-specific payload handling. Portal exports are useful for confirming account-specific optional fields, but are not required to determine the basic JSON shape. Do not copy portal bookkeeping fields such as `version`, `registryMetadata`, or internal tooling markers into a greenfield bundle.
+Other module types use their own output models. This bundle includes public-facing field references and starters for Event, Property, Config, Diagnostic, Remediation, Log, and Topology modules. The validator and packer support the import-bundle types listed in [schema/README.md](schema/README.md), including the JSON-encoded `collectionAttrs` used by TopologySource modules. Portal exports are useful for confirming account-specific optional fields, but are not required to determine the basic JSON shape. Do not copy portal bookkeeping fields such as `version`, `registryMetadata`, or internal tooling markers into a greenfield bundle.
 
 ### 4. Choose language
 
@@ -162,6 +162,8 @@ For dashboards on a new DataSource, read [references/dashboard-handoff.md](refer
 - [ ] LogicModule `name` uses underscores; `displayedAs` uses spaces and contains no internal `-`
 - [ ] AppliesTo is specific enough to avoid running on unrelated resources
 - [ ] Datapoints have useful descriptions, units, and a graph, alert, or overview use
+- [ ] Multi-instance metrics include `overviewGraphs` when cross-instance comparison is useful; overview datapoints declare `aggregateMethod`
+- [ ] Status/enum datapoints include object-based `statusDisplayNames` mappings, and thresholded datapoints use `##ALERTVALUEDISPLAYSTATUSNAME## (##VALUE##)` in contextual `alertBody` text when applicable
 - [ ] Queries are bounded and efficient; pagination, retries, and timeouts are intentional
 - [ ] No credentials, tokens, or sensitive device data are emitted or logged
 - [ ] LogSources include resource mapping; ConfigSources define meaningful checks

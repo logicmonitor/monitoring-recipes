@@ -20,6 +20,8 @@ LANG_BY_FILE = {
 
 MODULE_TYPE_SCHEMA = {
     0: "datasource.schema.json",
+    9: "topologysource.schema.json",
+    10: "logsource.schema.json",
     6: "configsource.schema.json",
     1: "eventsource.schema.json",
     5: "script-module.schema.json",
@@ -85,6 +87,29 @@ def apply_script_blob(target: dict[str, Any], script_path: Path) -> None:
     target["content"] = script_path.read_text(encoding="utf-8")
 
 
+def apply_topology_script(module: dict[str, Any], script_path: Path) -> None:
+    """Inline a topology script into its JSON-encoded collectionAttrs object."""
+    collection_attrs = module.get("collectionAttrs")
+    if isinstance(collection_attrs, str):
+        try:
+            collection_attrs = json.loads(collection_attrs)
+        except json.JSONDecodeError as exc:
+            raise ValueError("TopologySource collectionAttrs must contain valid JSON") from exc
+    if not isinstance(collection_attrs, dict):
+        raise ValueError("TopologySource collectionAttrs must be a JSON object string")
+
+    if script_path.suffix.lower() == ".groovy":
+        field = "scriptgroovy"
+    elif script_path.suffix.lower() == ".ps1":
+        field = "windowsscript"
+    else:
+        raise ValueError(f"Unsupported TopologySource script extension: {script_path.name}")
+
+    collection_attrs[field] = script_path.read_text(encoding="utf-8")
+    collection_attrs["scripttype"] = "embed"
+    module["collectionAttrs"] = json.dumps(collection_attrs, separators=(",", ":"))
+
+
 def pack_module(bundle_dir: Path, module: dict[str, Any]) -> list[str]:
     """Inline collect/ad files into module dict. Returns change descriptions."""
     changes: list[str] = []
@@ -97,6 +122,9 @@ def pack_module(bundle_dir: Path, module: dict[str, Any]) -> list[str]:
             blob = module.setdefault("script", {})
             apply_script_blob(blob, collect)
             changes.append(f"script.content from {collect.name}")
+        elif module_type == 9:
+            apply_topology_script(module, collect)
+            changes.append(f"collectionAttrs script from {collect.name}")
         elif "collectionAttrs" in module or module_type in (0, 1, 6):
             blob = module.setdefault("collectionAttrs", {})
             apply_script_blob(blob, collect)
@@ -124,6 +152,20 @@ def content_matches_file(blob: dict[str, Any] | None, script_path: Path) -> bool
     return blob.get("content") == expected
 
 
+def topology_script_matches_file(module: dict[str, Any], script_path: Path) -> bool:
+    collection_attrs = module.get("collectionAttrs")
+    if not isinstance(collection_attrs, str):
+        return False
+    try:
+        collection_attrs = json.loads(collection_attrs)
+    except json.JSONDecodeError:
+        return False
+    if not isinstance(collection_attrs, dict):
+        return False
+    field = "scriptgroovy" if script_path.suffix.lower() == ".groovy" else "windowsscript"
+    return collection_attrs.get(field) == script_path.read_text(encoding="utf-8")
+
+
 def check_pack_sync(bundle_dir: Path, module: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     collect = find_script(bundle_dir, SCRIPT_COLLECT_NAMES)
@@ -131,7 +173,12 @@ def check_pack_sync(bundle_dir: Path, module: dict[str, Any]) -> list[str]:
     module_type = module.get("type")
 
     if collect:
-        if module_type in (5, 11, 12):
+        if module_type == 9:
+            if not topology_script_matches_file(module, collect):
+                errors.append(
+                    f"collectionAttrs script does not match {collect.name}; run pack-module.py"
+                )
+        elif module_type in (5, 11, 12):
             if not content_matches_file(module.get("script"), collect):
                 errors.append(
                     f"script.content does not match {collect.name}; run pack-module.py"
@@ -170,7 +217,7 @@ EMIT_KEY_PATTERNS = [
     re.compile(r"lm\.emit\s*\(\s*" + _EMIT_KEY_IN_QUOTES),
     re.compile(r"println\s+" + _PRINTLN_KEY_EQ, re.MULTILINE),
     re.compile(
-        r"Write-Output\s+" + _METRIC_KEY + r"=",
+    r"Write-Output\s+['\"]?" + _METRIC_KEY + r"=",
         re.IGNORECASE | re.MULTILINE,
     ),
 ]
@@ -278,15 +325,17 @@ def namevalue_script_output_key(
 
 def graph_datapoint_refs(module: dict[str, Any]) -> list[str]:
     refs: list[str] = []
-    for graph in module.get("graphs") or []:
-        if not isinstance(graph, dict):
-            continue
-        for line in graph.get("lines") or []:
-            if isinstance(line, dict) and line.get("datapointName"):
-                refs.append(line["datapointName"])
-        for gdp in graph.get("datapoints") or []:
-            if isinstance(gdp, dict) and gdp.get("datapointName"):
-                refs.append(gdp["datapointName"])
+    graph_collections = (module.get("graphs") or [], module.get("overviewGraphs") or [])
+    for graph_collection in graph_collections:
+        for graph in graph_collection:
+            if not isinstance(graph, dict):
+                continue
+            for line in graph.get("lines") or []:
+                if isinstance(line, dict) and line.get("datapointName"):
+                    refs.append(line["datapointName"])
+            for gdp in graph.get("datapoints") or []:
+                if isinstance(gdp, dict) and gdp.get("datapointName"):
+                    refs.append(gdp["datapointName"])
     return refs
 
 

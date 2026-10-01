@@ -14,7 +14,7 @@
   "useWildValueAsUniqueIdentifier": false,
   "collectionAttrs": {
     "type": "groovy",
-    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\ndatasourceinstanceProps.each { instance, props ->\n    def wild = props.wildvalue\n    emit.dp(wild, \"example_metric\", 0)\n}\nreturn 0\n"
+    "content": "import com.santaba.agent.groovy.utils.GroovyScriptHelper as GSH\nimport com.logicmonitor.mod.Snippets\n\ndef modLoader = GSH.getInstance(GroovySystem.version)\n    .getScript(\"Snippets\", Snippets.getLoader())\n    .withBinding(getBinding())\ndef emit = modLoader.load(\"lm.emit\", \"0\")\n\ndatasourceinstanceProps.each { instance, props ->\n    def wild = props.wildvalue\n    emit.dp(wild, \"example_metric\", 0)\n    emit.dp(wild, \"example_status\", 0)\n}\nreturn 0\n"
   },
   "activeDiscovery": {
     "discoveryMethod": "ad_script",
@@ -34,7 +34,7 @@
   "datapoints": [
     {
       "name": "example_metric",
-      "description": "",
+      "description": "Example value collected per discovered instance.",
       "dataType": 7,
       "type": "gauge",
       "interpretMethod": "namevalue",
@@ -44,7 +44,36 @@
       "noData": "Do not trigger an alert",
       "clearInterval": 0,
       "triggerInterval": 0,
-      "statusDisplayNames": []
+      "statusDisplayNames": [],
+      "threshold": "> 90",
+      "alertBody": "Example metric on ##HOST## for ##INSTANCE## is ##VALUE##, placing the resource into ##LEVEL## state."
+    },
+    {
+      "name": "example_status",
+      "description": "Example node health status.",
+      "dataType": 7,
+      "type": "gauge",
+      "interpretMethod": "namevalue",
+      "interpretExpr": "##WILDVALUE##.example_status",
+      "useValue": "output",
+      "maxDigits": 4,
+      "noData": "Do not trigger an alert",
+      "clearInterval": 0,
+      "triggerInterval": 0,
+      "statusDisplayNames": [
+        {
+          "statusDisplayName": "Degraded",
+          "metricValue": "0",
+          "operator": "EQ"
+        },
+        {
+          "statusDisplayName": "Healthy",
+          "metricValue": "1",
+          "operator": "EQ"
+        }
+      ],
+      "threshold": "< 1",
+      "alertBody": "Node ##INSTANCE## on ##HOST## is reporting an unhealthy status of ##ALERTVALUEDISPLAYSTATUSNAME## (##VALUE##). Review the node and its supporting services. This started at ##START##, or ##DURATION## ago."
     }
   ],
   "graphs": [
@@ -71,6 +100,36 @@
         {
           "name": "example_metric",
           "datapointName": "example_metric",
+          "consolidationFn": "average"
+        }
+      ]
+    }
+  ],
+  "overviewGraphs": [
+    {
+      "name": "Example Metric by Instance",
+      "title": "Example Metric by Instance",
+      "verticalLabel": "value",
+      "min": 0,
+      "timeScale": "1day",
+      "displayPriority": 1,
+      "aggregated": false,
+      "scale1024": false,
+      "rigid": false,
+      "lines": [
+        {
+          "datapointName": "example_metric",
+          "legend": "##INSTANCE##",
+          "color": "blue",
+          "type": "line",
+          "isVirtual": false
+        }
+      ],
+      "datapoints": [
+        {
+          "name": "example_metric",
+          "datapointName": "example_metric",
+          "aggregateMethod": "average",
           "consolidationFn": "average"
         }
       ]
